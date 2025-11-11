@@ -1,0 +1,1937 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; connect-src 'self';">
+  <meta name="description" content="15-day intensive Python programming training for GNERC employees. Phase 1 foundations based on Harvard CS50, covering syntax, data structures, file I/O, APIs, testing, and OOP."/>
+  <meta name="keywords" content="Python training, GNERC, Harvard CS50, programming course, data automation, regulatory tools"/>
+  <meta name="author" content="Otar Zakalashvili"/>
+
+  <!-- Open Graph / Social Media -->
+  <meta property="og:type" content="website"/>
+  <meta property="og:title" content="Python Programming Foundations - GNERC Training Phase 1"/>
+  <meta property="og:description" content="15-day intensive Python training program based on Harvard CS50 for GNERC regulatory automation"/>
+  <meta property="og:image" content="https://gnerc.org/_website/images/logo_ge.svg"/>
+
+  <!-- Twitter Card -->
+  <meta name="twitter:card" content="summary_large_image"/>
+  <meta name="twitter:title" content="Python Programming Foundations - GNERC Training"/>
+  <meta name="twitter:description" content="15-day intensive Python training program for regulatory data automation"/>
+
+  <title>Python Foundations | Phase 1 – GNERC Training</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="https://gnerc.org/_website/images/logo_ge.svg"/>
+
+  <!-- Preconnect for performance -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link rel="preconnect" href="https://cdnjs.cloudflare.com">
+
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <style>
+    :root {
+      --primary: #1a5fb4;
+      --primary-dark: #0d47a1;
+      --accent: #e63946;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --secondary: #f1faee;
+      --text: #1f2937;
+      --text-light: #6b7280;
+      --border: #e5e7eb;
+      --bg: #f9fafb;
+      --shadow: 0 10px 25px rgba(0,0,0,0.08);
+      --phase-bg: #f3f4f6;
+      --header-bg: #0d47a1;
+      --card-bg: #ffffff;
+      --table-hover: #f8fafc;
+    }
+
+    [data-theme="dark"] {
+      --primary: #4a9eff;
+      --primary-dark: #3b82f6;
+      --accent: #f87171;
+      --success: #34d399;
+      --warning: #fbbf24;
+      --secondary: #1f2937;
+      --text: #f3f4f6;
+      --text-light: #9ca3af;
+      --border: #374151;
+      --bg: #111827;
+      --shadow: 0 10px 25px rgba(0,0,0,0.5);
+      --phase-bg: #1f2937;
+      --header-bg: #1f2937;
+      --card-bg: #1f2937;
+      --table-hover: #374151;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.7;
+      transition: background-color 0.3s ease, color 0.3s ease;
+    }
+
+    /* Skip to content link for accessibility */
+    .skip-link {
+      position: absolute;
+      top: -40px;
+      left: 0;
+      background: var(--primary);
+      color: white;
+      padding: 8px;
+      text-decoration: none;
+      z-index: 200;
+    }
+
+    .skip-link:focus {
+      top: 0;
+    }
+
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 1rem;
+    }
+
+    /* Dark Mode Toggle */
+    .theme-toggle {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 150;
+      background: var(--card-bg);
+      border: 2px solid var(--border);
+      border-radius: 50px;
+      padding: 0.5rem 1rem;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      box-shadow: var(--shadow);
+      transition: all 0.3s ease;
+    }
+
+    .theme-toggle:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+    }
+
+    .theme-toggle i {
+      font-size: 1.2rem;
+      color: var(--primary);
+    }
+
+    /* Back to Top Button */
+    .back-to-top {
+      position: fixed;
+      bottom: 30px;
+      right: 30px;
+      background: var(--primary);
+      color: white;
+      width: 50px;
+      height: 50px;
+      border-radius: 50%;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      box-shadow: var(--shadow);
+      z-index: 150;
+      transition: all 0.3s ease;
+      border: none;
+      font-size: 1.5rem;
+    }
+
+    .back-to-top.visible {
+      display: flex;
+    }
+
+    .back-to-top:hover {
+      background: var(--primary-dark);
+      transform: translateY(-5px);
+    }
+
+    /* Progress Indicator */
+    .progress-indicator {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 0%;
+      height: 4px;
+      background: linear-gradient(90deg, var(--primary), var(--accent));
+      z-index: 200;
+      transition: width 0.1s ease;
+    }
+
+    /* Header - Redesigned */
+    header {
+      background: var(--header-bg);
+      color: white;
+      padding: 2rem 0;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      transition: background-color 0.3s ease;
+    }
+
+    .header-content {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .header-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding-bottom: 1.5rem;
+      border-bottom: 1px solid rgba(255,255,255,0.15);
+    }
+
+    .logo-group {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+    }
+
+    .logo-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 1rem 1.5rem;
+      background: white;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      transition: all 0.3s ease;
+      text-decoration: none;
+    }
+
+    .logo-item:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+    }
+
+    .logo-item.dark-bg {
+      background: #1a1a1a;
+    }
+
+    .logo-item img {
+      height: 55px;
+      width: auto;
+      transition: all 0.3s ease;
+    }
+
+    .logo-item:hover img {
+      transform: scale(1.05);
+    }
+
+    .logo-divider {
+      width: 1px;
+      height: 30px;
+      background: rgba(255,255,255,0.3);
+    }
+
+    .header-meta {
+      display: flex;
+      align-items: center;
+      gap: 2rem;
+      font-size: 0.9rem;
+    }
+
+    .meta-item {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      white-space: nowrap;
+    }
+
+    .meta-item i {
+      opacity: 0.8;
+    }
+
+    .course-title {
+      text-align: center;
+      font-size: 1.75rem;
+      font-weight: 700;
+      line-height: 1.3;
+    }
+
+    .course-subtitle {
+      display: block;
+      font-weight: 500;
+      font-size: 1rem;
+      color: rgba(255,255,255,0.85);
+      margin-top: 0.5rem;
+    }
+
+    /* Print-only elements - hide on screen */
+    .hero-logos,
+    .hero-meta {
+      display: none;
+    }
+
+    /* Hero Banner */
+    .hero {
+      background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%);
+      color: white;
+      padding: 3rem 0;
+      margin-bottom: 2.5rem;
+      border-radius: 0 0 20px 20px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
+    }
+
+    .hero-content {
+      position: relative;
+      z-index: 2;
+      text-align: center;
+    }
+
+    .hero h1 {
+      font-size: 2.5rem;
+      font-weight: 900;
+      margin-bottom: 0.75rem;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    }
+
+    .hero p {
+      font-size: 1.1rem;
+      max-width: 700px;
+      margin: 0 auto 1.5rem;
+      opacity: 0.95;
+    }
+
+    .badges {
+      display: flex;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+      margin-top: 1rem;
+    }
+
+    .badge {
+      background: rgba(255,255,255,0.2);
+      backdrop-filter: blur(10px);
+      padding: 0.5rem 1rem;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    /* Phase Timeline - Redesigned */
+    .phase-timeline {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 3rem 2rem;
+      margin: 2rem 0;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+    }
+
+    .phase-title {
+      text-align: center;
+      margin-bottom: 3rem;
+      font-size: 1.6rem;
+      color: var(--primary-dark);
+      font-weight: 700;
+    }
+
+    .timeline {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 0;
+      position: relative;
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 0 2rem;
+    }
+
+    .timeline::before {
+      content: '';
+      position: absolute;
+      top: 30px;
+      left: calc(12.5% + 2rem);
+      right: calc(12.5% + 2rem);
+      height: 4px;
+      background: linear-gradient(to right,
+        var(--primary) 0%,
+        var(--primary) 33.33%,
+        var(--border) 33.33%,
+        var(--border) 100%);
+      z-index: 1;
+    }
+
+    .phase {
+      text-align: center;
+      position: relative;
+      z-index: 2;
+      padding: 0 0.5rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .phase-content {
+      width: 100%;
+    }
+
+    .phase-circle {
+      width: 60px;
+      height: 60px;
+      border-radius: 50%;
+      margin: 0 auto 1rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 1.2rem;
+      transition: all 0.3s ease;
+      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      position: relative;
+      background: var(--card-bg);
+    }
+
+    .phase.active .phase-circle {
+      background: linear-gradient(135deg, var(--primary), var(--primary-dark));
+      color: white;
+      transform: scale(1.2);
+      box-shadow: 0 8px 25px rgba(26,95,180,0.4);
+    }
+
+    .phase.active .phase-circle::after {
+      content: '';
+      position: absolute;
+      inset: -8px;
+      border: 3px solid var(--primary);
+      border-radius: 50%;
+      opacity: 0.3;
+      animation: pulse 2s ease-in-out infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% {
+        transform: scale(1);
+        opacity: 0.3;
+      }
+      50% {
+        transform: scale(1.1);
+        opacity: 0;
+      }
+    }
+
+    .phase.future .phase-circle {
+      background: var(--phase-bg);
+      color: var(--text-light);
+      border: 3px solid var(--border);
+    }
+
+    .phase-label {
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      font-size: 1rem;
+      color: var(--text);
+    }
+
+    .phase.active .phase-label {
+      color: var(--primary);
+    }
+
+    .phase-desc {
+      font-size: 0.85rem;
+      color: var(--text-light);
+      line-height: 1.4;
+    }
+
+    .phase-status {
+      display: inline-block;
+      margin-top: 0.5rem;
+      padding: 0.25rem 0.75rem;
+      border-radius: 12px;
+      font-size: 0.75rem;
+      font-weight: 600;
+      text-transform: uppercase;
+    }
+
+    .phase.active .phase-status {
+      background: rgba(26, 95, 180, 0.1);
+      color: var(--primary);
+    }
+
+    .phase.future .phase-status {
+      background: var(--phase-bg);
+      color: var(--text-light);
+    }
+
+    /* Overview Grid */
+    .overview-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem;
+      margin: 2rem 0;
+    }
+
+    .stat-card {
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 1.5rem;
+      text-align: center;
+      box-shadow: var(--shadow);
+      border: 1px solid var(--border);
+      transition: transform 0.2s;
+    }
+
+    .stat-card:hover {
+      transform: translateY(-4px);
+    }
+
+    .stat-card i {
+      font-size: 2rem;
+      color: var(--primary);
+      margin-bottom: 0.75rem;
+    }
+
+    .stat-card strong {
+      display: block;
+      font-size: 1.5rem;
+      color: var(--primary-dark);
+      margin-bottom: 0.25rem;
+    }
+
+    /* Syllabus Table */
+    .syllabus {
+      background: var(--card-bg);
+      border-radius: 16px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+      margin: 2.5rem 0;
+      border: 1px solid var(--border);
+    }
+
+    .syllabus-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 1.5rem 2rem;
+      background: var(--card-bg);
+      border-bottom: 2px solid var(--border);
+    }
+
+    .syllabus-header h2 {
+      margin: 0;
+      color: var(--primary-dark);
+    }
+
+    .progress-stats {
+      display: flex;
+      gap: 1rem;
+      font-size: 0.9rem;
+    }
+
+    .progress-stat {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.5rem 1rem;
+      background: var(--phase-bg);
+      border-radius: 8px;
+    }
+
+    .progress-stat i {
+      color: var(--primary);
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+
+    thead {
+      background: var(--primary);
+      color: white;
+    }
+
+    thead th {
+      padding: 1.25rem 1rem;
+      text-align: left;
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    tbody tr {
+      border-bottom: 1px solid var(--border);
+      transition: background 0.2s;
+    }
+
+    tbody tr:hover {
+      background: var(--table-hover);
+    }
+
+    tbody tr.completed {
+      opacity: 0.7;
+    }
+
+    tbody tr.completed td {
+      position: relative;
+    }
+
+    tbody tr.completed .day::after {
+      content: ' ✓';
+      color: var(--success);
+      font-weight: bold;
+    }
+
+    .day-checkbox {
+      cursor: not-allowed;
+      margin-right: 0.5rem;
+      width: 20px;
+      height: 20px;
+      vertical-align: middle;
+      pointer-events: none;
+      opacity: 0.6;
+    }
+
+    tbody td {
+      padding: 1.25rem 1rem;
+      vertical-align: top;
+    }
+
+    .day {
+      font-weight: 700;
+      color: var(--primary-dark);
+      font-size: 1.1rem;
+    }
+
+    .notes-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--primary);
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.9rem;
+      padding: 0.35rem 0.75rem;
+      border-radius: 8px;
+      background: #ebf5ff;
+      transition: all 0.2s;
+      white-space: nowrap;
+    }
+
+    .notes-link:hover {
+      background: #dbeafe;
+      transform: translateY(-1px);
+    }
+
+    .notes-link i {
+      font-size: 1rem;
+    }
+
+    .notes-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.5rem;
+      margin-top: 0.5rem;
+    }
+
+    .objectives ul,
+    .activities ul {
+      margin: 0.5rem 0;
+      padding-left: 1.3rem;
+      font-size: 0.95rem;
+    }
+
+    .objectives li,
+    .activities li {
+      margin: 0.25rem 0;
+    }
+
+    /* Final Project */
+    .project {
+      background: linear-gradient(135deg, #059669, #047857);
+      color: white;
+      border-radius: 16px;
+      padding: 2.5rem;
+      margin: 2.5rem 0;
+      text-align: center;
+      box-shadow: var(--shadow);
+    }
+
+    .project h2 {
+      margin-bottom: 1rem;
+      font-size: 1.9rem;
+    }
+
+    .project-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.5rem;
+      margin-top: 2rem;
+    }
+
+    .project-item {
+      background: rgba(255,255,255,0.15);
+      padding: 1.25rem;
+      border-radius: 12px;
+      backdrop-filter: blur(10px);
+    }
+
+    .project-item strong {
+      display: block;
+      margin-bottom: 0.5rem;
+      font-size: 1.1rem;
+    }
+
+    /* Footer */
+    footer {
+      background: var(--card-bg);
+      border-top: 1px solid var(--border);
+      padding: 2rem 0;
+      margin-top: 1.5rem;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+    }
+
+    .footer-content {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 2rem;
+      flex-wrap: wrap;
+    }
+
+    .footer-info {
+      text-align: center;
+      font-size: 0.9rem;
+      color: var(--text-light);
+    }
+
+    .footer-info strong {
+      color: var(--text);
+    }
+
+    @media (max-width: 992px) {
+      header {
+        padding: 1.5rem 0;
+      }
+
+      .header-top {
+        flex-direction: column;
+        gap: 1.5rem;
+        align-items: stretch;
+      }
+
+      .logo-group {
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+      }
+
+      .logo-item {
+        padding: 0.75rem 1rem;
+      }
+
+      .logo-item img {
+        height: 45px;
+      }
+
+      .logo-divider {
+        display: none;
+      }
+
+      .header-meta {
+        justify-content: center;
+        gap: 1rem;
+        flex-wrap: wrap;
+        font-size: 0.85rem;
+      }
+
+      .course-title {
+        font-size: 1.5rem;
+      }
+
+      .course-subtitle {
+        font-size: 0.95rem;
+      }
+
+      .hero h1 {
+        font-size: 2rem;
+      }
+
+      .timeline {
+        grid-template-columns: 1fr;
+        padding: 0;
+        gap: 2rem;
+      }
+
+      .timeline::before {
+        left: 30px;
+        top: 0;
+        bottom: 0;
+        width: 4px;
+        height: 100%;
+        right: auto;
+        background: linear-gradient(to bottom,
+          var(--primary) 0%,
+          var(--primary) 25%,
+          var(--border) 25%,
+          var(--border) 100%);
+      }
+
+      .phase {
+        display: flex;
+        align-items: flex-start;
+        text-align: left;
+        padding-left: 0;
+      }
+
+      .phase-circle {
+        margin: 0 1.5rem 0 0;
+        width: 60px;
+        height: 60px;
+        font-size: 1rem;
+        flex-shrink: 0;
+      }
+
+      .phase.active .phase-circle {
+        transform: scale(1);
+      }
+
+      .phase-content {
+        flex: 1;
+        padding-top: 0.5rem;
+      }
+
+      .phase-label {
+        font-size: 1.1rem;
+      }
+    }
+
+    @media (max-width: 768px) {
+      .theme-toggle {
+        top: 10px;
+        right: 10px;
+        padding: 0.4rem 0.8rem;
+        font-size: 0.9rem;
+      }
+
+      .back-to-top {
+        bottom: 20px;
+        right: 20px;
+        width: 45px;
+        height: 45px;
+      }
+
+      thead {
+        display: none;
+      }
+
+      tbody td {
+        display: block;
+        width: 100%;
+        padding: 1rem;
+        border-bottom: 1px solid var(--border);
+      }
+
+      tbody td:before {
+        content: attr(data-label);
+        font-weight: 600;
+        color: var(--primary);
+        display: block;
+        margin-bottom: 0.5rem;
+      }
+
+      .notes-links {
+        justify-content: center;
+      }
+
+      .header-top {
+        padding-bottom: 1rem;
+      }
+
+      .logo-group {
+        gap: 0.5rem;
+      }
+
+      .logo-item {
+        padding: 0.6rem 1rem;
+        font-size: 0.85rem;
+      }
+
+      .logo-item img {
+        height: 40px;
+      }
+
+      .header-meta {
+        font-size: 0.8rem;
+        gap: 0.75rem;
+      }
+
+      .meta-item span {
+        font-size: 0.85rem;
+      }
+
+      .course-title {
+        font-size: 1.3rem;
+      }
+
+      .course-subtitle {
+        font-size: 0.85rem;
+      }
+
+      .syllabus-header {
+        flex-direction: column;
+        gap: 1rem;
+      }
+
+      .progress-stats {
+        flex-direction: column;
+        width: 100%;
+      }
+    }
+
+    /* Print Styles - Enhanced for PDF */
+    @media print {
+      @page {
+        size: A4;
+        margin: 1.5cm;
+      }
+
+      * {
+        -webkit-print-color-adjust: exact !important;
+        print-color-adjust: exact !important;
+        color-adjust: exact !important;
+      }
+
+      .theme-toggle,
+      .back-to-top,
+      .progress-indicator,
+      .skip-link {
+        display: none !important;
+      }
+
+      body {
+        background: white;
+        color: #1f2937;
+      }
+
+      main {
+        page-break-before: auto;
+      }
+
+      header {
+        position: static !important;
+        box-shadow: none !important;
+        background: #0d47a1 !important;
+        color: white !important;
+        padding: 2rem 0 !important;
+        page-break-after: avoid !important;
+        page-break-inside: avoid !important;
+      }
+
+      .header-content {
+        color: white !important;
+      }
+
+      .header-top {
+        padding-bottom: 1.5rem !important;
+        border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+      }
+
+      .logo-group {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 2rem !important;
+      }
+
+      .logo-item {
+        background: white !important;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+        padding: 1rem 1.5rem !important;
+        border-radius: 8px !important;
+      }
+
+      .logo-item.dark-bg {
+        background: #1a1a1a !important;
+      }
+
+      .logo-item img {
+        height: 55px !important;
+      }
+
+      .logo-divider {
+        width: 1px !important;
+        height: 40px !important;
+        background: rgba(255,255,255,0.3) !important;
+      }
+
+      .header-meta {
+        display: flex !important;
+        justify-content: center !important;
+        gap: 2.5rem !important;
+      }
+
+      .meta-item,
+      .course-title,
+      .course-subtitle {
+        color: white !important;
+      }
+
+      .course-title {
+        font-size: 1.75rem !important;
+        margin-top: 1.5rem !important;
+      }
+
+      .course-subtitle {
+        font-size: 1rem !important;
+      }
+
+      .hero {
+        background: linear-gradient(135deg, #1e40af 0%, #1e3a8a 100%) !important;
+        color: white !important;
+        padding: 0 !important;
+        page-break-after: always !important;
+        page-break-inside: avoid !important;
+        margin-bottom: 0 !important;
+        border-radius: 0 !important;
+        height: calc(100vh - 336px) !important;
+        max-height: calc(100vh - 336px) !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        overflow: hidden !important;
+      }
+
+      .hero .container {
+        padding: 3rem 2rem !important;
+        width: 100% !important;
+      }
+
+      .hero-content {
+        max-width: 700px !important;
+        margin: 0 auto !important;
+        text-align: center !important;
+      }
+
+      /* Hide print-only elements in print since we have the header */
+      .hero-logos,
+      .hero-meta {
+        display: none !important;
+      }
+
+      .hero h1 {
+        color: white !important;
+        font-size: 2.5rem !important;
+        margin-bottom: 1.5rem !important;
+        text-align: center !important;
+      }
+
+      .hero p {
+        color: white !important;
+        font-size: 1.1rem !important;
+        margin-bottom: 2.5rem !important;
+        text-align: center !important;
+        line-height: 1.6 !important;
+      }
+
+      .badges {
+        justify-content: center !important;
+        gap: 1rem !important;
+        margin-top: 2rem !important;
+      }
+
+      .badge {
+        color: white !important;
+        background: rgba(255,255,255,0.2) !important;
+        border: 1px solid rgba(255,255,255,0.3) !important;
+      }
+
+      .badge i {
+        color: white !important;
+      }
+
+      .phase-timeline {
+        background: white !important;
+        border: 2px solid #e5e7eb !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        margin: 1.5rem 0 !important;
+        padding: 2.5rem 2rem !important;
+      }
+
+      .phase-title {
+        color: #0d47a1 !important;
+        margin-bottom: 2.5rem !important;
+        font-size: 1.5rem !important;
+      }
+
+      .phase-title i {
+        color: #0d47a1 !important;
+      }
+
+      .timeline {
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 2.5rem 2rem !important;
+        position: relative !important;
+        max-width: 700px !important;
+        margin: 0 auto !important;
+        padding: 0 !important;
+      }
+
+      .timeline::before {
+        display: none !important;
+      }
+
+      .phase {
+        text-align: center !important;
+        position: relative !important;
+        z-index: 2 !important;
+        padding: 0 0.5rem !important;
+        display: block !important;
+      }
+
+      .phase-circle {
+        width: 60px !important;
+        height: 60px !important;
+        border-radius: 50% !important;
+        margin: 0 auto 1rem !important;
+        display: flex !important;
+        align-items: center !important;
+        justify-content: center !important;
+        font-weight: 700 !important;
+        font-size: 1.2rem !important;
+        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        position: relative !important;
+      }
+
+      .phase.active .phase-circle {
+        background: linear-gradient(135deg, #1a5fb4, #0d47a1) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: 0 6px 20px rgba(26,95,180,0.3) !important;
+      }
+
+      .phase.active .phase-circle::after {
+        display: none !important;
+      }
+
+      .phase.active .phase-label {
+        color: #1a5fb4 !important;
+        font-weight: 700 !important;
+      }
+
+      .phase.active .phase-status {
+        background: rgba(26, 95, 180, 0.15) !important;
+        color: #1a5fb4 !important;
+        display: inline-block !important;
+        margin-top: 0.5rem !important;
+        padding: 0.25rem 0.75rem !important;
+        border-radius: 12px !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+      }
+
+      .phase.active .phase-status i {
+        color: #1a5fb4 !important;
+      }
+
+      .phase.future .phase-circle {
+        background: #f3f4f6 !important;
+        color: #6b7280 !important;
+        border: 3px solid #e5e7eb !important;
+      }
+
+      .phase.future .phase-status {
+        background: #f3f4f6 !important;
+        color: #6b7280 !important;
+        display: inline-block !important;
+        margin-top: 0.5rem !important;
+        padding: 0.25rem 0.75rem !important;
+        border-radius: 12px !important;
+        font-size: 0.75rem !important;
+        font-weight: 600 !important;
+      }
+
+      .phase.future .phase-status i {
+        color: #6b7280 !important;
+      }
+
+      .phase-label {
+        font-weight: 700 !important;
+        margin-bottom: 0.5rem !important;
+        font-size: 1rem !important;
+        color: #1f2937 !important;
+      }
+
+      .phase-desc {
+        font-size: 0.85rem !important;
+        color: #6b7280 !important;
+        line-height: 1.4 !important;
+      }
+
+      .phase-content {
+        width: 100% !important;
+      }
+
+      .overview-grid {
+        margin: 1.5rem 0 !important;
+        display: grid !important;
+        grid-template-columns: repeat(2, 1fr) !important;
+        gap: 1.5rem !important;
+        max-width: 700px !important;
+        margin-left: auto !important;
+        margin-right: auto !important;
+      }
+
+      .stat-card {
+        background: white !important;
+        border: 2px solid #e5e7eb !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+        padding: 1.5rem !important;
+      }
+
+      .stat-card i {
+        color: #1a5fb4 !important;
+        opacity: 1 !important;
+      }
+
+      .stat-card strong {
+        color: #0d47a1 !important;
+      }
+
+      .stat-card div {
+        color: #1f2937 !important;
+      }
+
+      .syllabus {
+        background: white !important;
+        border: 2px solid #e5e7eb !important;
+        box-shadow: none !important;
+        page-break-before: always;
+      }
+
+      .syllabus-header {
+        background: white !important;
+        border-bottom: 2px solid #e5e7eb !important;
+      }
+
+      .syllabus-header h2 {
+        color: #0d47a1 !important;
+      }
+
+      .progress-stat {
+        background: #f3f4f6 !important;
+      }
+
+      .progress-stat i {
+        color: #1a5fb4 !important;
+      }
+
+      thead {
+        background: #1a5fb4 !important;
+        color: white !important;
+      }
+
+      thead th {
+        color: white !important;
+      }
+
+      tbody tr {
+        border-bottom: 1px solid #e5e7eb !important;
+      }
+
+      tbody tr.completed {
+        opacity: 0.7;
+      }
+
+      tbody tr.completed .day::after {
+        content: ' ✓';
+        color: #10b981 !important;
+        font-weight: bold;
+      }
+
+      .day {
+        color: #0d47a1 !important;
+      }
+
+      .notes-link {
+        background: #ebf5ff !important;
+        color: #1a5fb4 !important;
+      }
+
+      table {
+        page-break-inside: auto;
+      }
+
+      tr {
+        page-break-inside: avoid;
+        page-break-after: auto;
+      }
+
+      .project {
+        background: linear-gradient(135deg, #059669, #047857) !important;
+        color: white !important;
+        border: none !important;
+        box-shadow: none !important;
+        page-break-inside: avoid;
+      }
+
+      .project h2,
+      .project p,
+      .project-item,
+      .project-item strong {
+        color: white !important;
+      }
+
+      footer {
+        background: white !important;
+        border-top: 2px solid #e5e7eb !important;
+        page-break-inside: avoid;
+      }
+
+      .footer-info {
+        color: #1f2937 !important;
+      }
+
+      .footer-info a {
+        color: #1a5fb4 !important;
+        text-decoration: underline;
+      }
+
+      a.notes-link[href]:after,
+      .logo-item[href]:after {
+        content: none !important;
+      }
+    }
+  </style>
+</head>
+<body>
+  <!-- Skip to content for accessibility -->
+  <a href="#main-content" class="skip-link">Skip to main content</a>
+
+  <!-- Progress indicator -->
+  <div class="progress-indicator" role="progressbar" aria-label="Page scroll progress"></div>
+
+  <!-- Dark mode toggle -->
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
+    <i class="fas fa-moon" id="themeIcon"></i>
+    <span id="themeText">Dark</span>
+  </button>
+
+  <!-- Back to top button -->
+  <button class="back-to-top" id="backToTop" aria-label="Back to top">
+    <i class="fas fa-arrow-up"></i>
+  </button>
+
+  <!-- Header -->
+  <header role="banner">
+    <div class="container">
+      <div class="header-content">
+        <div class="header-top">
+          <div class="logo-group">
+            <a href="https://cs50.harvard.edu/python/" target="_blank" rel="noopener noreferrer" class="logo-item dark-bg" aria-label="Visit Harvard CS50 Python Course">
+              <img src="https://pll.harvard.edu/themes/custom/twel_scholar/logo.svg" alt="Harvard CS50">
+            </a>
+            <div class="logo-divider"></div>
+            <a href="https://sai.ge/ka/" target="_blank" rel="noopener noreferrer" class="logo-item dark-bg" aria-label="Visit Public Audit Institute Georgia">
+              <img src="https://www.sai.ge/Uploads/2020/9/logo-GEO.png" alt="Public Audit Institute Georgia">
+            </a>
+            <div class="logo-divider"></div>
+            <a href="https://gnerc.org/" target="_blank" rel="noopener noreferrer" class="logo-item" aria-label="Visit GNERC">
+              <img src="https://gnerc.org/_website/images/logo_ge.svg" alt="GNERC">
+            </a>
+          </div>
+          <div class="header-meta">
+            <div class="meta-item">
+              <i class="fas fa-chalkboard-teacher"></i>
+              <span>Otar Zakalashvili</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-calendar"></i>
+              <span>Nov 12, 2025</span>
+            </div>
+            <div class="meta-item">
+              <i class="fas fa-clock"></i>
+              <span>2h/session</span>
+            </div>
+          </div>
+        </div>
+        <div class="course-title">
+          Python Programming Foundations
+          <span class="course-subtitle">Phase 1 – GNERC Digital Skills Initiative</span>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="hero">
+    <!-- Print-only logos at top -->
+    <div class="hero-logos">
+      <img src="https://pll.harvard.edu/themes/custom/twel_scholar/logo.svg" alt="Harvard CS50">
+      <div class="logo-divider"></div>
+      <img src="https://www.sai.ge/Uploads/2020/9/logo-GEO.png" alt="Public Audit Institute Georgia">
+      <div class="logo-divider"></div>
+      <img src="https://gnerc.org/_website/images/logo_ge.svg" alt="GNERC">
+    </div>
+
+    <div class="container">
+      <div class="hero-content">
+        <h1>Python Programming for GNERC</h1>
+        <p>A 15-day intensive Phase 1 training program based on Harvard's CS50 Introduction to Programming with Python — tailored for regulatory data automation, validation, and reporting.</p>
+        <div class="badges">
+          <div class="badge"><i class="fas fa-graduation-cap"></i> Beginner Level</div>
+          <div class="badge"><i class="fas fa-clock"></i> 2 Hours/Session</div>
+          <div class="badge"><i class="fas fa-certificate"></i> Certificate Upon Completion</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Print-only meta at bottom -->
+    <div class="hero-meta">
+      <div>
+        <i class="fas fa-chalkboard-teacher"></i>
+        <span>Trainer: Otar Zakalashvili</span>
+      </div>
+      <div>
+        <i class="fas fa-calendar"></i>
+        <span>Start: Nov 12, 2025</span>
+      </div>
+      <div>
+        <i class="fas fa-clock"></i>
+        <span>2 hours/session</span>
+      </div>
+    </div>
+  </section>
+
+  <main id="main-content" class="container">
+
+    <!-- Phase Timeline -->
+    <section class="phase-timeline" aria-label="Training Roadmap">
+      <h3 class="phase-title"><i class="fas fa-route"></i> Training Roadmap</h3>
+      <div class="timeline">
+        <div class="phase active">
+          <div class="phase-circle" aria-label="Phase 1 - Current">1</div>
+          <div class="phase-content">
+            <div class="phase-label">Python Foundations</div>
+            <div class="phase-desc">Core syntax, logic, files, testing</div>
+            <div class="phase-status"><i class="fas fa-play-circle"></i> Current Phase</div>
+          </div>
+        </div>
+        <div class="phase future">
+          <div class="phase-circle" aria-label="Phase 2 - Upcoming">2</div>
+          <div class="phase-content">
+            <div class="phase-label">Data Analytics</div>
+            <div class="phase-desc">Pandas, NumPy, Statistics</div>
+            <div class="phase-status"><i class="fas fa-lock"></i> Coming Soon</div>
+          </div>
+        </div>
+        <div class="phase future">
+          <div class="phase-circle" aria-label="Phase 3 - Upcoming">3</div>
+          <div class="phase-content">
+            <div class="phase-label">Visualization & Reporting</div>
+            <div class="phase-desc">Matplotlib, Seaborn, Dash</div>
+            <div class="phase-status"><i class="fas fa-lock"></i> Coming Soon</div>
+          </div>
+        </div>
+        <div class="phase future">
+          <div class="phase-circle" aria-label="Phase 4 - Upcoming">4</div>
+          <div class="phase-content">
+            <div class="phase-label">Regulatory Automation</div>
+            <div class="phase-desc">Custom tools & workflows</div>
+            <div class="phase-status"><i class="fas fa-lock"></i> Coming Soon</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Overview -->
+    <div class="overview-grid">
+      <div class="stat-card">
+        <i class="fas fa-calendar-alt"></i>
+        <strong>15</strong>
+        <div>Training Days</div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-clock"></i>
+        <strong>2</strong>
+        <div>Hours per Session</div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-users"></i>
+        <strong>GNERC</strong>
+        <div>Employees Only</div>
+      </div>
+      <div class="stat-card">
+        <i class="fas fa-check-circle"></i>
+        <strong>Phase 1</strong>
+        <div>Foundation Complete</div>
+      </div>
+    </div>
+
+    <!-- Syllabus -->
+    <article class="syllabus" aria-label="Course Syllabus">
+      <div class="syllabus-header">
+        <h2><i class="fas fa-book"></i> Course Syllabus</h2>
+        <div class="progress-stats">
+          <div class="progress-stat">
+            <i class="fas fa-check-circle"></i>
+            <span><strong id="completedDays">0</strong> / 15 Days Completed</span>
+          </div>
+          <div class="progress-stat">
+            <i class="fas fa-chart-line"></i>
+            <span><strong id="progressPercent">0</strong>% Progress</span>
+          </div>
+        </div>
+      </div>
+      <table role="table">
+        <thead>
+          <tr>
+            <th>Day</th>
+            <th>Objectives</th>
+            <th>Key Topics</th>
+            <th>Hands-On</th>
+            <th>CS50 Notes</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr data-day="1">
+            <td class="day" data-label="Day">
+              <input type="checkbox" class="day-checkbox" id="day1" aria-label="Mark Day 1 as completed">
+              <label for="day1">Day 1</label>
+            </td>
+            <td data-label="Objectives"><ul><li>Get started with Python</li><li>Write first programs</li></ul></td>
+            <td data-label="Topics"><code>print()</code>, <code>input()</code>, variables, strings, <code>f-strings</code></td>
+            <td data-label="Activities"><ul><li>Hello World</li><li>Simple calculator</li><li>Format name & age</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/0/" target="_blank" class="notes-link">Week 0</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-day="2">
+            <td class="day" data-label="Day">
+              <input type="checkbox" class="day-checkbox" id="day2" aria-label="Mark Day 2 as completed">
+              <label for="day2">Day 2</label>
+            </td>
+            <td data-label="Objectives"><ul><li>Master functions</li><li>Decision-making</li></ul></td>
+            <td data-label="Topics"><code>def</code>, <code>if/elif/else</code>, <code>match</code>, operators</td>
+            <td data-label="Activities"><ul><li>Grade classifier</li><li>Even/odd checker</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/0/" target="_blank" class="notes-link">Week 0</a>
+                <a href="https://cs50.harvard.edu/python/notes/1/" target="_blank" class="notes-link">Week 1</a>
+              </div>
+            </td>
+          </tr>
+          <tr data-day="3">
+            <td class="day" data-label="Day">
+              <input type="checkbox" class="day-checkbox" id="day3" aria-label="Mark Day 3 as completed">
+              <label for="day3">Day 3</label>
+            </td>
+            <td data-label="Objectives"><ul><li>Control flow with loops</li><li>Input validation</li></ul></td>
+            <td data-label="Topics"><code>while</code>, <code>break</code>, infinite loops</td>
+            <td data-label="Activities"><ul><li>Repeated meow</li><li>Retry logic</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/1/" target="_blank" class="notes-link">Week 1</a>
+                <a href="https://cs50.harvard.edu/python/notes/2/" target="_blank" class="notes-link">Week 2</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 4</td>
+            <td data-label="Objectives"><ul><li>Iterate with <code>for</code></li><li>Work with lists</li></ul></td>
+            <td data-label="Topics"><code>range()</code>, <code>list</code>, <code>append()</code></td>
+            <td data-label="Activities"><ul><li>Print pyramids</li><li>Sort names</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/2/" target="_blank" class="notes-link">Week 2</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 5</td>
+            <td data-label="Objectives"><ul><li>Organize data</li><li>Nested structures</li></ul></td>
+            <td data-label="Topics"><code>dict</code>, key-value, list of dicts</td>
+            <td data-label="Activities"><ul><li>Student registry</li><li>Lookup system</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/2/" target="_blank" class="notes-link">Week 2</a>
+                <a href="https://cs50.harvard.edu/python/notes/3/" target="_blank" class="notes-link">Week 3</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 6</td>
+            <td data-label="Objectives"><ul><li>Robust error handling</li><li>Defensive coding</li></ul></td>
+            <td data-label="Topics"><code>try/except</code>, <code>ValueError</code>, <code>pass</code></td>
+            <td data-label="Activities"><ul><li>Safe input</li><li>ID validator</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/3/" target="_blank" class="notes-link">Week 3</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 7</td>
+            <td data-label="Objectives"><ul><li>Use external libraries</li><li>CLI arguments</li></ul></td>
+            <td data-label="Topics"><code>random</code>, <code>sys.argv</code>, <code>exit()</code></td>
+            <td data-label="Activities"><ul><li>Coin flip</li><li>CLI greeter</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/4/" target="_blank" class="notes-link">Week 4</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 8</td>
+            <td data-label="Objectives"><ul><li>Work with APIs</li><li>Install packages</li></ul></td>
+            <td data-label="Topics"><code>requests</code>, JSON, <code>pip</code></td>
+            <td data-label="Activities"><ul><li>iTunes search</li><li>Custom module</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/4/" target="_blank" class="notes-link">Week 4</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 9</td>
+            <td data-label="Objectives"><ul><li>Test-driven development</li><li>Code quality</li></ul></td>
+            <td data-label="Topics"><code>pytest</code>, <code>assert</code>, test files</td>
+            <td data-label="Activities"><ul><li>Test calculator</li><li>Exception tests</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/5/" target="_blank" class="notes-link">Week 5</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 10</td>
+            <td data-label="Objectives"><ul><li>File I/O operations</li><li>CSV processing</li></ul></td>
+            <td data-label="Topics"><code>open()</code>, <code>csv.reader</code>, <code>DictWriter</code></td>
+            <td data-label="Activities"><ul><li>Log system</li><li>Export report</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/6/" target="_blank" class="notes-link">Week 6</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 11</td>
+            <td data-label="Objectives"><ul><li>Binary files & images</li><li>Data sorting</li></ul></td>
+            <td data-label="Topics"><code>Pillow</code>, <code>lambda</code>, <code>sorted()</code></td>
+            <td data-label="Activities"><ul><li>Animated GIF</li><li>Sort CSV</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/6/" target="_blank" class="notes-link">Week 6</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 12</td>
+            <td data-label="Objectives"><ul><li>Pattern matching</li><li>Data cleaning</li></ul></td>
+            <td data-label="Topics"><code>re.search()</code>, groups, flags</td>
+            <td data-label="Activities"><ul><li>Email validator</li><li>Log parser</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/7/" target="_blank" class="notes-link">Week 7</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 13</td>
+            <td data-label="Objectives"><ul><li>OOP fundamentals</li><li>Reusable classes</li></ul></td>
+            <td data-label="Topics"><code>class</code>, <code>@property</code>, <code>raise</code></td>
+            <td data-label="Activities"><ul><li>Employee class</li><li>Form validator</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/8/" target="_blank" class="notes-link">Week 8</a>
+              </div>
+            </td>
+          </tr>
+          <tr>
+            <td class="day" data-label="Day">Day 14</td>
+            <td data-label="Objectives"><ul><li>Advanced Python</li><li>CLI tools</li></ul></td>
+            <td data-label="Topics">Inheritance, <code>argparse</code>, generators</td>
+            <td data-label="Activities"><ul><li>Payroll processor</li><li>Type-checked script</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/notes/8/" target="_blank" class="notes-link">Week 8</a>
+                <a href="https://cs50.harvard.edu/python/notes/9/" target="_blank" class="notes-link">Week 9</a>
+              </div>
+            </td>
+          </tr>
+          <tr style="background:#ecfdf5;">
+            <td class="day" data-label="Day">Day 15</td>
+            <td data-label="Objectives"><ul><li>Integrate all skills</li><li>Build real tool</li></ul></td>
+            <td data-label="Topics">Full review + project</td>
+            <td data-label="Activities"><ul><li>Final Project</li><li>Demo & peer review</li></ul></td>
+            <td data-label="CS50 Notes">
+              <div class="notes-links">
+                <a href="https://cs50.harvard.edu/python/project/" target="_blank" class="notes-link">Final Project</a>
+              </div>
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </article>
+
+    <!-- Final Project -->
+    <div class="project">
+      <h2>Phase 1 Final Project</h2>
+      <p>Build a practical automation tool for GNERC regulatory workflows. Submit with tests, docs, and demo.</p>
+      <div class="project-grid">
+        <div class="project-item">
+          <strong>project.py</strong>
+          <div>Main script</div>
+        </div>
+        <div class="project-item">
+          <strong>test_project.py</strong>
+          <div>3+ tests</div>
+        </div>
+        <div class="project-item">
+          <strong>requirements.txt</strong>
+          <div>Packages</div>
+        </div>
+        <div class="project-item">
+          <strong>README.md</strong>
+          <div>Guide</div>
+        </div>
+      </div>
+      <p style="margin-top:1.5rem; opacity:0.9;">
+        <strong>Ideas:</strong> Tariff Validator • Report Generator • Data Cleaner • License Checker
+      </p>
+    </div>
+
+  </main>
+
+  <!-- Footer -->
+  <footer role="contentinfo">
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-info">
+          <p><strong>Organized by:</strong> Public Audit Institute of Georgia</p>
+        </div>
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Dark Mode Toggle
+    const themeToggle = document.getElementById('themeToggle');
+    const themeIcon = document.getElementById('themeIcon');
+    const themeText = document.getElementById('themeText');
+    const body = document.body;
+
+    // Load saved theme
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    if (savedTheme === 'dark') {
+      body.setAttribute('data-theme', 'dark');
+      themeIcon.classList.replace('fa-moon', 'fa-sun');
+      themeText.textContent = 'Light';
+    }
+
+    themeToggle.addEventListener('click', () => {
+      const currentTheme = body.getAttribute('data-theme');
+      if (currentTheme === 'dark') {
+        body.removeAttribute('data-theme');
+        themeIcon.classList.replace('fa-sun', 'fa-moon');
+        themeText.textContent = 'Dark';
+        localStorage.setItem('theme', 'light');
+      } else {
+        body.setAttribute('data-theme', 'dark');
+        themeIcon.classList.replace('fa-moon', 'fa-sun');
+        themeText.textContent = 'Light';
+        localStorage.setItem('theme', 'dark');
+      }
+    });
+
+    // Back to Top Button
+    const backToTop = document.getElementById('backToTop');
+    window.addEventListener('scroll', () => {
+      if (window.pageYOffset > 300) {
+        backToTop.classList.add('visible');
+      } else {
+        backToTop.classList.remove('visible');
+      }
+    });
+
+    backToTop.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    });
+
+    // Progress Indicator
+    window.addEventListener('scroll', () => {
+      const winScroll = document.body.scrollTop || document.documentElement.scrollTop;
+      const height = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+      const scrolled = (winScroll / height) * 100;
+      document.querySelector('.progress-indicator').style.width = scrolled + '%';
+    });
+
+    // Progress Tracking with localStorage
+    const totalDays = 15;
+    let completedDays = JSON.parse(localStorage.getItem('completedDays')) || [];
+
+    // Add checkboxes to all day rows dynamically
+    const tableRows = document.querySelectorAll('tbody tr');
+    tableRows.forEach((row, index) => {
+      const dayNum = index + 1;
+      row.setAttribute('data-day', dayNum);
+
+      const dayCell = row.querySelector('.day');
+      if (dayCell && !dayCell.querySelector('input')) {
+        const currentText = dayCell.textContent.trim();
+        dayCell.innerHTML = `
+          <input type="checkbox" class="day-checkbox" id="day${dayNum}" aria-label="Mark Day ${dayNum} as completed">
+          <label for="day${dayNum}">${currentText}</label>
+        `;
+      }
+    });
+
+    // Load saved progress
+    function updateProgress() {
+      const completed = completedDays.length;
+      const percent = Math.round((completed / totalDays) * 100);
+
+      document.getElementById('completedDays').textContent = completed;
+      document.getElementById('progressPercent').textContent = percent;
+
+      // Update checkboxes and row styles
+      completedDays.forEach(day => {
+        const checkbox = document.getElementById(`day${day}`);
+        const row = document.querySelector(`tr[data-day="${day}"]`);
+        if (checkbox) checkbox.checked = true;
+        if (row) row.classList.add('completed');
+      });
+    }
+
+    // Programmatic function to set completed days (admin use only)
+    window.setCompletedDays = function(daysArray) {
+      if (!Array.isArray(daysArray)) {
+        console.error('setCompletedDays: Argument must be an array of day numbers');
+        return;
+      }
+
+      completedDays = daysArray.filter(day => day >= 1 && day <= totalDays);
+      localStorage.setItem('completedDays', JSON.stringify(completedDays));
+      updateProgress();
+
+      console.log(`✅ Completed days updated: ${completedDays.join(', ')}`);
+      console.log(`📊 Progress: ${completedDays.length}/${totalDays} (${Math.round((completedDays.length / totalDays) * 100)}%)`);
+    };
+
+    // Function to add a single completed day
+    window.markDayComplete = function(dayNum) {
+      if (dayNum < 1 || dayNum > totalDays) {
+        console.error(`markDayComplete: Day must be between 1 and ${totalDays}`);
+        return;
+      }
+
+      if (!completedDays.includes(dayNum)) {
+        completedDays.push(dayNum);
+        localStorage.setItem('completedDays', JSON.stringify(completedDays));
+        updateProgress();
+        console.log(`✅ Day ${dayNum} marked as complete`);
+      } else {
+        console.log(`ℹ️ Day ${dayNum} is already marked as complete`);
+      }
+    };
+
+    // Function to remove a completed day
+    window.markDayIncomplete = function(dayNum) {
+      if (dayNum < 1 || dayNum > totalDays) {
+        console.error(`markDayIncomplete: Day must be between 1 and ${totalDays}`);
+        return;
+      }
+
+      if (completedDays.includes(dayNum)) {
+        completedDays = completedDays.filter(d => d !== dayNum);
+        localStorage.setItem('completedDays', JSON.stringify(completedDays));
+        updateProgress();
+        console.log(`✅ Day ${dayNum} marked as incomplete`);
+      } else {
+        console.log(`ℹ️ Day ${dayNum} is already marked as incomplete`);
+      }
+    };
+
+    // Function to get current progress
+    window.getProgress = function() {
+      const progress = {
+        completedDays: completedDays,
+        total: totalDays,
+        count: completedDays.length,
+        percentage: Math.round((completedDays.length / totalDays) * 100)
+      };
+      console.log('📊 Current Progress:', progress);
+      return progress;
+    };
+
+    // Function to reset all progress
+    window.resetProgress = function() {
+      if (confirm('Are you sure you want to reset all progress?')) {
+        completedDays = [];
+        localStorage.setItem('completedDays', JSON.stringify(completedDays));
+        updateProgress();
+        console.log('🔄 Progress reset to 0%');
+      }
+    };
+
+    updateProgress();
+
+    // Log available functions on page load
+    console.log('📚 Course Progress Functions Available:');
+    console.log('  • setCompletedDays([1,2,3,...]) - Set multiple completed days');
+    console.log('  • markDayComplete(dayNum) - Mark a single day as complete');
+    console.log('  • markDayIncomplete(dayNum) - Mark a single day as incomplete');
+    console.log('  • getProgress() - View current progress');
+    console.log('  • resetProgress() - Reset all progress to 0%');
+    console.log('');
+    console.log('💡 Example: markDayComplete(1) or setCompletedDays([1,2,3,4,5])');
+    getProgress();
+
+    // Keyboard navigation improvements
+    document.addEventListener('keydown', (e) => {
+      // Escape key closes modals or returns to top
+      if (e.key === 'Escape') {
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+      }
+    });
+
+    // Add focus visible for better keyboard navigation
+    document.querySelectorAll('a, button, input').forEach(el => {
+      el.addEventListener('focus', () => {
+        el.style.outline = '2px solid var(--primary)';
+        el.style.outlineOffset = '2px';
+      });
+      el.addEventListener('blur', () => {
+        el.style.outline = '';
+        el.style.outlineOffset = '';
+      });
+    });
+  </script>
+</body>
+</html>
