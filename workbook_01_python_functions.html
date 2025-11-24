@@ -1,0 +1,1025 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Functions Workbook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f23;
+            color: #cccccc;
+            overflow-x: hidden;
+        }
+
+        .app-container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 350px;
+            background: linear-gradient(180deg, #1e1e3f 0%, #2d1b69 100%);
+            padding: 20px;
+            box-shadow: 4px 0 20px rgba(0,0,0,0.3);
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .logo {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #4a4a6a;
+        }
+
+        .logo h1 {
+            font-size: 1.8rem;
+            background: linear-gradient(45deg, #00d4ff, #ff00ff, #00ff88);
+            background-size: 200% 200%;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            animation: gradientShift 3s ease infinite;
+            margin-bottom: 5px;
+        }
+
+        @keyframes gradientShift {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        .progress-overview {
+            background: rgba(255,255,255,0.1);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+
+        .progress-text {
+            font-size: 0.9rem;
+            color: #00ff88;
+            font-weight: 600;
+            text-align: center;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, #00ff88, #00d4ff);
+            width: 0%;
+            transition: width 0.5s ease;
+            border-radius: 4px;
+        }
+
+        .section-title {
+            color: #00d4ff;
+            font-size: 1rem;
+            font-weight: 600;
+            margin: 20px 0 10px 0;
+            padding-left: 10px;
+            border-left: 3px solid #00d4ff;
+        }
+
+        .exercise-item {
+            padding: 12px 15px;
+            margin: 6px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border: 1px solid transparent;
+        }
+
+        .exercise-item:hover {
+            background: rgba(0, 212, 255, 0.1);
+            border-color: #00d4ff;
+            transform: translateX(5px);
+        }
+
+        .exercise-item.active {
+            background: linear-gradient(45deg, rgba(0, 212, 255, 0.2), rgba(255, 0, 255, 0.1));
+            border-color: #00d4ff;
+            box-shadow: 0 4px 15px rgba(0, 212, 255, 0.3);
+        }
+
+        .exercise-item.completed {
+            background: rgba(0, 255, 136, 0.1);
+            border-color: #00ff88;
+        }
+
+        .exercise-item.completed .exercise-status {
+            color: #00ff88;
+        }
+
+        .exercise-number {
+            background: linear-gradient(45deg, #ff00ff, #00d4ff);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 15px;
+            font-weight: 600;
+            font-size: 0.85rem;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .exercise-item.completed .exercise-number {
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+        }
+
+        .exercise-title {
+            flex: 1;
+            font-size: 0.9rem;
+            line-height: 1.3;
+        }
+
+        .exercise-status {
+            font-size: 1.2rem;
+            color: #666;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 350px;
+            padding: 40px;
+            min-height: 100vh;
+        }
+
+        .exercise-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .exercise-header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 30px;
+            background: linear-gradient(135deg, #1e1e3f, #2d1b69);
+            border-radius: 20px;
+            border: 1px solid #4a4a6a;
+        }
+
+        .exercise-header h1 {
+            font-size: 2.5rem;
+            background: linear-gradient(45deg, #00d4ff, #ff00ff);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+        }
+
+        .exercise-header .section-name {
+            color: #00ff88;
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+
+        .exercise-description {
+            font-size: 1.3rem;
+            line-height: 1.6;
+            color: #ffffff;
+        }
+
+        .exercise-description code {
+            background: rgba(0, 212, 255, 0.2);
+            color: #00d4ff;
+            padding: 4px 8px;
+            border-radius: 6px;
+            font-family: 'Monaco', 'Consolas', monospace;
+            font-size: 1.1rem;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 40px;
+            gap: 20px;
+        }
+
+        .nav-button {
+            background: linear-gradient(45deg, #00d4ff, #ff00ff);
+            color: white;
+            border: none;
+            padding: 15px 25px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(0, 212, 255, 0.4);
+        }
+
+        .nav-button:disabled {
+            background: #444;
+            color: #666;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .complete-button {
+            background: linear-gradient(45deg, #00ff88, #00d4ff);
+            color: #0f0f23;
+            border: none;
+            padding: 15px 30px;
+            border-radius: 12px;
+            cursor: pointer;
+            font-weight: 700;
+            font-size: 1rem;
+            transition: all 0.3s ease;
+            margin: 20px auto;
+            display: block;
+        }
+
+        .complete-button:hover {
+            transform: scale(1.05);
+            box-shadow: 0 8px 25px rgba(0, 255, 136, 0.4);
+        }
+
+        .complete-button.completed {
+            background: linear-gradient(45deg, #00ff88, #00ff88);
+        }
+
+        .tips-section {
+            background: linear-gradient(135deg, rgba(255, 0, 255, 0.1), rgba(0, 212, 255, 0.1));
+            border: 1px solid #ff00ff;
+            border-radius: 15px;
+            padding: 25px;
+            margin: 30px 0;
+        }
+
+        .tips-section h3 {
+            color: #ff00ff;
+            margin-bottom: 15px;
+            font-size: 1.3rem;
+        }
+
+        .tips-section p {
+            line-height: 1.6;
+            color: #cccccc;
+        }
+
+        /* Mobile Responsiveness */
+        .mobile-toggle {
+            display: none;
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            z-index: 200;
+            background: linear-gradient(45deg, #00d4ff, #ff00ff);
+            color: white;
+            border: none;
+            padding: 12px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 1.2rem;
+        }
+
+        @media (max-width: 768px) {
+            .mobile-toggle {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 80px 20px 40px 20px;
+            }
+
+            .exercise-header h1 {
+                font-size: 2rem;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+        }
+
+        /* Scrollbar Styling */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: rgba(255,255,255,0.1);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: linear-gradient(45deg, #00d4ff, #ff00ff);
+            border-radius: 3px;
+        }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <button class="mobile-toggle" onclick="toggleSidebar()">☰</button>
+        
+        <nav class="sidebar" id="sidebar">
+            <div class="logo">
+                <h1>🐍 Python Functions</h1>
+                <p style="color: #999; font-size: 0.9rem;">Interactive Workbook</p>
+            </div>
+
+            <div class="progress-overview">
+                <div class="progress-text" id="progressText">0 / 50 Completed</div>
+                <div class="progress-bar">
+                    <div class="progress-fill" id="progressFill"></div>
+                </div>
+            </div>
+
+            <div class="section-title">🔹 No Arguments</div>
+            <div class="exercise-item" onclick="showExercise(1)" data-exercise="1">
+                <span class="exercise-number">1</span>
+                <span class="exercise-title">say_hello()</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(2)" data-exercise="2">
+                <span class="exercise-number">2</span>
+                <span class="exercise-title">say_goodbye()</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(3)" data-exercise="3">
+                <span class="exercise-number">3</span>
+                <span class="exercise-title">say_python()</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(4)" data-exercise="4">
+                <span class="exercise-number">4</span>
+                <span class="exercise-title">line()</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(5)" data-exercise="5">
+                <span class="exercise-number">5</span>
+                <span class="exercise-title">say_name()</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(6)" data-exercise="6">
+                <span class="exercise-number">6</span>
+                <span class="exercise-title">repeat_hi()</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(7)" data-exercise="7">
+                <span class="exercise-number">7</span>
+                <span class="exercise-title">cheer()</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(8)" data-exercise="8">
+                <span class="exercise-number">8</span>
+                <span class="exercise-title">blank_line()</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(9)" data-exercise="9">
+                <span class="exercise-number">9</span>
+                <span class="exercise-title">three_lines()</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(10)" data-exercise="10">
+                <span class="exercise-number">10</span>
+                <span class="exercise-title">greet_world()</span>
+                <span class="exercise-status">○</span>
+            </div>
+
+            <div class="section-title">🔹 One Argument</div>
+            <div class="exercise-item" onclick="showExercise(11)" data-exercise="11">
+                <span class="exercise-number">11</span>
+                <span class="exercise-title">greet(name)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(12)" data-exercise="12">
+                <span class="exercise-number">12</span>
+                <span class="exercise-title">echo(word)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(13)" data-exercise="13">
+                <span class="exercise-number">13</span>
+                <span class="exercise-title">shout(word)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(14)" data-exercise="14">
+                <span class="exercise-number">14</span>
+                <span class="exercise-title">whisper(word)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(15)" data-exercise="15">
+                <span class="exercise-number">15</span>
+                <span class="exercise-title">repeat(word)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(16)" data-exercise="16">
+                <span class="exercise-number">16</span>
+                <span class="exercise-title">goodbye(name)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(17)" data-exercise="17">
+                <span class="exercise-number">17</span>
+                <span class="exercise-title">frame(word)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(18)" data-exercise="18">
+                <span class="exercise-number">18</span>
+                <span class="exercise-title">stars(word)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(19)" data-exercise="19">
+                <span class="exercise-number">19</span>
+                <span class="exercise-title">say_number(n)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(20)" data-exercise="20">
+                <span class="exercise-number">20</span>
+                <span class="exercise-title">double_print(text)</span>
+                <span class="exercise-status">○</span>
+            </div>
+
+            <div class="section-title">🔹 Returning Values</div>
+            <div class="exercise-item" onclick="showExercise(21)" data-exercise="21">
+                <span class="exercise-number">21</span>
+                <span class="exercise-title">double(n)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(22)" data-exercise="22">
+                <span class="exercise-number">22</span>
+                <span class="exercise-title">square(n)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(23)" data-exercise="23">
+                <span class="exercise-number">23</span>
+                <span class="exercise-title">cube(n)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(24)" data-exercise="24">
+                <span class="exercise-number">24</span>
+                <span class="exercise-title">half(n)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(25)" data-exercise="25">
+                <span class="exercise-number">25</span>
+                <span class="exercise-title">triple_text(text)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(26)" data-exercise="26">
+                <span class="exercise-number">26</span>
+                <span class="exercise-title">first_char(text)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(27)" data-exercise="27">
+                <span class="exercise-number">27</span>
+                <span class="exercise-title">last_char(text)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(28)" data-exercise="28">
+                <span class="exercise-number">28</span>
+                <span class="exercise-title">length(text)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(29)" data-exercise="29">
+                <span class="exercise-number">29</span>
+                <span class="exercise-title">is_even(n)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(30)" data-exercise="30">
+                <span class="exercise-number">30</span>
+                <span class="exercise-title">is_odd(n)</span>
+                <span class="exercise-status">○</span>
+            </div>
+
+            <div class="section-title">🔹 Two Arguments</div>
+            <div class="exercise-item" onclick="showExercise(31)" data-exercise="31">
+                <span class="exercise-number">31</span>
+                <span class="exercise-title">add(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(32)" data-exercise="32">
+                <span class="exercise-number">32</span>
+                <span class="exercise-title">subtract(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(33)" data-exercise="33">
+                <span class="exercise-number">33</span>
+                <span class="exercise-title">multiply(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(34)" data-exercise="34">
+                <span class="exercise-number">34</span>
+                <span class="exercise-title">divide(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(35)" data-exercise="35">
+                <span class="exercise-number">35</span>
+                <span class="exercise-title">avg(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(36)" data-exercise="36">
+                <span class="exercise-number">36</span>
+                <span class="exercise-title">greet_two(name1, name2)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(37)" data-exercise="37">
+                <span class="exercise-number">37</span>
+                <span class="exercise-title">longer(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(38)" data-exercise="38">
+                <span class="exercise-number">38</span>
+                <span class="exercise-title">shorter(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(39)" data-exercise="39">
+                <span class="exercise-number">39</span>
+                <span class="exercise-title">concat(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(40)" data-exercise="40">
+                <span class="exercise-number">40</span>
+                <span class="exercise-title">repeat_word(word, n)</span>
+                <span class="exercise-status">○</span>
+            </div>
+
+            <div class="section-title">🔹 More Logic</div>
+            <div class="exercise-item" onclick="showExercise(41)" data-exercise="41">
+                <span class="exercise-number">41</span>
+                <span class="exercise-title">max_of_two(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(42)" data-exercise="42">
+                <span class="exercise-number">42</span>
+                <span class="exercise-title">min_of_two(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(43)" data-exercise="43">
+                <span class="exercise-number">43</span>
+                <span class="exercise-title">positive_or_negative(n)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(44)" data-exercise="44">
+                <span class="exercise-number">44</span>
+                <span class="exercise-title">between(x, a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(45)" data-exercise="45">
+                <span class="exercise-number">45</span>
+                <span class="exercise-title">grade(score)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(46)" data-exercise="46">
+                <span class="exercise-number">46</span>
+                <span class="exercise-title">same_length(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(47)" data-exercise="47">
+                <span class="exercise-number">47</span>
+                <span class="exercise-title">sum_of_three(a, b, c)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(48)" data-exercise="48">
+                <span class="exercise-number">48</span>
+                <span class="exercise-title">max_of_three(a, b, c)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(49)" data-exercise="49">
+                <span class="exercise-number">49</span>
+                <span class="exercise-title">greet_age(name, age)</span>
+                <span class="exercise-status">○</span>
+            </div>
+            <div class="exercise-item" onclick="showExercise(50)" data-exercise="50">
+                <span class="exercise-number">50</span>
+                <span class="exercise-title">square_and_add(a, b)</span>
+                <span class="exercise-status">○</span>
+            </div>
+        </nav>
+
+        <main class="main-content">
+            <div class="exercise-content" id="exerciseContent">
+                <!-- Exercise content will be dynamically loaded here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        const exercises = {
+            1: {
+                title: "Exercise 1: say_hello()",
+                section: "Functions With No Arguments",
+                description: 'Write <code>say_hello()</code> that prints <code>"hello"</code>.'
+            },
+            2: {
+                title: "Exercise 2: say_goodbye()",
+                section: "Functions With No Arguments", 
+                description: 'Write <code>say_goodbye()</code> that prints <code>"goodbye"</code>.'
+            },
+            3: {
+                title: "Exercise 3: say_python()",
+                section: "Functions With No Arguments",
+                description: 'Write <code>say_python()</code> that prints <code>"Python is fun"</code>.'
+            },
+            4: {
+                title: "Exercise 4: line()",
+                section: "Functions With No Arguments",
+                description: 'Write <code>line()</code> that prints <code>"---------"</code>. Call it before and after a message.'
+            },
+            5: {
+                title: "Exercise 5: say_name()",
+                section: "Functions With No Arguments",
+                description: 'Write <code>say_name()</code> that prints your own name.'
+            },
+            6: {
+                title: "Exercise 6: repeat_hi()",
+                section: "Functions With No Arguments",
+                description: 'Write <code>repeat_hi()</code> that prints <code>"hi"</code> 3 times.'
+            },
+            7: {
+                title: "Exercise 7: cheer()",
+                section: "Functions With No Arguments",
+                description: 'Write <code>cheer()</code> that prints <code>"Go!"</code> twice.'
+            },
+            8: {
+                title: "Exercise 8: blank_line()",
+                section: "Functions With No Arguments",
+                description: 'Write <code>blank_line()</code> that prints an empty line.'
+            },
+            9: {
+                title: "Exercise 9: three_lines()",
+                section: "Functions With No Arguments",
+                description: 'Write <code>three_lines()</code> that calls <code>blank_line()</code> three times.'
+            },
+            10: {
+                title: "Exercise 10: greet_world()",
+                section: "Functions With No Arguments",
+                description: 'Write <code>greet_world()</code> that prints <code>"Hello, world!"</code>.'
+            },
+            11: {
+                title: "Exercise 11: greet(name)",
+                section: "Functions With One Argument",
+                description: 'Write <code>greet(name)</code> that prints <code>"Hello, &lt;name&gt;"</code>.'
+            },
+            12: {
+                title: "Exercise 12: echo(word)",
+                section: "Functions With One Argument",
+                description: 'Write <code>echo(word)</code> that prints the word twice.'
+            },
+            13: {
+                title: "Exercise 13: shout(word)",
+                section: "Functions With One Argument",
+                description: 'Write <code>shout(word)</code> that prints the word in uppercase.'
+            },
+            14: {
+                title: "Exercise 14: whisper(word)",
+                section: "Functions With One Argument",
+                description: 'Write <code>whisper(word)</code> that prints the word in lowercase.'
+            },
+            15: {
+                title: "Exercise 15: repeat(word)",
+                section: "Functions With One Argument",
+                description: 'Write <code>repeat(word)</code> that prints the word 3 times on separate lines.'
+            },
+            16: {
+                title: "Exercise 16: goodbye(name)",
+                section: "Functions With One Argument",
+                description: 'Write <code>goodbye(name)</code> that prints <code>"Goodbye, &lt;name&gt;"</code>.'
+            },
+            17: {
+                title: "Exercise 17: frame(word)",
+                section: "Functions With One Argument",
+                description: 'Write <code>frame(word)</code> that prints the word inside <code>[]</code>.'
+            },
+            18: {
+                title: "Exercise 18: stars(word)",
+                section: "Functions With One Argument",
+                description: 'Write <code>stars(word)</code> that prints <code>"***word***"</code>.'
+            },
+            19: {
+                title: "Exercise 19: say_number(n)",
+                section: "Functions With One Argument",
+                description: 'Write <code>say_number(n)</code> that prints <code>"Number is &lt;n&gt;"</code>.'
+            },
+            20: {
+                title: "Exercise 20: double_print(text)",
+                section: "Functions With One Argument",
+                description: 'Write <code>double_print(text)</code> that prints <code>"text text"</code> on one line.'
+            },
+            21: {
+                title: "Exercise 21: double(n)",
+                section: "Functions Returning Values",
+                description: 'Write <code>double(n)</code> that returns <code>n * 2</code>.'
+            },
+            22: {
+                title: "Exercise 22: square(n)",
+                section: "Functions Returning Values",
+                description: 'Write <code>square(n)</code> that returns <code>n ** 2</code>.'
+            },
+            23: {
+                title: "Exercise 23: cube(n)",
+                section: "Functions Returning Values",
+                description: 'Write <code>cube(n)</code> that returns <code>n ** 3</code>.'
+            },
+            24: {
+                title: "Exercise 24: half(n)",
+                section: "Functions Returning Values",
+                description: 'Write <code>half(n)</code> that returns <code>n / 2</code>.'
+            },
+            25: {
+                title: "Exercise 25: triple_text(text)",
+                section: "Functions Returning Values",
+                description: 'Write <code>triple_text(text)</code> that returns <code>text</code> repeated 3 times.'
+            },
+            26: {
+                title: "Exercise 26: first_char(text)",
+                section: "Functions Returning Values",
+                description: 'Write <code>first_char(text)</code> that returns the first letter.'
+            },
+            27: {
+                title: "Exercise 27: last_char(text)",
+                section: "Functions Returning Values",
+                description: 'Write <code>last_char(text)</code> that returns the last letter.'
+            },
+            28: {
+                title: "Exercise 28: length(text)",
+                section: "Functions Returning Values",
+                description: 'Write <code>length(text)</code> that returns number of characters.'
+            },
+            29: {
+                title: "Exercise 29: is_even(n)",
+                section: "Functions Returning Values",
+                description: 'Write <code>is_even(n)</code> that returns True if even.'
+            },
+            30: {
+                title: "Exercise 30: is_odd(n)",
+                section: "Functions Returning Values",
+                description: 'Write <code>is_odd(n)</code> that returns True if odd.'
+            },
+            31: {
+                title: "Exercise 31: add(a, b)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>add(a, b)</code> that returns the sum.'
+            },
+            32: {
+                title: "Exercise 32: subtract(a, b)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>subtract(a, b)</code> that returns difference.'
+            },
+            33: {
+                title: "Exercise 33: multiply(a, b)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>multiply(a, b)</code> that returns product.'
+            },
+            34: {
+                title: "Exercise 34: divide(a, b)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>divide(a, b)</code> that returns quotient.'
+            },
+            35: {
+                title: "Exercise 35: avg(a, b)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>avg(a, b)</code> that returns average.'
+            },
+            36: {
+                title: "Exercise 36: greet_two(name1, name2)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>greet_two(name1, name2)</code> that prints <code>"Hello name1 and name2"</code>.'
+            },
+            37: {
+                title: "Exercise 37: longer(a, b)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>longer(a, b)</code> that returns the longer string.'
+            },
+            38: {
+                title: "Exercise 38: shorter(a, b)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>shorter(a, b)</code> that returns the shorter string.'
+            },
+            39: {
+                title: "Exercise 39: concat(a, b)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>concat(a, b)</code> that returns the two strings joined.'
+            },
+            40: {
+                title: "Exercise 40: repeat_word(word, n)",
+                section: "Functions With Two Arguments",
+                description: 'Write <code>repeat_word(word, n)</code> that returns word repeated n times.'
+            },
+            41: {
+                title: "Exercise 41: max_of_two(a, b)",
+                section: "Slightly More Logic",
+                description: 'Write <code>max_of_two(a, b)</code> that returns the larger number.'
+            },
+            42: {
+                title: "Exercise 42: min_of_two(a, b)",
+                section: "Slightly More Logic",
+                description: 'Write <code>min_of_two(a, b)</code> that returns the smaller number.'
+            },
+            43: {
+                title: "Exercise 43: positive_or_negative(n)",
+                section: "Slightly More Logic",
+                description: 'Write <code>positive_or_negative(n)</code> that returns <code>"positive"</code>, <code>"negative"</code>, or <code>"zero"</code>.'
+            },
+            44: {
+                title: "Exercise 44: between(x, a, b)",
+                section: "Slightly More Logic",
+                description: 'Write <code>between(x, a, b)</code> that returns True if <code>x</code> is between <code>a</code> and <code>b</code>.'
+            },
+            45: {
+                title: "Exercise 45: grade(score)",
+                section: "Slightly More Logic",
+                description: 'Write <code>grade(score)</code> that returns <code>"pass"</code> if score ≥ 50 else <code>"fail"</code>.'
+            },
+            46: {
+                title: "Exercise 46: same_length(a, b)",
+                section: "Slightly More Logic",
+                description: 'Write <code>same_length(a, b)</code> that returns True if two strings have same length.'
+            },
+            47: {
+                title: "Exercise 47: sum_of_three(a, b, c)",
+                section: "Slightly More Logic",
+                description: 'Write <code>sum_of_three(a, b, c)</code> that returns their sum.'
+            },
+            48: {
+                title: "Exercise 48: max_of_three(a, b, c)",
+                section: "Slightly More Logic",
+                description: 'Write <code>max_of_three(a, b, c)</code> that returns the largest number.'
+            },
+            49: {
+                title: "Exercise 49: greet_age(name, age)",
+                section: "Slightly More Logic",
+                description: 'Write <code>greet_age(name, age)</code> that prints <code>"Hello &lt;name&gt;, you are &lt;age&gt;"</code>.'
+            },
+            50: {
+                title: "Exercise 50: square_and_add(a, b)",
+                section: "Slightly More Logic",
+                description: 'Write <code>square_and_add(a, b)</code> that returns <code>a**2 + b**2</code>.'
+            }
+        };
+
+        let currentExercise = 1;
+        let completedExercises = new Set();
+
+        // Load progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem('pythonFunctionsProgress');
+            if (saved) {
+                completedExercises = new Set(JSON.parse(saved));
+                updateProgressDisplay();
+                updateMenuItems();
+            }
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            localStorage.setItem('pythonFunctionsProgress', JSON.stringify([...completedExercises]));
+        }
+
+        // Update progress display
+        function updateProgressDisplay() {
+            const completed = completedExercises.size;
+            const total = 50;
+            const percentage = Math.round((completed / total) * 100);
+            
+            document.getElementById('progressText').textContent = `${completed} / ${total} Completed`;
+            document.getElementById('progressFill').style.width = `${percentage}%`;
+        }
+
+        // Update menu items
+        function updateMenuItems() {
+            completedExercises.forEach(num => {
+                const item = document.querySelector(`[data-exercise="${num}"]`);
+                if (item) {
+                    item.classList.add('completed');
+                    item.querySelector('.exercise-status').textContent = '✓';
+                }
+            });
+        }
+
+        // Show exercise
+        function showExercise(exerciseNum) {
+            currentExercise = exerciseNum;
+            const exercise = exercises[exerciseNum];
+            
+            // Update active menu item
+            document.querySelectorAll('.exercise-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            document.querySelector(`[data-exercise="${exerciseNum}"]`).classList.add('active');
+            
+            // Generate exercise content
+            const content = `
+                <div class="exercise-header">
+                    <h1>${exercise.title}</h1>
+                    <div class="section-name">${exercise.section}</div>
+                    <div class="exercise-description">${exercise.description}</div>
+                </div>
+                
+                ${exerciseNum === 10 ? '<div class="tips-section"><h3>💡 Tip</h3><p>For each function, test it with <strong>at least 2 different calls</strong> so you see how it behaves with different inputs. Use your Python IDE or REPL to test your functions!</p></div>' : ''}
+                
+                ${exerciseNum === 30 ? '<div class="tips-section"><h3>🎯 Great Progress!</h3><p>You\'re getting the hang of functions! The next exercises will focus on functions that work with multiple arguments. Keep up the excellent work!</p></div>' : ''}
+                
+                ${exerciseNum === 50 ? '<div class="tips-section"><h3>🎉 Congratulations!</h3><p>You\'ve completed all 50 Python function exercises! You now have a solid foundation in writing functions. Keep practicing and try creating your own functions to solve different problems.</p></div>' : ''}
+                
+                <button class="complete-button ${completedExercises.has(exerciseNum) ? 'completed' : ''}" onclick="markComplete(${exerciseNum})">
+                    ${completedExercises.has(exerciseNum) ? '✓ Completed' : 'Mark as Complete'}
+                </button>
+                
+                <div class="navigation">
+                    <button class="nav-button" onclick="previousExercise()" ${exerciseNum === 1 ? 'disabled' : ''}>
+                        ← Previous
+                    </button>
+                    <button class="nav-button" onclick="nextExercise()" ${exerciseNum === 50 ? 'disabled' : ''}>
+                        Next →
+                    </button>
+                </div>
+            `;
+            
+            document.getElementById('exerciseContent').innerHTML = content;
+            
+            // Close mobile sidebar if open
+            if (window.innerWidth <= 768) {
+                document.getElementById('sidebar').classList.remove('open');
+            }
+        }
+
+        // Mark exercise as complete
+        function markComplete(exerciseNum) {
+            if (completedExercises.has(exerciseNum)) {
+                completedExercises.delete(exerciseNum);
+            } else {
+                completedExercises.add(exerciseNum);
+            }
+            
+            saveProgress();
+            updateProgressDisplay();
+            updateMenuItems();
+            showExercise(exerciseNum); // Refresh to update button
+        }
+
+        // Navigation functions
+        function nextExercise() {
+            if (currentExercise < 50) {
+                showExercise(currentExercise + 1);
+            }
+        }
+
+        function previousExercise() {
+            if (currentExercise > 1) {
+                showExercise(currentExercise - 1);
+            }
+        }
+
+        // Mobile sidebar toggle
+        function toggleSidebar() {
+            document.getElementById('sidebar').classList.toggle('open');
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowRight' && currentExercise < 50) {
+                nextExercise();
+            } else if (e.key === 'ArrowLeft' && currentExercise > 1) {
+                previousExercise();
+            } else if (e.key === ' ') {
+                e.preventDefault();
+                markComplete(currentExercise);
+            }
+        });
+
+        // Initialize
+        document.addEventListener('DOMContentLoaded', function() {
+            loadProgress();
+            showExercise(1);
+        });
+    </script>
+</body>
+</html>

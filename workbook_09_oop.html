@@ -1,0 +1,533 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python OOP Confidence Builder</title>
+    <style>
+        :root {
+            --bg-dark: #121212;
+            --bg-panel: #1e1e1e;
+            --bg-sidebar: #181818;
+            --accent: #bb86fc;
+            --accent-hover: #9965f4;
+            --text-main: #e0e0e0;
+            --text-muted: #a0a0a0;
+            --border: #333;
+            --terminal-bg: #0d1117;
+            --terminal-header: #161b22;
+            --success: #03dac6;
+            --sidebar-width: 280px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-dark);
+            color: var(--text-main);
+            height: 100vh;
+            overflow: hidden; /* Prevent body scroll, handle inside elements */
+            display: flex;
+            flex-direction: column;
+        }
+
+        /* --- Header --- */
+        header {
+            height: 60px;
+            background-color: var(--bg-sidebar);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 20px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 100;
+        }
+
+        .burger {
+            display: none; /* Hidden on desktop */
+            cursor: pointer;
+            font-size: 1.5rem;
+            margin-right: 15px;
+            color: var(--text-main);
+        }
+
+        h1 { font-size: 1.2rem; font-weight: 600; letter-spacing: 0.5px; }
+        h1 span { color: var(--accent); }
+
+        /* --- Layout Container --- */
+        .container {
+            display: flex;
+            height: calc(100vh - 60px); /* Subtract header */
+            margin-top: 60px;
+            width: 100%;
+        }
+
+        /* --- Sidebar --- */
+        .sidebar {
+            width: var(--sidebar-width);
+            background-color: var(--bg-sidebar);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            height: 100%;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: var(--text-muted);
+            border-bottom: 1px solid var(--border);
+        }
+
+        .nav-list { list-style: none; }
+
+        .nav-item {
+            padding: 15px 20px;
+            border-bottom: 1px solid #222;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 0.9rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .nav-item:hover { background-color: #252525; }
+        .nav-item.active { 
+            background-color: rgba(187, 134, 252, 0.1); 
+            border-left: 4px solid var(--accent);
+            color: var(--accent);
+        }
+        
+        .nav-item .num { font-weight: bold; margin-right: 10px; opacity: 0.7; }
+
+        /* --- Main Content --- */
+        .main-content {
+            flex: 1;
+            padding: 40px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .exercise-card {
+            background-color: var(--bg-panel);
+            border-radius: 12px;
+            padding: 40px;
+            max-width: 800px;
+            width: 100%;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+            border: 1px solid var(--border);
+        }
+
+        .part-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            background-color: rgba(187, 134, 252, 0.15);
+            color: var(--accent);
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .exercise-title {
+            font-size: 1.8rem;
+            margin-bottom: 20px;
+            line-height: 1.3;
+        }
+
+        .exercise-desc {
+            font-size: 1.1rem;
+            line-height: 1.6;
+            color: #ccc;
+            margin-bottom: 30px;
+        }
+
+        /* --- Terminal Simulation --- */
+        .terminal {
+            background-color: var(--terminal-bg);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid #30363d;
+            font-family: 'Fira Code', 'Consolas', monospace;
+            margin-bottom: 30px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+
+        .terminal-header {
+            background-color: var(--terminal-header);
+            padding: 8px 12px;
+            display: flex;
+            gap: 6px;
+            border-bottom: 1px solid #30363d;
+        }
+
+        .dot { width: 10px; height: 10px; border-radius: 50%; }
+        .red { background-color: #ff5f56; }
+        .yellow { background-color: #ffbd2e; }
+        .green { background-color: #27c93f; }
+
+        .terminal-body {
+            padding: 20px;
+            color: #e6edf3;
+            font-size: 0.95rem;
+            line-height: 1.5;
+        }
+
+        .prompt { color: var(--success); margin-right: 8px; user-select: none; }
+        .output { color: #a5d6ff; }
+        .comment { color: #8b949e; font-style: italic; }
+
+        /* --- Navigation Buttons --- */
+        .nav-controls {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 20px;
+        }
+
+        .btn {
+            background-color: var(--bg-sidebar);
+            color: var(--text-main);
+            border: 1px solid var(--border);
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.2s;
+        }
+
+        .btn:hover { background-color: var(--accent); color: #000; border-color: var(--accent); }
+        .btn:disabled { opacity: 0.5; cursor: not-allowed; }
+
+        /* --- Overlay for Mobile --- */
+        .overlay {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 90;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s;
+        }
+        .overlay.active { opacity: 1; pointer-events: all; }
+
+        /* --- Mobile Responsiveness --- */
+        @media (max-width: 768px) {
+            .burger { display: block; }
+            
+            .sidebar {
+                position: fixed;
+                left: 0; top: 60px; /* Below header */
+                bottom: 0;
+                z-index: 95;
+                transform: translateX(-100%);
+                width: 80%;
+                max-width: 300px;
+            }
+
+            .sidebar.active { transform: translateX(0); }
+            .main-content { padding: 20px; }
+            .exercise-card { padding: 25px; }
+            .exercise-title { font-size: 1.5rem; }
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="burger" onclick="toggleSidebar()">☰</div>
+        <h1>100 Gentle Steps <span>// Python OOP</span></h1>
+    </header>
+
+    <div class="container">
+        <div class="overlay" onclick="closeSidebar()"></div>
+        
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">Table of Contents</div>
+            <ul class="nav-list" id="nav-list">
+                </ul>
+        </nav>
+
+        <main class="main-content">
+            <div class="exercise-card">
+                <span class="part-badge" id="part-badge">Part 1</span>
+                <h2 class="exercise-title" id="ex-title">Loading...</h2>
+                <div class="exercise-desc" id="ex-desc"></div>
+                
+                <div class="terminal">
+                    <div class="terminal-header">
+                        <div class="dot red"></div>
+                        <div class="dot yellow"></div>
+                        <div class="dot green"></div>
+                    </div>
+                    <div class="terminal-body" id="terminal-content">
+                        </div>
+                </div>
+
+                <div class="nav-controls">
+                    <button class="btn" id="prev-btn" onclick="prevExercise()">← Previous</button>
+                    <button class="btn" id="next-btn" onclick="nextExercise()">Next →</button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+<script>
+    // --- Data Generation Logic ---
+    
+    const generateExercises = () => {
+        const exercises = [];
+        
+        // Helper to add
+        const add = (id, part, title, desc, term) => {
+            exercises.push({ id, part, title, desc, term });
+        };
+
+        // --- Part 1: Dictionaries to First Class (1-15) ---
+        const p1 = "Part 1: From Dictionaries to Your First Class";
+        add(1, p1, "The Dictionary Setup", "Create a dictionary called <code>student</code> with keys 'name' and 'house'. Print them individually.", 
+            `<span class="prompt">>>></span> print(student["name"])<br><span class="output">Harry</span><br><span class="prompt">>>></span> print(student["house"])<br><span class="output">Gryffindor</span>`);
+        
+        add(2, p1, "Formatted Strings", "Do the same, but print it as an f-string: <code>\"[name] from [house]\"</code>.", 
+            `<span class="prompt">>>></span> print(f"{student['name']} from {student['house']}")<br><span class="output">Harry from Gryffindor</span>`);
+
+        add(3, p1, "Wrapping in a Function", "Write a function <code>get_student()</code> that returns a dictionary with name and house from input.", 
+            `<span class="prompt">>>></span> s = get_student()<br><span class="output">Name? Harry<br>House? Gryffindor</span><br><span class="prompt">>>></span> print(s)<br><span class="output">{'name': 'Harry', 'house': 'Gryffindor'}</span>`);
+
+        add(4, p1, "The Empty Class", "Create a class called <code>Student</code>. It should be empty for now. Create one object <code>s = Student()</code>.", 
+            `<span class="comment"># No output means success!</span><br><span class="prompt">>>></span> class Student:<br><span class="prompt">...</span>     pass<br><span class="prompt">>>></span> s = Student()`);
+
+        add(5, p1, "Adding a Docstring", "Add a docstring inside the class: <code>\"\"\"A Hogwarts student\"\"\"</code>.", 
+            `<span class="prompt">>>></span> help(Student)<br><span class="output">Help on class Student in module __main__:<br><br>class Student(builtins.object)<br> |  A Hogwarts student</span>`);
+
+        add(6, p1, "The Do-Nothing Init", "Add <code>__init__(self)</code> that does nothing (use <code>pass</code>). Create an object again.", 
+            `<span class="prompt">>>></span> s = Student()<br><span class="comment"># Still runs silently. We are building structure.</span>`);
+
+        add(7, p1, "Storing Data", "Update <code>__init__(self, name, house)</code>. Store them as <code>self.name</code> and <code>self.house</code>.", 
+            `<span class="prompt">>>></span> # Code defined...<br><span class="prompt">>>></span> # Ready to create objects with data.</span>`);
+
+        add(8, p1, "Instantiating Data", "Create a student with <code>s = Student(\"Harry\", \"Gryffindor\")</code>. Print <code>s.name</code>.", 
+            `<span class="prompt">>>></span> s = Student("Harry", "Gryffindor")<br><span class="prompt">>>></span> print(s.name)<br><span class="output">Harry</span>`);
+
+        add(9, p1, "The String Representation", "Add <code>__str__(self)</code> that returns <code>f\"{self.name} from {self.house}\"</code>.", 
+            `<span class="prompt">>>></span> # Method added to class</span>`);
+
+        add(10, p1, "Testing __str__", "Now <code>print(s)</code>. It should show your nice string instead of the weird memory address.", 
+            `<span class="prompt">>>></span> print(s)<br><span class="output">Harry from Gryffindor</span>`);
+
+        add(11, p1, "Repetition: Multiple Objects", "Create three different students (e.g., Harry, Ron, Hermione) and print each one.", 
+            `<span class="output">Harry from Gryffindor<br>Ron from Gryffindor<br>Hermione from Gryffindor</span>`);
+
+        add(12, p1, "Adding Behavior: Shout", "Add a method <code>shout(self)</code> that returns the name in uppercase.", 
+            `<span class="prompt">>>></span> # inside class: return self.name.upper()`);
+
+        add(13, p1, "Calling Shout", "Call <code>s.shout()</code> on one of your students.", 
+            `<span class="prompt">>>></span> print(s.shout())<br><span class="output">HARRY</span>`);
+
+        add(14, p1, "Adding Behavior: Introduce", "Add a method <code>introduce(self)</code> that returns <code>\"Hi, I'm {self.name}!\"</code>.", 
+            `<span class="prompt">>>></span> print(s.introduce())<br><span class="output">Hi, I'm Harry!</span>`);
+
+        add(15, p1, "Group Introductions", "Call <code>introduce()</code> on all your student objects.", 
+            `<span class="output">Hi, I'm Harry!<br>Hi, I'm Ron!<br>Hi, I'm Hermione!</span>`);
+
+        // --- Part 2: Animals (16-35) ---
+        const p2 = "Part 2: Simple Classes - Animals";
+        
+        add(16, p2, "Class Dog", "Create a class <code>Dog</code> with name and breed attributes.", `<span class="prompt">>>></span> d = Dog("Buddy", "Pug")`);
+        add(17, p2, "Describing Dog", "Add <code>__str__</code> that returns <code>\"[name] is a [breed]\"</code>.", `<span class="prompt">>>></span> print(d)<br><span class="output">Buddy is a Pug</span>`);
+        add(18, p2, "Two Dogs", "Create two dogs and print them.", `<span class="output">Buddy is a Pug<br>Rex is a German Shepherd</span>`);
+        add(19, p2, "Bark Method", "Add a method <code>bark(self)</code> that returns \"Woof!\".", `<span class="prompt">>>></span> d.bark()<br><span class="output">'Woof!'</span>`);
+        add(20, p2, "Barking Dogs", "Call <code>bark()</code> on your dogs.", `<span class="output">Woof!<br>Woof!</span>`);
+        add(21, p2, "Class Cat", "Create a class <code>Cat</code> exactly like Dog but returns \"Meow\".", `<span class="prompt">>>></span> c = Cat("Luna", "Siamese")<br><span class="output">Meow</span>`);
+
+        // Repetition 22-30
+        const animals = ["Rabbit", "Bird", "Fish", "Snake", "Turtle", "Hamster", "Parrot", "Goldfish", "Lizard"];
+        const sounds = ["Sniff", "Chirp", "Blub", "Hiss", "Slow...", "Squeak", "Squawk", "Bloop", "Ssss"];
+        
+        for(let i=0; i<animals.length; i++) {
+            add(22+i, p2, `Repetition: ${animals[i]}`, `Create class <code>${animals[i]}</code> with name/breed. <code>__str__</code> returns description. Method returns "${sounds[i]}".`, 
+            `<span class="prompt">>>></span> p = ${animals[i]}("Pet", "Type")<br><span class="prompt">>>></span> print(p)<br><span class="output">Pet is a Type</span><br><span class="prompt">>>></span> p.sound()<br><span class="output">${sounds[i]}</span>`);
+        }
+
+        add(31, p2, "Polymorphism Prep: Speak (Dog)", "Add a method <code>speak(self)</code> to Dog that returns the same as bark().", `<span class="prompt">>>></span> d.speak()<br><span class="output">'Woof!'</span>`);
+        add(32, p2, "Polymorphism Prep: Speak (Cat)", "Do the same for Cat.", `<span class="prompt">>>></span> c.speak()<br><span class="output">'Meow'</span>`);
+        add(33, p2, "The Pet Loop", "Make a list <code>pets = [dog1, cat1, dog2]</code> and loop to call <code>.speak()</code> on each.", 
+            `<span class="prompt">>>></span> for p in pets: print(p.speak())<br><span class="output">Woof!<br>Meow<br>Woof!</span>`);
+        add(34, p2, "Default Arguments", "Update Init: <code>def __init__(self, name, breed=\"Unknown\")</code>.", `<span class="comment"># No output, just definition update.</span>`);
+        add(35, p2, "Testing Defaults", "Create a dog without giving a breed. It should say \"Unknown\".", 
+            `<span class="prompt">>>></span> d = Dog("Stray")<br><span class="prompt">>>></span> print(d)<br><span class="output">Stray is a Unknown</span>`);
+
+        // --- Part 3: Wizards (36-55) ---
+        const p3 = "Part 3: Wizards & Hogwarts";
+        add(36, p3, "Class Wizard", "Create class <code>Wizard</code> with name and house.", `<span class="prompt">>>></span> w = Wizard("Merlin", "Slytherin")`);
+        add(37, p3, "Describing Wizards", "Add <code>__str__</code>.", `<span class="prompt">>>></span> print(w)<br><span class="output">Merlin from Slytherin</span>`);
+        add(38, p3, "Magic Spells", "Add method <code>cast_spell(self)</code> that returns \"Expecto Patronum!\".", `<span class="output">Expecto Patronum!</span>`);
+        
+        // 39-45 Repetition
+        for(let i=39; i<=45; i++) {
+            add(i, p3, `More Wizards (Repetition #${i-38})`, `Create another Wizard from a different house. Print them and cast a spell.`, 
+            `<span class="output">Wizard${i} from Hufflepuff<br>Expecto Patronum!</span>`);
+        }
+
+        add(46, p3, "Validation Logic", "Add logic: if house not in ['Gryffindor', 'Hufflepuff', 'Ravenclaw', 'Slytherin'] → <code>raise ValueError(\"Invalid house\")</code>.", 
+            `<span class="comment"># Inside __init__...</span>`);
+        add(47, p3, "Testing Validation", "Try to create a wizard with house \"Diagon Alley\". You should see the error.", 
+            `<span class="output" style="color:#ff5f56">ValueError: Invalid house</span>`);
+        add(48, p3, "Class Attributes", "Add a class attribute <code>school = \"Hogwarts\"</code> outside any method.", 
+            `<span class="prompt">>>></span> class Wizard:<br><span class="prompt">...</span>     school = "Hogwarts"`);
+        add(49, p3, "Accessing Class Attributes", "Print <code>Wizard.school</code> and <code>my_wizard.school</code>.", 
+            `<span class="output">Hogwarts<br>Hogwarts</span>`);
+        add(50, p3, "Full Info Method", "Add method <code>full_info(self)</code> that returns \"[name] from [house], studies at {self.school}\".", 
+            `<span class="output">Harry from Gryffindor, studies at Hogwarts</span>`);
+        
+        // 51-55 Repetition
+        for(let i=51; i<=55; i++) {
+            add(i, p3, `School Roster #${i-50}`, "Create a new wizard and call <code>full_info()</code>.", 
+            `<span class="output">Student${i} from Ravenclaw, studies at Hogwarts</span>`);
+        }
+
+        // --- Part 4: Foods (56-70) ---
+        const p4 = "Part 4: Tiny Classes (Pure Repetition)";
+        const foods = ["Apple", "Banana", "Pizza", "Burger", "Cookie", "IceCream", "Sushi", "Taco", "Pancake", "Sandwich", "Donut", "Cupcake", "Broccoli", "Carrot", "Chocolate"];
+        
+        foods.forEach((food, index) => {
+            add(56+index, p4, `Class ${food}`, `Create class <code>${food}</code>. Name attribute only. <code>__str__</code> returns "Delicious [name]!". Create object and print.`, 
+            `<span class="prompt">>>></span> f = ${food}("Gala")<br><span class="prompt">>>></span> print(f)<br><span class="output">Delicious Gala!</span>`);
+        });
+
+        // --- Part 5: Adding Methods (71-90) ---
+        const p5 = "Part 5: Adding Methods Again and Again";
+        
+        for(let i=71; i<=80; i++) {
+            add(i, p5, `Eating Food #${i-70}`, `Pick food class #${i-70} from previous section. Add <code>.eat(self)</code> returning "Nom nom!".`, 
+            `<span class="prompt">>>></span> f.eat()<br><span class="output">Nom nom!</span>`);
+        }
+        for(let i=81; i<=90; i++) {
+            add(i, p5, `Sleeping Animal #${i-80}`, `Pick an animal class from Part 2. Add <code>.sleep(self)</code> returning "Zzz...".`, 
+            `<span class="prompt">>>></span> a.sleep()<br><span class="output">Zzz...</span>`);
+        }
+
+        // --- Part 6: Inheritance (91-100) ---
+        const p6 = "Part 6: Very Gentle Inheritance";
+        add(91, p6, "The Parent Class", "Create a parent class <code>Person</code> with name and a method <code>greet(self)</code> → \"Hello!\".", 
+            `<span class="prompt">>>></span> p = Person("John")<br><span class="prompt">>>></span> p.greet()<br><span class="output">Hello!</span>`);
+        
+        add(92, p6, "First Child: Student", "Create class <code>Student(Person)</code>. Nothing else inside. Create one and call <code>.greet()</code>.", 
+            `<span class="prompt">>>></span> s = Student("Alice")<br><span class="prompt">>>></span> s.greet()<br><span class="output">Hello!</span><br><span class="comment"># It inherited the method!</span>`);
+
+        add(93, p6, "Second Child: Professor", "Create class <code>Professor(Person)</code>. Same thing.", 
+            `<span class="prompt">>>></span> p = Professor("Snape")<br><span class="prompt">>>></span> p.greet()<br><span class="output">Hello!</span>`);
+
+        add(94, p6, "More Children: Prefect", "Create <code>Prefect(Person)</code>. Inherit and test.", `<span class="output">Hello!</span>`);
+        add(95, p6, "More Children: Auror", "Create <code>Auror(Person)</code>. Inherit and test.", `<span class="output">Hello!</span>`);
+        add(96, p6, "More Children: Healer", "Create <code>Healer(Person)</code>. Inherit and test.", `<span class="output">Hello!</span>`);
+
+        add(97, p6, "Adding Child Attributes", "Add <code>__init__(self, name, subject)</code> to Professor. Remember to store subject.", 
+            `<span class="comment"># You might need super().__init__(name) or just self.name = name for now.</span>`);
+
+        add(98, p6, "Overriding Methods", "Override <code>greet(self)</code> in Professor → \"Good morning, I teach {self.subject}.\"", 
+            `<span class="comment"># Defines new behavior for this specific class.</span>`);
+
+        add(99, p6, "Testing Override", "Create a Professor and call <code>.greet()</code>.", 
+            `<span class="prompt">>>></span> p = Professor("Snape", "Potions")<br><span class="prompt">>>></span> p.greet()<br><span class="output">Good morning, I teach Potions.</span>`);
+
+        add(100, p6, "The Final Celebration", "Create one Student and one Professor. Print both. Celebrate!", 
+            `<span class="prompt">>>></span> s = Student("You")<br><span class="prompt">>>></span> p = Professor("AI", "OOP")<br><span class="output" style="color: var(--accent)">CONGRATULATIONS! You are an OOP Master! 🐍✨</span>`);
+
+        return exercises;
+    };
+
+    // --- Application Logic ---
+
+    const exercises = generateExercises();
+    let currentIndex = 0;
+
+    // DOM Elements
+    const navList = document.getElementById('nav-list');
+    const exTitle = document.getElementById('ex-title');
+    const exDesc = document.getElementById('ex-desc');
+    const terminalContent = document.getElementById('terminal-content');
+    const partBadge = document.getElementById('part-badge');
+    const prevBtn = document.getElementById('prev-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const sidebar = document.getElementById('sidebar');
+    const overlay = document.querySelector('.overlay');
+
+    // Render Sidebar
+    function renderSidebar() {
+        navList.innerHTML = '';
+        exercises.forEach((ex, index) => {
+            const li = document.createElement('li');
+            li.className = 'nav-item';
+            if (index === currentIndex) li.classList.add('active');
+            li.innerHTML = `<span class="num">#${ex.id}</span> ${ex.title}`; // Simplified title
+            li.onclick = () => loadExercise(index);
+            navList.appendChild(li);
+        });
+        // Scroll active item into view
+        const activeItem = navList.children[currentIndex];
+        if (activeItem) {
+            activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+    }
+
+    // Load Exercise
+    function loadExercise(index) {
+        currentIndex = index;
+        const ex = exercises[index];
+
+        exTitle.innerText = `${ex.id}. ${ex.title}`;
+        partBadge.innerText = ex.part;
+        exDesc.innerHTML = ex.desc; // Use innerHTML for <code> tags
+        terminalContent.innerHTML = ex.term;
+
+        // Button Logic
+        prevBtn.disabled = currentIndex === 0;
+        nextBtn.disabled = currentIndex === exercises.length - 1;
+
+        // Mobile: Close sidebar after selection
+        if(window.innerWidth <= 768) {
+            closeSidebar();
+        }
+
+        renderSidebar();
+    }
+
+    // Navigation
+    function nextExercise() {
+        if (currentIndex < exercises.length - 1) {
+            loadExercise(currentIndex + 1);
+        }
+    }
+
+    function prevExercise() {
+        if (currentIndex > 0) {
+            loadExercise(currentIndex - 1);
+        }
+    }
+
+    // Mobile Sidebar Logic
+    function toggleSidebar() {
+        sidebar.classList.toggle('active');
+        overlay.classList.toggle('active');
+    }
+
+    function closeSidebar() {
+        sidebar.classList.remove('active');
+        overlay.classList.remove('active');
+    }
+
+    // Initialize
+    loadExercise(0);
+
+</script>
+</body>
+</html>

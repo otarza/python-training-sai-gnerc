@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Loops Workbook - 110 Exercises</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg-primary: #0d1117; --bg-secondary: #161b22; --bg-tertiary: #1f2937;
+            --text-primary: #e6edf3; --text-secondary: #8b949e;
+            --accent: #58a6ff; --border: #30363d; --success: #3fb950;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: var(--bg-primary); color: var(--text-primary); line-height: 1.6;
+        }
+        header {
+            position: fixed; top: 0; left: 0; right: 0; height: 60px;
+            background: var(--bg-secondary); border-bottom: 1px solid var(--border);
+            display: flex; align-items: center; padding: 0 2rem; z-index: 1000;
+        }
+        .burger-menu {
+            display: none; background: none; border: none; color: var(--text-primary);
+            font-size: 1.5rem; cursor: pointer; padding: 0.5rem; margin-right: 1rem;
+        }
+        header h1 { font-size: 1.25rem; font-weight: 600; }
+        .sidebar {
+            position: fixed; top: 60px; left: 0; width: 280px; height: calc(100vh - 60px);
+            background: var(--bg-secondary); border-right: 1px solid var(--border);
+            overflow-y: auto; padding: 1.5rem 0; z-index: 999; transition: transform 0.3s;
+        }
+        .sidebar::-webkit-scrollbar { width: 8px; }
+        .sidebar::-webkit-scrollbar-track { background: var(--bg-secondary); }
+        .sidebar::-webkit-scrollbar-thumb { background: var(--border); border-radius: 4px; }
+        .sidebar-section { margin-bottom: 1.5rem; }
+        .sidebar-section h3 {
+            font-size: 0.875rem; font-weight: 600; color: var(--text-secondary);
+            padding: 0 1.5rem; margin-bottom: 0.5rem; text-transform: uppercase;
+        }
+        .sidebar-item {
+            padding: 0.5rem 1.5rem; cursor: pointer; color: var(--text-secondary);
+            font-size: 0.9rem; transition: all 0.2s; border-left: 3px solid transparent;
+        }
+        .sidebar-item:hover { background: var(--bg-tertiary); color: var(--text-primary); }
+        .sidebar-item.active {
+            background: var(--bg-tertiary); color: var(--accent);
+            border-left-color: var(--accent); font-weight: 500;
+        }
+        main {
+            margin-left: 280px; margin-top: 60px; padding: 2rem;
+            min-height: calc(100vh - 60px);
+        }
+        .exercise-container {
+            display: none; max-width: 900px; margin: 0 auto; animation: fadeIn 0.3s;
+        }
+        .exercise-container.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .exercise-header { margin-bottom: 2rem; }
+        .exercise-number { color: var(--accent); font-size: 0.875rem; font-weight: 600; margin-bottom: 0.5rem; }
+        .exercise-title { font-size: 2rem; font-weight: 700; margin-bottom: 1rem; }
+        .exercise-description { font-size: 1.125rem; color: var(--text-secondary); line-height: 1.8; }
+        .section {
+            background: var(--bg-secondary); border: 1px solid var(--border);
+            border-radius: 8px; padding: 1.5rem; margin-bottom: 1.5rem;
+        }
+        .section h3 {
+            font-size: 1.125rem; margin-bottom: 1rem;
+            display: flex; align-items: center; gap: 0.5rem;
+        }
+        .section h3::before { content: "▸"; color: var(--accent); }
+        .section p, .section ul { color: var(--text-secondary); margin-bottom: 0.75rem; }
+        .section ul { padding-left: 1.5rem; }
+        .section li { margin-bottom: 0.5rem; }
+        .terminal {
+            background: var(--bg-primary); border: 1px solid var(--border);
+            border-radius: 8px; padding: 1rem;
+            font-family: 'Courier New', monospace; font-size: 0.9rem;
+            margin-bottom: 1rem; box-shadow: 0 4px 12px rgba(0,0,0,0.3);
+        }
+        .terminal-header {
+            display: flex; align-items: center; gap: 0.5rem;
+            margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border);
+        }
+        .terminal-dot { width: 12px; height: 12px; border-radius: 50%; }
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27c93f; }
+        .terminal-title {
+            flex: 1; text-align: center; color: var(--text-secondary); font-size: 0.75rem;
+        }
+        .terminal-line { margin-bottom: 0.5rem; color: #c9d1d9; }
+        .terminal-prompt { color: var(--accent); }
+        .terminal-input { color: var(--success); }
+        .terminal-comment { color: var(--text-secondary); font-style: italic; }
+        .navigation {
+            display: flex; justify-content: space-between; margin-top: 3rem; gap: 1rem;
+        }
+        .nav-btn {
+            padding: 0.75rem 1.5rem; background: var(--bg-tertiary);
+            border: 1px solid var(--border); border-radius: 6px;
+            color: var(--text-primary); font-size: 0.9rem; cursor: pointer;
+            transition: all 0.2s; display: flex; align-items: center; gap: 0.5rem;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background: var(--accent); border-color: var(--accent); transform: translateY(-2px);
+        }
+        .nav-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+        @media (max-width: 768px) {
+            .burger-menu { display: block; }
+            .sidebar { transform: translateX(-100%); }
+            .sidebar.open { transform: translateX(0); }
+            .sidebar-overlay {
+                display: none; position: fixed; top: 60px; left: 0; right: 0; bottom: 0;
+                background: rgba(0,0,0,0.6); z-index: 998;
+            }
+            .sidebar-overlay.open { display: block; }
+            main { margin-left: 0; padding: 1.5rem; }
+            .exercise-title { font-size: 1.5rem; }
+            header h1 { font-size: 1rem; }
+            .navigation { flex-direction: column; }
+            .nav-btn { width: 100%; justify-content: center; }
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="burger-menu" id="burgerMenu">☰</button>
+        <h1>🐍 Python Loops Workbook - 110 Exercises</h1>
+    </header>
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+    <aside class="sidebar" id="sidebar"></aside>
+    <main id="mainContent"></main>
+    
+    <script>
+        const exerciseData = {
+            "While Loops": [
+                {id:1,title:"Number Greater Than 10",desc:"Ask the user for a number. Keep asking until they type a number greater than 10.",hints:["Use while loop with condition checking if number is NOT > 10","Convert input to int()","Loop stops when valid number entered"],terminal:[{t:"o",x:"Enter a number: "},{t:"i",x:"5"},{t:"o",x:"Enter a number: "},{t:"i",x:"15"},{t:"o",x:"Thank you! 15 is greater than 10"}]},
+                {id:2,title:"Type 'hello'",desc:"Ask the user to type 'hello'. Repeat until they type it correctly.",hints:["String comparison is case-sensitive","Use != operator in while condition","Get user input inside the loop"],terminal:[{t:"o",x:"Type 'hello': "},{t:"i",x:"hi"},{t:"o",x:"Type 'hello': "},{t:"i",x:"hello"},{t:"o",x:"Correct!"}]},
+                {id:3,title:"Print 1 to 5",desc:"Start with x = 1. Print it while x <= 5, increasing by 1.",hints:["Initialize x = 1 before loop","Condition: while x <= 5","Increment: x += 1"],terminal:[{t:"o",x:"1"},{t:"o",x:"2"},{t:"o",x:"3"},{t:"o",x:"4"},{t:"o",x:"5"}]},
+                {id:4,title:"Count Down 5 to 1",desc:"Count down from 5 to 1 using a while loop.",hints:["Start with x = 5","Condition: while x >= 1","Decrement: x -= 1"],terminal:[{t:"o",x:"5"},{t:"o",x:"4"},{t:"o",x:"3"},{t:"o",x:"2"},{t:"o",x:"1"}]},
+                {id:5,title:"Subtract by 2",desc:"Start at 10 and subtract 2 each loop until you go below 0.",hints:["Start with x = 10","Condition: while x >= 0","Subtract 2: x -= 2"],terminal:[{t:"o",x:"10"},{t:"o",x:"8"},{t:"o",x:"6"},{t:"o",x:"4"},{t:"o",x:"2"},{t:"o",x:"0"}]},
+                {id:6,title:"Password Check",desc:"Ask for a password. Keep looping until they type 'python'.",hints:["Similar to 'hello' exercise","Compare input to 'python'","Loop while password != 'python'"],terminal:[{t:"o",x:"Enter password: "},{t:"i",x:"java"},{t:"o",x:"Wrong!"},{t:"o",x:"Enter password: "},{t:"i",x:"python"},{t:"o",x:"Access granted!"}]},
+                {id:7,title:"Positive Number",desc:"Ask for a positive number. Loop until they give one.",hints:["Positive means > 0","Use: while num <= 0","Convert input to int"],terminal:[{t:"o",x:"Enter positive: "},{t:"i",x:"-5"},{t:"o",x:"Enter positive: "},{t:"i",x:"7"},{t:"o",x:"Great! You entered 7"}]},
+                {id:8,title:"Sum Until 0",desc:"Keep adding numbers to a sum until they enter 0.",hints:["Initialize sum = 0","Use while True or check num != 0","Add each number to sum","Break when 0 entered"],terminal:[{t:"o",x:"Enter number (0 to stop): "},{t:"i",x:"10"},{t:"o",x:"Enter number (0 to stop): "},{t:"i",x:"25"},{t:"o",x:"Enter number (0 to stop): "},{t:"i",x:"0"},{t:"o",x:"Total: 35"}]},
+                {id:9,title:"Print 'ha' 7 Times",desc:"Use a while loop to print 'ha' 7 times.",hints:["Counter starting at 0","Loop while counter < 7","Print 'ha' and increment"],terminal:[{t:"o",x:"ha"},{t:"o",x:"ha"},{t:"o",x:"ha"},{t:"o",x:"ha"},{t:"o",x:"ha"},{t:"o",x:"ha"},{t:"o",x:"ha"}]},
+                {id:10,title:"Numbers 3 to 12",desc:"Print every number from 3 to 12 using a while loop.",hints:["Start with x = 3","Loop while x <= 12","Print x and increment"],terminal:[{t:"o",x:"3"},{t:"o",x:"4"},{t:"o",x:"5"},{t:"c",x:"..."},{t:"o",x:"12"}]},
+                {id:11,title:"Even Numbers 2-20",desc:"Print only even numbers from 2 to 20.",hints:["Method 1: Start at 2, increment by 2","Method 2: Check num % 2 == 0","Loop while num <= 20"],terminal:[{t:"o",x:"2"},{t:"o",x:"4"},{t:"c",x:"..."},{t:"o",x:"20"}]},
+                {id:12,title:"Running Product",desc:"Multiply numbers from 1 to 5 (factorial).",hints:["Initialize product = 1 (not 0!)","Counter from 1 to 5","Multiply product by counter"],terminal:[{t:"o",x:"Product: 120"},{t:"c",x:"1×2×3×4×5 = 120"}]},
+                {id:13,title:"Until Negative",desc:"Ask for numbers until they type a negative.",hints:["Use while True or num = 0","Check if num < 0","Use break to exit"],terminal:[{t:"o",x:"Enter number: "},{t:"i",x:"5"},{t:"o",x:"Enter number: "},{t:"i",x:"-3"},{t:"o",x:"Stopping."}]},
+                {id:14,title:"String Letters",desc:"Print letters of a string using a while loop.",hints:["Use len(string) for length","Index starts at 0","Access with string[index]","Loop while index < len(string)"],terminal:[{t:"o",x:"Enter word: "},{t:"i",x:"Python"},{t:"o",x:"P"},{t:"o",x:"y"},{t:"o",x:"t"},{t:"o",x:"h"},{t:"o",x:"o"},{t:"o",x:"n"}]},
+                {id:15,title:"Loading Animation",desc:"Print 'loading...' until counter reaches 4.",hints:["Counter at 0","Loop while counter < 4","Print and increment"],terminal:[{t:"o",x:"loading..."},{t:"o",x:"loading..."},{t:"o",x:"loading..."},{t:"o",x:"loading..."},{t:"o",x:"Done!"}]},
+            ],
+            "For Loops": [
+                {id:16,title:"Print 'hello' 4 Times",desc:"Print 'hello' exactly 4 times using a for loop.",hints:["Use: for i in range(4):","range(4) generates 0,1,2,3","Don't need to use variable i"],terminal:[{t:"o",x:"hello"},{t:"o",x:"hello"},{t:"o",x:"hello"},{t:"o",x:"hello"}]},
+                {id:17,title:"Numbers 1 to 10",desc:"Print numbers from 1 to 10 using range.",hints:["Use: for i in range(1, 11):","Stop value is exclusive","Print i"],terminal:[{t:"o",x:"1"},{t:"o",x:"2"},{t:"c",x:"..."},{t:"o",x:"10"}]},
+                {id:18,title:"Every Second Number",desc:"Print every second number from 0 to 20.",hints:["range(start, stop, step)","Step of 2 skips every other","Use: for i in range(0, 21, 2):"],terminal:[{t:"o",x:"0"},{t:"o",x:"2"},{t:"c",x:"..."},{t:"o",x:"20"}]},
+                {id:19,title:"Squares 1-6",desc:"Print the squares of numbers 1 through 6.",hints:["Use: for i in range(1, 7):","Calculate: i * i or i ** 2","Print the result"],terminal:[{t:"o",x:"1"},{t:"o",x:"4"},{t:"o",x:"9"},{t:"o",x:"16"},{t:"o",x:"25"},{t:"o",x:"36"}]},
+                {id:20,title:"Letters in 'Python'",desc:"Print letters in 'Python' using a for loop.",hints:["Use: for letter in 'Python':","No need for range() or indexing","Variable contains each character"],terminal:[{t:"o",x:"P"},{t:"o",x:"y"},{t:"o",x:"t"},{t:"o",x:"h"},{t:"o",x:"o"},{t:"o",x:"n"}]},
+                {id:21,title:"Meow N Times",desc:"Print 'meow' as many times as user enters.",hints:["Get input and convert to int","Use: for i in range(n):","Print 'meow' each iteration"],terminal:[{t:"o",x:"How many? "},{t:"i",x:"5"},{t:"o",x:"meow"},{t:"o",x:"meow"},{t:"o",x:"meow"},{t:"o",x:"meow"},{t:"o",x:"meow"}]},
+                {id:22,title:"Count Down 10-1",desc:"Print numbers from 10 down to 1.",hints:["range(start, stop, step)","Negative step counts backwards","Use: range(10, 0, -1)"],terminal:[{t:"o",x:"10"},{t:"o",x:"9"},{t:"c",x:"..."},{t:"o",x:"1"}]},
+                {id:23,title:"Characters on New Lines",desc:"Print each character in user input on new line.",hints:["Get input: text = input(...)","Use: for char in text:","Print each char"],terminal:[{t:"o",x:"Enter text: "},{t:"i",x:"Hello"},{t:"o",x:"H"},{t:"o",x:"e"},{t:"o",x:"l"},{t:"o",x:"l"},{t:"o",x:"o"}]},
+                {id:24,title:"Even or Odd",desc:"For numbers 1 to 15, print 'even' or 'odd'.",hints:["Use: for i in range(1, 16):","Check: if i % 2 == 0:","Print 'even' or 'odd'"],terminal:[{t:"o",x:"1 is odd"},{t:"o",x:"2 is even"},{t:"c",x:"..."},{t:"o",x:"15 is odd"}]},
+                {id:25,title:"Multiplication Table of 3",desc:"Print 3×1 to 3×10.",hints:["Use: for i in range(1, 11):","Calculate: 3 * i","Format nicely"],terminal:[{t:"o",x:"3 × 1 = 3"},{t:"o",x:"3 × 2 = 6"},{t:"c",x:"..."},{t:"o",x:"3 × 10 = 30"}]},
+                {id:26,title:"Vowels Only",desc:"Print each vowel in a word.",hints:["vowels = 'aeiouAEIOU'","For each char, check if in vowels","Print if match"],terminal:[{t:"o",x:"Enter word: "},{t:"i",x:"Programming"},{t:"o",x:"o"},{t:"o",x:"a"},{t:"o",x:"i"}]},
+                {id:27,title:"Multiples of 5",desc:"Loop 1 to 20, print only multiples of 5.",hints:["Use: for i in range(1, 21):","Check: if i % 5 == 0:","Print if true"],terminal:[{t:"o",x:"5"},{t:"o",x:"10"},{t:"o",x:"15"},{t:"o",x:"20"}]},
+                {id:28,title:"Count 'a' Letters",desc:"Count how many 'a' in 'abracadabra'.",hints:["Initialize count = 0","For each char, check if 'a'","Increment count"],terminal:[{t:"o",x:"'a' appears 5 times"}]},
+                {id:29,title:"10 Stars in Row",desc:"Print 10 stars (*) in a row.",hints:["Use: for i in range(10):","Print with: print('*', end='')","Or build string"],terminal:[{t:"o",x:"**********"}]},
+                {id:30,title:"5 Lines of Hashes",desc:"Print 5 lines of '#####'.",hints:["Use: for i in range(5):","Print '#####' or '#' * 5","Each iteration = new line"],terminal:[{t:"o",x:"#####"},{t:"o",x:"#####"},{t:"o",x:"#####"},{t:"o",x:"#####"},{t:"o",x:"#####"}]},
+            ],
+            "Nested Loops": [
+                {id:31,title:"3×3 Square",desc:"Print a 3×3 square of #.",hints:["Outer loop: rows (3)","Inner loop: columns (3)","Print without newline in inner loop"],terminal:[{t:"o",x:"###"},{t:"o",x:"###"},{t:"o",x:"###"}]},
+                {id:32,title:"4×2 Rectangle",desc:"Print a 4×2 rectangle of *.",hints:["Outer: 2 rows","Inner: 4 columns","Same pattern as square"],terminal:[{t:"o",x:"****"},{t:"o",x:"****"}]},
+                {id:33,title:"Triangle",desc:"Print triangle: 1 star, 2 stars... up to 5.",hints:["Outer: for row in range(1, 6):","Inner prints 'row' number of stars","Use: for col in range(row):"],terminal:[{t:"o",x:"*"},{t:"o",x:"**"},{t:"o",x:"***"},{t:"o",x:"****"},{t:"o",x:"*****"}]},
+                {id:34,title:"3×3 Number Grid",desc:"Print numbers in 3×3 grid (1 2 3 on each row).",hints:["Outer: 3 rows","Inner: for col in range(1, 4):","Print col with spaces"],terminal:[{t:"o",x:"1 2 3"},{t:"o",x:"1 2 3"},{t:"o",x:"1 2 3"}]},
+                {id:35,title:"Multiplication Table",desc:"Print table from 1 to 5.",hints:["Outer: for row in range(1, 6):","Inner: for col in range(1, 6):","Print row * col"],terminal:[{t:"o",x:"1  2  3  4  5"},{t:"o",x:"2  4  6  8  10"},{t:"c",x:"..."}]},
+                {id:36,title:"Numeric Staircase",desc:"Print: 1, 12, 123, 1234.",hints:["Outer: for row in range(1, 5):","Inner: for num in range(1, row+1):","Print num without spaces"],terminal:[{t:"o",x:"1"},{t:"o",x:"12"},{t:"o",x:"123"},{t:"o",x:"1234"}]},
+                {id:37,title:"5×5 Dot Grid",desc:"Print a 5×5 grid of dots.",hints:["Same as square","Change range to 5 for both loops"],terminal:[{t:"o",x:"....."},{t:"o",x:"....."},{t:"o",x:"....."},{t:"o",x:"....."},{t:"o",x:"....."}]},
+                {id:38,title:"Checkerboard",desc:"Print checkerboard of # and . (alternating).",hints:["Check if (row + col) % 2 == 0","Print '#' for even, '.' for odd","Creates alternating pattern"],terminal:[{t:"o",x:"#.#.#"},{t:"o",x:".#.#."},{t:"o",x:"#.#.#"},{t:"o",x:".#.#."},{t:"o",x:"#.#.#"}]},
+                {id:39,title:"ABC Rows",desc:"Print 3 rows, each with 'ABC'.",hints:["Outer: for row in range(3):","Inner: for letter in 'ABC':","Print each letter"],terminal:[{t:"o",x:"ABC"},{t:"o",x:"ABC"},{t:"o",x:"ABC"}]},
+                {id:40,title:"Letter Triangle",desc:"Print: A, BB, CCC, DDDD.",hints:["Use chr(65 + row) for letters","Inner loop repeats letter row+1 times","chr(65) = 'A', chr(66) = 'B'"],terminal:[{t:"o",x:"A"},{t:"o",x:"BB"},{t:"o",x:"CCC"},{t:"o",x:"DDDD"}]},
+            ],
+            "Lists": [
+                {id:41,title:"List of Colors",desc:"Create list of 3 colors and print each.",hints:["colors = ['red', 'blue', 'green']","Use: for color in colors:","Print each color"],terminal:[{t:"o",x:"red"},{t:"o",x:"blue"},{t:"o",x:"green"}]},
+                {id:42,title:"Numbers Doubled",desc:"List of 5 numbers, print each doubled.",hints:["numbers = [1, 2, 3, 4, 5]","For each num, print num * 2"],terminal:[{t:"o",x:"2"},{t:"o",x:"4"},{t:"o",x:"6"},{t:"o",x:"8"},{t:"o",x:"10"}]},
+                {id:43,title:"Favorite Foods",desc:"Ask for 3 foods, store and print them.",hints:["foods = []","Loop 3 times","foods.append(input(...))","Print list"],terminal:[{t:"o",x:"Enter food 1: "},{t:"i",x:"pizza"},{t:"o",x:"Enter food 2: "},{t:"i",x:"sushi"},{t:"o",x:"Enter food 3: "},{t:"i",x:"tacos"},{t:"o",x:"Your foods: pizza, sushi, tacos"}]},
+                {id:44,title:"Sum of List",desc:"Sum all numbers in [1, 2, 3, 4].",hints:["numbers = [1, 2, 3, 4]","Initialize total = 0","For each num: total += num"],terminal:[{t:"o",x:"Sum: 10"}]},
+                {id:45,title:"Even Numbers",desc:"Print only even numbers from list.",hints:["Create mixed list","Use: if num % 2 == 0:","Print when true"],terminal:[{t:"o",x:"List: [1,2,3,4,5,6,7,8]"},{t:"o",x:"Evens: 2,4,6,8"}]},
+                {id:46,title:"Odd Numbers",desc:"Print only odd numbers from list.",hints:["Use: if num % 2 == 1","Or: if num % 2 != 0","Print only odds"],terminal:[{t:"o",x:"List: [1,2,3,4,5,6,7,8]"},{t:"o",x:"Odds: 1,3,5,7"}]},
+                {id:47,title:"Name Lengths",desc:"Print length of each name in list.",hints:["names = ['Alice', 'Bob', 'Charlie']","For each name, print len(name)","Or format nicely"],terminal:[{t:"o",x:"Alice: 5"},{t:"o",x:"Bob: 3"},{t:"o",x:"Charlie: 7"}]},
+                {id:48,title:"Store 5 Numbers",desc:"Ask for 5 numbers and store in list.",hints:["numbers = []","Loop 5 times","Get input, convert to int, append"],terminal:[{t:"o",x:"Enter number 1: "},{t:"i",x:"10"},{t:"o",x:"Enter number 2: "},{t:"i",x:"25"},{t:"c",x:"..."},{t:"o",x:"Stored: [10,25,33,47,51]"}]},
+                {id:49,title:"Smallest Number",desc:"Print smallest number in list.",hints:["smallest = numbers[0]","Loop and compare","If num < smallest: update","Or use min()"],terminal:[{t:"o",x:"List: [45,12,67,3,89]"},{t:"o",x:"Smallest: 3"}]},
+                {id:50,title:"Largest Number",desc:"Print largest number in list.",hints:["largest = numbers[0]","Loop and compare","If num > largest: update","Or use max()"],terminal:[{t:"o",x:"List: [45,12,67,3,89]"},{t:"o",x:"Largest: 89"}]},
+                {id:51,title:"Temperatures",desc:"Print each temperature with '°C'.",hints:["temps = [20, 25, 18, 30]","For each temp, print f'{temp}°C'"],terminal:[{t:"o",x:"20°C"},{t:"o",x:"25°C"},{t:"o",x:"18°C"},{t:"o",x:"30°C"}]},
+                {id:52,title:"Colors with Index",desc:"Print colors with their index.",hints:["Method 1: for i, color in enumerate(colors):","Method 2: for i in range(len(colors)):","Print both index and color"],terminal:[{t:"o",x:"0: red"},{t:"o",x:"1: yellow"},{t:"o",x:"2: blue"}]},
+                {id:53,title:"Count 'apple'",desc:"Count how many times 'apple' appears.",hints:["count = 0","For each item, check if == 'apple'","Increment count","Or use list.count('apple')"],terminal:[{t:"o",x:"List: ['apple','banana','apple','orange','apple']"},{t:"o",x:"'apple' appears 3 times"}]},
+                {id:54,title:"Reverse List",desc:"Reverse list manually (no reverse()).",hints:["new_list = []","Loop backwards: range(len(list)-1, -1, -1)","Append list[i] to new_list"],terminal:[{t:"o",x:"Original: [1,2,3,4,5]"},{t:"o",x:"Reversed: [5,4,3,2,1]"}]},
+                {id:55,title:"Strings Longer Than 3",desc:"Print only strings longer than 3 chars.",hints:["For each word in list:","Check: if len(word) > 3:","Print the word"],terminal:[{t:"o",x:"List: ['hi','hello','bye','goodbye']"},{t:"o",x:"hello"},{t:"o",x:"goodbye"}]},
+                {id:56,title:"Comma Separated",desc:"Print items on same line separated by commas.",hints:["Method 1: print(item, end=', ')","Method 2: print(', '.join(list))","Watch for trailing comma"],terminal:[{t:"o",x:"apple, banana, orange, grape"}]},
+                {id:57,title:"Calculate Average",desc:"Create list of 5 numbers, calculate average.",hints:["Sum all numbers: total = 0","Divide by length: avg = total / len(numbers)","Print result"],terminal:[{t:"o",x:"Numbers: [10,20,30,40,50]"},{t:"o",x:"Average: 30.0"}]},
+                {id:58,title:"Numbers Squared",desc:"Ask for 4 numbers, print them squared.",hints:["Get 4 inputs, store in list","For each num, print num ** 2"],terminal:[{t:"o",x:"Enter number 1: "},{t:"i",x:"3"},{t:"c",x:"..."},{t:"o",x:"Squared: 9, 16, 25, 36"}]},
+                {id:59,title:"Uppercase Items",desc:"Print items in list in uppercase.",hints:["words = ['hello', 'world']","For each word, print word.upper()"],terminal:[{t:"o",x:"HELLO"},{t:"o",x:"WORLD"},{t:"o",x:"PYTHON"}]},
+                {id:60,title:"Last 3 Items",desc:"Print last 3 items using a loop.",hints:["Use list[-3:] to get last 3","Or range(len(list)-3, len(list))","Loop and print"],terminal:[{t:"o",x:"List: [10,20,30,40,50,60]"},{t:"o",x:"Last 3: 40, 50, 60"}]},
+            ],
+            "List of Dictionaries": [
+                {id:61,title:"Student Names",desc:"Create list of 3 student dicts, print names.",hints:["students = [{'name': 'Alice', 'age': 20}, ...]","For each student, print student['name']"],terminal:[{t:"o",x:"Alice"},{t:"o",x:"Bob"},{t:"o",x:"Charlie"}]},
+                {id:62,title:"Add Country",desc:"Add 'country' to each dict and print.",hints:["For each student in students:","Add: student['country'] = 'USA'","Print updated dicts"],terminal:[{t:"o",x:"{'name':'Alice','age':20,'country':'USA'}"}]},
+                {id:63,title:"Name: Age Format",desc:"Print 'name: age' for each student.",hints:["For each student:","Print f\"{student['name']}: {student['age']}\""],terminal:[{t:"o",x:"Alice: 20"},{t:"o",x:"Bob: 22"},{t:"o",x:"Charlie: 19"}]},
+                {id:64,title:"Count Age > 18",desc:"Count students with age > 18.",hints:["count = 0","For each student, check if student['age'] > 18","Increment count"],terminal:[{t:"o",x:"Students older than 18: 2"}]},
+                {id:65,title:"Grades Above 90",desc:"Print names of students with grade > 90.",hints:["For each student:","Check: if student['grade'] > 90:","Print student['name']"],terminal:[{t:"o",x:"Students with grade > 90:"},{t:"o",x:"Alice"},{t:"o",x:"Charlie"}]},
+                {id:66,title:"Pet Names",desc:"Print all pet names from pets list.",hints:["pets = [{'type': 'dog', 'name': 'Max'}, ...]","For each pet, print pet['name']"],terminal:[{t:"o",x:"Max"},{t:"o",x:"Whiskers"},{t:"o",x:"Tweety"}]},
+                {id:67,title:"Book Titles",desc:"Create 3 book dicts, print titles.",hints:["books = [{'title': '1984', 'pages': 328}, ...]","Loop and print book['title']"],terminal:[{t:"o",x:"1984"},{t:"o",x:"To Kill a Mockingbird"},{t:"o",x:"The Great Gatsby"}]},
+                {id:68,title:"Salary + 10%",desc:"Print each salary increased by 10%.",hints:["For each employee:","Calculate: new = salary * 1.10","Print name and new salary"],terminal:[{t:"o",x:"Alice: $55000"},{t:"o",x:"Bob: $66000"}]},
+                {id:69,title:"Sum Prices",desc:"Sum all prices from items list.",hints:["total = 0","For each item: total += item['price']","Print total"],terminal:[{t:"o",x:"Total: $45"}]},
+                {id:70,title:"Car Brands",desc:"Print only brands from cars list.",hints:["cars = [{'brand': 'Toyota', 'year': 2020}, ...]","For each car, print car['brand']"],terminal:[{t:"o",x:"Toyota"},{t:"o",x:"Honda"},{t:"o",x:"Ford"}]},
+                {id:71,title:"Name Lives in City",desc:"Print 'name lives in city' format.",hints:["people = [{'name': 'Alice', 'city': 'NYC'}, ...]","Print f\"{person['name']} lives in {person['city']}\""],terminal:[{t:"o",x:"Alice lives in NYC"},{t:"o",x:"Bob lives in LA"}]},
+                {id:72,title:"Price > 20",desc:"Count products with price > 20.",hints:["count = 0","For each product, check if price > 20","Increment if true"],terminal:[{t:"o",x:"Products with price > $20: 4"}]},
+                {id:73,title:"Rating > 8",desc:"Print movie titles with rating > 8.",hints:["For each movie:","Check: if movie['rating'] > 8:","Print movie['title']"],terminal:[{t:"o",x:"Highly rated:"},{t:"o",x:"The Shawshank Redemption"}]},
+                {id:74,title:"Name and Keys",desc:"Print each student's name and their dict keys.",hints:["For each student:","Print student['name']","Print student.keys()"],terminal:[{t:"o",x:"Alice"},{t:"o",x:"Keys: dict_keys(['name','age','grade'])"}]},
+                {id:75,title:"Key: Value Pairs",desc:"Print key: value pairs using nested loop.",hints:["For each dictionary in list:","For each key in dictionary:","Print f'{key}: {dictionary[key]}'"],terminal:[{t:"o",x:"Student 1:"},{t:"o",x:"name: Alice"},{t:"o",x:"age: 20"}]},
+            ],
+            "Dictionaries": [
+                {id:76,title:"Fruits and Colors",desc:"Create dict of 3 fruits→colors, print keys.",hints:["fruits = {'apple': 'red', 'banana': 'yellow'}","Use: for fruit in fruits:","Or: for fruit in fruits.keys():"],terminal:[{t:"o",x:"apple"},{t:"o",x:"banana"},{t:"o",x:"orange"}]},
+                {id:77,title:"Keys and Values",desc:"Print each key and its value.",hints:["Method 1: for key, value in dict.items():","Method 2: for key in dict: print(key, dict[key])"],terminal:[{t:"o",x:"apple: red"},{t:"o",x:"banana: yellow"}]},
+                {id:78,title:"Only Values",desc:"Print only values from dictionary.",hints:["Use: for value in dict.values():","Print each value"],terminal:[{t:"o",x:"red"},{t:"o",x:"yellow"},{t:"o",x:"orange"}]},
+                {id:79,title:"Count Letters",desc:"Count letters in word and store in dict.",hints:["letter_count = {}","For each char in word:","If char in dict, increment; else set to 1"],terminal:[{t:"o",x:"Enter word: "},{t:"i",x:"hello"},{t:"o",x:"{'h':1,'e':1,'l':2,'o':1}"}]},
+                {id:80,title:"Double Values",desc:"Create dict of 5 numbers, double each value.",hints:["For key in dict:","dict[key] = dict[key] * 2","Or: dict[key] *= 2"],terminal:[{t:"o",x:"Original: {'a':5,'b':10}"},{t:"o",x:"Doubled: {'a':10,'b':20}"}]},
+                {id:81,title:"Check Key Exists",desc:"Ask for key, print value if exists.",hints:["Use: if key in dictionary:","Print dictionary[key]","Else: print 'Not found'"],terminal:[{t:"o",x:"Enter fruit: "},{t:"i",x:"apple"},{t:"o",x:"Color: red"}]},
+                {id:82,title:"Check 'banana'",desc:"Check if 'banana' is a key.",hints:["Use: if 'banana' in dictionary:","Print appropriate message"],terminal:[{t:"o",x:"'banana' is in the dictionary"}]},
+                {id:83,title:"Capitals",desc:"Create dict of country→capital, print capitals.",hints:["countries = {'USA': 'Washington', ...}","For capital in countries.values():","Print capital"],terminal:[{t:"o",x:"Washington"},{t:"o",x:"London"},{t:"o",x:"Paris"}]},
+                {id:84,title:"Total Cost",desc:"Sum all prices in dict.",hints:["total = 0","For price in prices.values():","Add to total"],terminal:[{t:"o",x:"Total: $9"}]},
+                {id:85,title:"Add 5 to Prices",desc:"Add 5 to all prices in dict.",hints:["For key in prices:","prices[key] += 5"],terminal:[{t:"o",x:"Updated prices: bread:8, milk:9"}]},
+                {id:86,title:"Values > 100",desc:"Count dict values greater than 100.",hints:["count = 0","For value in dict.values():","If value > 100: count += 1"],terminal:[{t:"o",x:"Values > 100: 2"}]},
+                {id:87,title:"Keys with Vowels",desc:"Print keys starting with a vowel.",hints:["vowels = 'aeiouAEIOU'","For key in dict:","Check: if key[0] in vowels:"],terminal:[{t:"o",x:"Keys with vowels:"},{t:"o",x:"apple"},{t:"o",x:"orange"}]},
+                {id:88,title:"Oldest Age",desc:"Print oldest age from names→ages dict.",hints:["oldest = 0","Loop through values and find max","Or use: max(dict.values())"],terminal:[{t:"o",x:"Oldest age: 30"}]},
+                {id:89,title:"Shortest Key",desc:"Print shortest key in dictionary.",hints:["Initialize with first key","For each key, check len(key)","Or use: min(dict.keys(), key=len)"],terminal:[{t:"o",x:"Shortest key: pear"}]},
+                {id:90,title:"Swap Keys and Values",desc:"Create new dict with keys/values swapped.",hints:["new_dict = {}","For key, value in dict.items():","new_dict[value] = key"],terminal:[{t:"o",x:"Original: {'a':1,'b':2}"},{t:"o",x:"Swapped: {1:'a',2:'b'}"}]},
+            ],
+            "Strings With Loops": [
+                {id:91,title:"Count Vowels",desc:"Count vowels in a word.",hints:["vowels = 'aeiouAEIOU'","count = 0","For each char, if char in vowels: count += 1"],terminal:[{t:"o",x:"Enter word: "},{t:"i",x:"Education"},{t:"o",x:"Vowel count: 5"}]},
+                {id:92,title:"Count Uppercase",desc:"Count uppercase letters.",hints:["count = 0","For each char:","if char.isupper(): count += 1"],terminal:[{t:"o",x:"Enter text: "},{t:"i",x:"Hello World"},{t:"o",x:"Uppercase: 2"}]},
+                {id:93,title:"Character Per Line",desc:"Print each character on its own line.",hints:["Get input","For char in text:","Print char"],terminal:[{t:"o",x:"Enter text: "},{t:"i",x:"Hi!"},{t:"o",x:"H"},{t:"o",x:"i"},{t:"o",x:"!"}]},
+                {id:94,title:"Reverse String",desc:"Reverse string manually with loop.",hints:["reversed_str = ''","Loop from end: range(len(s)-1,-1,-1)","Add each char: reversed_str += s[i]"],terminal:[{t:"o",x:"Enter text: "},{t:"i",x:"hello"},{t:"o",x:"Reversed: olleh"}]},
+                {id:95,title:"Replace Vowels",desc:"Replace every vowel with * manually.",hints:["vowels = 'aeiouAEIOU'","new_str = ''","For each char: if in vowels: add '*', else: add char"],terminal:[{t:"o",x:"Enter text: "},{t:"i",x:"hello world"},{t:"o",x:"h*ll* w*rld"}]},
+                {id:96,title:"Count Spaces",desc:"Count spaces in a sentence.",hints:["count = 0","For each char:","if char == ' ': count += 1"],terminal:[{t:"o",x:"Enter text: "},{t:"i",x:"Hello world from Python"},{t:"o",x:"Spaces: 3"}]},
+                {id:97,title:"Only Consonants",desc:"Print only consonants from string.",hints:["vowels = 'aeiouAEIOU'","For each char:","if char.isalpha() and char not in vowels"],terminal:[{t:"o",x:"Enter text: "},{t:"i",x:"Python"},{t:"o",x:"P y t h n"}]},
+                {id:98,title:"Even Indices",desc:"Print characters at even indices.",hints:["Method 1: for i in range(0, len(s), 2)","Method 2: enumerate and check i % 2 == 0"],terminal:[{t:"o",x:"Enter: "},{t:"i",x:"Programming"},{t:"o",x:"P r g a m n"}]},
+                {id:99,title:"Odd Indices",desc:"Print characters at odd indices.",hints:["Method 1: for i in range(1, len(s), 2)","Method 2: enumerate and check i % 2 == 1"],terminal:[{t:"o",x:"Enter: "},{t:"i",x:"Programming"},{t:"o",x:"r o r m i g"}]},
+                {id:100,title:"Vertical 'hello'",desc:"Print 'hello' vertically 3 times.",hints:["Outer: for i in range(3):","Inner: for char in 'hello':","Print each char on new line"],terminal:[{t:"o",x:"h"},{t:"o",x:"e"},{t:"o",x:"l"},{t:"o",x:"l"},{t:"o",x:"o"},{t:"c",x:"...repeats 3 times"}]},
+            ],
+            "Pattern Printing": [
+                {id:101,title:"Vertical Bricks",desc:"Print vertical column of 6 bricks.",hints:["Use: for i in range(6):","Print '#' or '█'"],terminal:[{t:"o",x:"#"},{t:"o",x:"#"},{t:"o",x:"#"},{t:"o",x:"#"},{t:"o",x:"#"},{t:"o",x:"#"}]},
+                {id:102,title:"Row of Dollars",desc:"Print row of 8 $ symbols.",hints:["Method 1: print('$' * 8)","Method 2: for i in range(8): print('$', end='')"],terminal:[{t:"o",x:"$$$$$$$$"}]},
+                {id:103,title:"User Square",desc:"Print square of size entered by user.",hints:["Get n from input","Two nested loops: both range(n)","Print '#' in inner loop"],terminal:[{t:"o",x:"Enter size: "},{t:"i",x:"4"},{t:"o",x:"####"},{t:"o",x:"####"},{t:"o",x:"####"},{t:"o",x:"####"}]},
+                {id:104,title:"User Rectangle",desc:"Print rectangle given width and height.",hints:["Get height and width","Outer: range(height)","Inner: range(width)"],terminal:[{t:"o",x:"Enter height: "},{t:"i",x:"3"},{t:"o",x:"Enter width: "},{t:"i",x:"7"},{t:"o",x:"#######"},{t:"o",x:"#######"},{t:"o",x:"#######"}]},
+                {id:105,title:"Left Triangle",desc:"Print left-aligned triangle size 5.",hints:["Outer: for row in range(1, 6):","Inner: for col in range(row):","Print '#'"],terminal:[{t:"o",x:"#"},{t:"o",x:"##"},{t:"o",x:"###"},{t:"o",x:"####"},{t:"o",x:"#####"}]},
+                {id:106,title:"Right Triangle",desc:"Print right-aligned triangle size 5.",hints:["For row in range(1, 6):","Print (5 - row) spaces","Print row hashes"],terminal:[{t:"o",x:"    #"},{t:"o",x:"   ##"},{t:"o",x:"  ###"},{t:"o",x:" ####"},{t:"o",x:"#####"}]},
+                {id:107,title:"Hollow Square",desc:"Print hollow square (border only).",hints:["If row is 0 or size-1: print full row","Else: print '#' + spaces + '#'"],terminal:[{t:"o",x:"#####"},{t:"o",x:"#   #"},{t:"o",x:"#   #"},{t:"o",x:"#   #"},{t:"o",x:"#####"}]},
+                {id:108,title:"Pyramid",desc:"Print pyramid of height 4.",hints:["For row 0-3:","Print (3 - row) spaces","Print (2 * row + 1) hashes"],terminal:[{t:"o",x:"   #"},{t:"o",x:"  ###"},{t:"o",x:" #####"},{t:"o",x:"#######"}]},
+                {id:109,title:"Diamond",desc:"Print diamond shape.",hints:["First half: expanding triangle","Second half: contracting triangle","Mirror the calculations"],terminal:[{t:"o",x:"  #"},{t:"o",x:" ###"},{t:"o",x:"#####"},{t:"o",x:" ###"},{t:"o",x:"  #"}]},
+                {id:110,title:"Checkerboard",desc:"Print checkerboard of given size.",hints:["Get size from user","Nested loops","if (row + col) % 2 == 0: print one, else: print other"],terminal:[{t:"o",x:"Enter size: "},{t:"i",x:"6"},{t:"o",x:"# # # "},{t:"o",x:" # # #"},{t:"o",x:"# # # "},{t:"o",x:" # # #"}]},
+            ],
+        };
+
+        // Build sidebar and exercises
+        const sidebar = document.getElementById('sidebar');
+        const mainContent = document.getElementById('mainContent');
+        let currentExercise = 1;
+
+        Object.keys(exerciseData).forEach(category => {
+            const section = document.createElement('div');
+            section.className = 'sidebar-section';
+            section.innerHTML = `<h3>${category}</h3>`;
+            
+            exerciseData[category].forEach(ex => {
+                const item = document.createElement('div');
+                item.className = 'sidebar-item';
+                item.textContent = `${ex.id}. ${ex.title}`;
+                item.dataset.exercise = ex.id;
+                item.onclick = () => showExercise(ex.id);
+                section.appendChild(item);
+            });
+            
+            sidebar.appendChild(section);
+        });
+
+        // Create exercise pages
+        Object.values(exerciseData).flat().forEach(ex => {
+            const container = document.createElement('div');
+            container.className = 'exercise-container';
+            container.id = `exercise-${ex.id}`;
+            
+            let terminalHTML = '';
+            if (ex.terminal && ex.terminal.length > 0) {
+                terminalHTML = `
+                    <div class="section">
+                        <h3>Example Output</h3>
+                        <div class="terminal">
+                            <div class="terminal-header">
+                                <div class="terminal-dot red"></div>
+                                <div class="terminal-dot yellow"></div>
+                                <div class="terminal-dot green"></div>
+                                <div class="terminal-title">python</div>
+                            </div>
+                            ${ex.terminal.map(line => {
+                                if (line.t === 'o') return `<div class="terminal-line terminal-output">${line.x}</div>`;
+                                if (line.t === 'i') return `<div class="terminal-line"><span class="terminal-prompt">>>> </span><span class="terminal-input">${line.x}</span></div>`;
+                                if (line.t === 'c') return `<div class="terminal-line terminal-comment"># ${line.x}</div>`;
+                                return '';
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+            
+            container.innerHTML = `
+                <div class="exercise-header">
+                    <div class="exercise-number">Exercise ${ex.id} of 110</div>
+                    <h1 class="exercise-title">${ex.title}</h1>
+                    <p class="exercise-description">${ex.desc}</p>
+                </div>
+                
+                ${terminalHTML}
+                
+                <div class="section">
+                    <h3>Hints</h3>
+                    <ul>
+                        ${ex.hints.map(hint => `<li>${hint}</li>`).join('')}
+                    </ul>
+                </div>
+                
+                <div class="navigation">
+                    <button class="nav-btn" id="prev-${ex.id}" ${ex.id === 1 ? 'disabled' : ''} onclick="showExercise(${ex.id - 1})">
+                        ← Previous
+                    </button>
+                    <button class="nav-btn" id="next-${ex.id}" ${ex.id === 110 ? 'disabled' : ''} onclick="showExercise(${ex.id + 1})">
+                        Next →
+                    </button>
+                </div>
+            `;
+            
+            mainContent.appendChild(container);
+        });
+
+        function showExercise(id) {
+            // Hide all exercises
+            document.querySelectorAll('.exercise-container').forEach(el => el.classList.remove('active'));
+            document.querySelectorAll('.sidebar-item').forEach(el => el.classList.remove('active'));
+            
+            // Show selected exercise
+            document.getElementById(`exercise-${id}`).classList.add('active');
+            document.querySelector(`[data-exercise="${id}"]`).classList.add('active');
+            
+            // Scroll to top
+            window.scrollTo(0, 0);
+            
+            // Close mobile menu
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('open');
+            
+            currentExercise = id;
+        }
+
+        // Mobile menu toggle
+        document.getElementById('burgerMenu').onclick = () => {
+            document.getElementById('sidebar').classList.toggle('open');
+            document.getElementById('sidebarOverlay').classList.toggle('open');
+        };
+
+        document.getElementById('sidebarOverlay').onclick = () => {
+            document.getElementById('sidebar').classList.remove('open');
+            document.getElementById('sidebarOverlay').classList.remove('open');
+        };
+
+        // Show first exercise on load
+        showExercise(1);
+        
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentExercise > 1) {
+                showExercise(currentExercise - 1);
+            } else if (e.key === 'ArrowRight' && currentExercise < 110) {
+                showExercise(currentExercise + 1);
+            }
+        });
+    </script>
+</body>
+</html>

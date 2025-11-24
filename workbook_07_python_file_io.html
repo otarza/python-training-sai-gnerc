@@ -1,0 +1,2397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python File I/O Workbook - 70 Exercises</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #c9d1d9;
+            --text-secondary: #8b949e;
+            --accent: #58a6ff;
+            --accent-hover: #1f6feb;
+            --border: #30363d;
+            --success: #3fb950;
+            --warning: #d29922;
+            --sidebar-width: 320px;
+            --header-height: 70px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: var(--header-height);
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border);
+            display: flex;
+            align-items: center;
+            padding: 0 2rem;
+            z-index: 1000;
+        }
+
+        .burger-menu {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            margin-right: 1rem;
+            transition: color 0.3s;
+        }
+
+        .burger-menu:hover {
+            color: var(--accent);
+        }
+
+        .header h1 {
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            font-weight: 400;
+            margin-left: 1rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: var(--header-height);
+            width: var(--sidebar-width);
+            height: calc(100vh - var(--header-height));
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            transition: transform 0.3s ease;
+            z-index: 999;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--border);
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #484f58;
+        }
+
+        .sidebar-section {
+            margin-bottom: 1.5rem;
+        }
+
+        .sidebar-section h3 {
+            color: var(--text-secondary);
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            padding: 0 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+        }
+
+        .sidebar-item {
+            display: block;
+            padding: 0.5rem 1.5rem;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.2s;
+            cursor: pointer;
+            border-left: 3px solid transparent;
+            font-size: 0.9rem;
+        }
+
+        .sidebar-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--accent);
+        }
+
+        .sidebar-item.active {
+            background: var(--bg-tertiary);
+            color: var(--accent);
+            border-left-color: var(--accent);
+        }
+
+        .sidebar-item .exercise-number {
+            display: inline-block;
+            width: 35px;
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            margin-top: var(--header-height);
+            padding: 2rem;
+            min-height: calc(100vh - var(--header-height));
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+        }
+
+        .exercise {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .exercise.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exercise-header {
+            margin-bottom: 2rem;
+            padding-bottom: 1.5rem;
+            border-bottom: 2px solid var(--border);
+        }
+
+        .exercise-number-badge {
+            display: inline-block;
+            background: var(--accent);
+            color: #000;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+
+        .difficulty-badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 20px;
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-left: 0.5rem;
+        }
+
+        .difficulty-beginner {
+            background: rgba(63, 185, 80, 0.2);
+            color: var(--success);
+        }
+
+        .difficulty-intermediate {
+            background: rgba(210, 153, 34, 0.2);
+            color: var(--warning);
+        }
+
+        .difficulty-advanced {
+            background: rgba(88, 166, 255, 0.2);
+            color: var(--accent);
+        }
+
+        .exercise-title {
+            font-size: 2rem;
+            font-weight: 600;
+            color: var(--text-primary);
+            margin: 1rem 0;
+        }
+
+        .exercise-description {
+            font-size: 1.1rem;
+            color: var(--text-secondary);
+            line-height: 1.8;
+            margin-bottom: 2rem;
+        }
+
+        .section {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 1.5rem;
+        }
+
+        .section-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+        }
+
+        .section-title::before {
+            content: '▸';
+            margin-right: 0.5rem;
+        }
+
+        .section-content {
+            color: var(--text-primary);
+        }
+
+        .section-content p {
+            margin-bottom: 0.75rem;
+        }
+
+        .section-content ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .section-content li {
+            padding: 0.5rem 0;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+
+        .section-content li::before {
+            content: '•';
+            position: absolute;
+            left: 0.5rem;
+            color: var(--accent);
+        }
+
+        /* Terminal */
+        .terminal {
+            background: #000;
+            border: 1px solid var(--border);
+            border-radius: 8px;
+            padding: 1rem;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            overflow-x: auto;
+            margin: 1rem 0;
+        }
+
+        .terminal-header {
+            color: var(--text-secondary);
+            margin-bottom: 0.75rem;
+            font-size: 0.85rem;
+        }
+
+        .terminal-line {
+            margin: 0.25rem 0;
+        }
+
+        .terminal-prompt {
+            color: var(--success);
+        }
+
+        .terminal-input {
+            color: #fff;
+        }
+
+        .terminal-output {
+            color: var(--accent);
+        }
+
+        .terminal-comment {
+            color: var(--text-secondary);
+            font-style: italic;
+        }
+
+        /* Code blocks */
+        .code-example {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent);
+            padding: 1rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border);
+        }
+
+        .nav-button {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-button:hover {
+            background: var(--accent);
+            color: #000;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.3;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        .nav-button:disabled:hover {
+            background: var(--bg-secondary);
+            color: var(--text-primary);
+            border-color: var(--border);
+        }
+
+        .progress-indicator {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .burger-menu {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .header {
+                padding: 0 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.2rem;
+            }
+
+            .header .subtitle {
+                display: none;
+            }
+
+            .exercise-title {
+                font-size: 1.5rem;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+        }
+
+        /* Overlay for mobile */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: var(--header-height);
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 998;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Tips and Notes */
+        .tip {
+            background: rgba(88, 166, 255, 0.1);
+            border-left: 3px solid var(--accent);
+            padding: 1rem;
+            border-radius: 4px;
+            margin: 1rem 0;
+        }
+
+        .tip-title {
+            font-weight: 600;
+            color: var(--accent);
+            margin-bottom: 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <button class="burger-menu" id="burgerMenu" aria-label="Toggle menu">☰</button>
+        <h1>Python File I/O Workbook</h1>
+        <span class="subtitle">70 Reinforcement Exercises</span>
+    </header>
+
+    <!-- Overlay for mobile -->
+    <div class="overlay" id="overlay"></div>
+
+    <!-- Sidebar -->
+    <nav class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <h3>🟢 Part 1: Writing & Reading</h3>
+            <div id="part1-nav"></div>
+        </div>
+        <div class="sidebar-section">
+            <h3>🟡 Part 2: with open()</h3>
+            <div id="part2-nav"></div>
+        </div>
+        <div class="sidebar-section">
+            <h3>🟠 Part 3: Lists & Sorting</h3>
+            <div id="part3-nav"></div>
+        </div>
+        <div class="sidebar-section">
+            <h3>🔵 Part 4: CSV Basics</h3>
+            <div id="part4-nav"></div>
+        </div>
+        <div class="sidebar-section">
+            <h3>🔵 Part 5: CSV Dictionaries</h3>
+            <div id="part5-nav"></div>
+        </div>
+        <div class="sidebar-section">
+            <h3>🟣 Part 6: CSV Module</h3>
+            <div id="part6-nav"></div>
+        </div>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="container">
+            <div id="exercises-container"></div>
+
+            <!-- Navigation -->
+            <div class="navigation">
+                <button class="nav-button" id="prevBtn">
+                    ← Previous
+                </button>
+                <div class="progress-indicator" id="progress"></div>
+                <button class="nav-button" id="nextBtn">
+                    Next →
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        // Exercise data
+        const exercises = [
+            // Part 1: Writing and Reading Text Files (1-20)
+            {
+                number: 1,
+                part: 1,
+                title: "Create Your First File",
+                description: "Create a file named hello.txt and write the word Hello inside it.",
+                difficulty: "beginner",
+                explanation: "This is your first step in file handling! You'll learn how to create a new file and write text to it using Python's built-in functions.",
+                steps: [
+                    "Use the open() function with write mode ('w')",
+                    "Write the text 'Hello' to the file",
+                    "Don't forget to close the file after writing"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise1.py" },
+                    { type: "output", text: "File created successfully!" }
+                ],
+                tips: [
+                    "The 'w' mode creates a new file if it doesn't exist",
+                    "If the file already exists, 'w' mode will overwrite it",
+                    "Always close files after you're done with them"
+                ]
+            },
+            {
+                number: 2,
+                part: 1,
+                title: "Add Confirmation Message",
+                description: "Modify your program to also print 'File created!' after writing.",
+                difficulty: "beginner",
+                explanation: "Adding user feedback makes your programs more interactive and helps confirm that operations completed successfully.",
+                steps: [
+                    "After writing to the file, use print() to display a message",
+                    "This confirms the operation was successful"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise2.py" },
+                    { type: "output", text: "File created!" }
+                ],
+                tips: [
+                    "Good programs always provide feedback to users",
+                    "Print statements help with debugging"
+                ]
+            },
+            {
+                number: 3,
+                part: 1,
+                title: "Write Your Name",
+                description: "Write your name into a file called name.txt.",
+                difficulty: "beginner",
+                explanation: "Practice the same concept with different content. Repetition builds confidence!",
+                steps: [
+                    "Create a file called name.txt",
+                    "Write your name to it",
+                    "Close the file"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise3.py" },
+                    { type: "output", text: "Your name has been saved!" }
+                ],
+                tips: [
+                    "You can write any string to a file",
+                    "File names can be anything you choose"
+                ]
+            },
+            {
+                number: 4,
+                part: 1,
+                title: "User Input to File",
+                description: "Ask the user for their name and write it into name.txt.",
+                difficulty: "beginner",
+                explanation: "Now we combine file writing with user input. This makes your program interactive!",
+                steps: [
+                    "Use input() to get the user's name",
+                    "Store it in a variable",
+                    "Write that variable to the file"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise4.py" },
+                    { type: "input", text: "Enter your name: John" },
+                    { type: "output", text: "Name saved to file!" }
+                ],
+                tips: [
+                    "input() always returns a string",
+                    "You can use any variable name to store user input"
+                ]
+            },
+            {
+                number: 5,
+                part: 1,
+                title: "Save Favorite Color",
+                description: "Ask for the user's favorite color and write it to color.txt.",
+                difficulty: "beginner",
+                explanation: "Another practice with user input and file writing. Each exercise reinforces the pattern.",
+                steps: [
+                    "Ask for favorite color using input()",
+                    "Open color.txt in write mode",
+                    "Write the color to the file"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise5.py" },
+                    { type: "input", text: "What's your favorite color? Blue" },
+                    { type: "output", text: "Color saved!" }
+                ],
+                tips: [
+                    "You can create multiple files in one program",
+                    "Each file operation is independent"
+                ]
+            },
+            {
+                number: 6,
+                part: 1,
+                title: "Multiple Lines of Text",
+                description: "Ask the user for three words and write them one per line into words.txt.",
+                difficulty: "beginner",
+                explanation: "Learn how to write multiple lines to a file. Each word should appear on its own line.",
+                steps: [
+                    "Get three words from the user",
+                    "Write each word followed by a newline character (\\n)",
+                    "Or use multiple write() calls"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise6.py" },
+                    { type: "input", text: "Word 1: Python" },
+                    { type: "input", text: "Word 2: Programming" },
+                    { type: "input", text: "Word 3: Files" },
+                    { type: "output", text: "Words saved!" }
+                ],
+                tips: [
+                    "The \\n character creates a new line",
+                    "You can call write() multiple times"
+                ]
+            },
+            {
+                number: 7,
+                part: 1,
+                title: "Write a Sentence",
+                description: "Write a sentence of your choice into sentence.txt.",
+                difficulty: "beginner",
+                explanation: "Practice writing longer text. A sentence is just a longer string!",
+                steps: [
+                    "Create a sentence as a string",
+                    "Write it to sentence.txt"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise7.py" },
+                    { type: "output", text: "Sentence saved to file!" }
+                ],
+                tips: [
+                    "Sentences can contain spaces and punctuation",
+                    "Everything is just text to Python"
+                ]
+            },
+            {
+                number: 8,
+                part: 1,
+                title: "Multiple Sentences",
+                description: "Write two sentences into a file, each on a new line.",
+                difficulty: "beginner",
+                explanation: "Combine multiple sentences with proper line breaks.",
+                steps: [
+                    "Write first sentence",
+                    "Add a newline (\\n)",
+                    "Write second sentence"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise8.py" },
+                    { type: "output", text: "Both sentences saved!" }
+                ],
+                tips: [
+                    "Remember to add \\n between sentences",
+                    "You can also use f-strings with \\n"
+                ]
+            },
+            {
+                number: 9,
+                part: 1,
+                title: "Read a File",
+                description: "Read and print the contents of sentence.txt.",
+                difficulty: "beginner",
+                explanation: "Now learn to read files! Use 'r' mode (read mode) instead of 'w' mode.",
+                steps: [
+                    "Open the file in read mode ('r')",
+                    "Use .read() to get all contents",
+                    "Print the result"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise9.py" },
+                    { type: "output", text: "Python is fun to learn. File handling is important." }
+                ],
+                tips: [
+                    "Read mode ('r') is the default mode",
+                    ".read() returns the entire file as a string",
+                    "The file must exist before you can read it"
+                ]
+            },
+            {
+                number: 10,
+                part: 1,
+                title: "Read Line by Line",
+                description: "Read and print the contents of words.txt line by line.",
+                difficulty: "beginner",
+                explanation: "Learn to read files one line at a time using a for loop.",
+                steps: [
+                    "Open the file in read mode",
+                    "Use a for loop to iterate over the file object",
+                    "Print each line"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise10.py" },
+                    { type: "output", text: "Python" },
+                    { type: "output", text: "Programming" },
+                    { type: "output", text: "Files" }
+                ],
+                tips: [
+                    "You can loop directly over a file object",
+                    "Each iteration gives you one line",
+                    "Lines include the newline character"
+                ]
+            },
+            {
+                number: 11,
+                part: 1,
+                title: "Write and Read Back",
+                description: "Write a list of three animal names into animals.txt and print them back.",
+                difficulty: "beginner",
+                explanation: "Combine writing and reading in one program. First write, then read the same file.",
+                steps: [
+                    "Write three animal names to the file",
+                    "Close the file",
+                    "Open it again in read mode",
+                    "Print the contents"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise11.py" },
+                    { type: "output", text: "Writing animals..." },
+                    { type: "output", text: "Reading back:" },
+                    { type: "output", text: "Cat" },
+                    { type: "output", text: "Dog" },
+                    { type: "output", text: "Bird" }
+                ],
+                tips: [
+                    "You need to close the file after writing before you can read it",
+                    "Or open it in different modes in separate operations"
+                ]
+            },
+            {
+                number: 12,
+                part: 1,
+                title: "Save Movie List",
+                description: "Ask for three favorite movies and save them in movies.txt.",
+                difficulty: "beginner",
+                explanation: "More practice with multiple user inputs and file writing.",
+                steps: [
+                    "Ask for three movie names",
+                    "Write each one on a new line"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise12.py" },
+                    { type: "input", text: "Movie 1: Inception" },
+                    { type: "input", text: "Movie 2: The Matrix" },
+                    { type: "input", text: "Movie 3: Interstellar" },
+                    { type: "output", text: "Movies saved!" }
+                ],
+                tips: [
+                    "You can use a loop to get multiple inputs",
+                    "Makes the code shorter and cleaner"
+                ]
+            },
+            {
+                number: 13,
+                part: 1,
+                title: "Numbered Movie List",
+                description: "Read movies.txt and print each movie with a number (1., 2., 3.).",
+                difficulty: "beginner",
+                explanation: "Learn to add formatting to your output. Use enumerate or a counter.",
+                steps: [
+                    "Read the file line by line",
+                    "Add a number before each line",
+                    "Print with nice formatting"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise13.py" },
+                    { type: "output", text: "1. Inception" },
+                    { type: "output", text: "2. The Matrix" },
+                    { type: "output", text: "3. Interstellar" }
+                ],
+                tips: [
+                    "enumerate() is perfect for this",
+                    "Or use a counter variable that increases each loop"
+                ]
+            },
+            {
+                number: 14,
+                part: 1,
+                title: "Save Your Age",
+                description: "Ask for the user's age and write it into age.txt.",
+                difficulty: "beginner",
+                explanation: "Even though age is a number, you'll write it as text to the file.",
+                steps: [
+                    "Get age from user",
+                    "Write to age.txt"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise14.py" },
+                    { type: "input", text: "Enter your age: 25" },
+                    { type: "output", text: "Age saved!" }
+                ],
+                tips: [
+                    "input() returns a string, even if user types a number",
+                    "Files store everything as text"
+                ]
+            },
+            {
+                number: 15,
+                part: 1,
+                title: "Append Mode Introduction",
+                description: "Modify your program to append new ages instead of overwriting the file.",
+                difficulty: "beginner",
+                explanation: "Learn about append mode ('a'). It adds to the end of a file instead of replacing everything.",
+                steps: [
+                    "Use 'a' mode instead of 'w' mode",
+                    "Each new age will be added to the end"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise15.py" },
+                    { type: "input", text: "Enter age: 30" },
+                    { type: "output", text: "Age appended!" },
+                    { type: "comment", text: "Run again..." },
+                    { type: "input", text: "Enter age: 25" },
+                    { type: "output", text: "Age appended!" }
+                ],
+                tips: [
+                    "'a' mode creates the file if it doesn't exist",
+                    "'a' mode doesn't delete existing content",
+                    "Always add \\n to separate entries"
+                ]
+            },
+            {
+                number: 16,
+                part: 1,
+                title: "Append Multiple Ages",
+                description: "Append three more ages to the same file and print all of them.",
+                difficulty: "beginner",
+                explanation: "Practice append mode multiple times and then read all the accumulated data.",
+                steps: [
+                    "Append three ages using 'a' mode",
+                    "Then read and print all ages"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise16.py" },
+                    { type: "input", text: "Age 1: 28" },
+                    { type: "input", text: "Age 2: 32" },
+                    { type: "input", text: "Age 3: 19" },
+                    { type: "output", text: "All ages in file:" },
+                    { type: "output", text: "30, 25, 28, 32, 19" }
+                ],
+                tips: [
+                    "The file keeps growing each time you append",
+                    "Remember to read after closing the write operation"
+                ]
+            },
+            {
+                number: 17,
+                part: 1,
+                title: "Proper Line Breaks",
+                description: "Add \\n after each age so that every age appears on a new line.",
+                difficulty: "beginner",
+                explanation: "Learn the importance of newline characters for readable file output.",
+                steps: [
+                    "When writing each age, add '\\n' at the end",
+                    "This creates proper line breaks"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise17.py" },
+                    { type: "comment", text: "File contents:" },
+                    { type: "output", text: "30" },
+                    { type: "output", text: "25" },
+                    { type: "output", text: "28" }
+                ],
+                tips: [
+                    "Without \\n, everything appears on one line",
+                    "You can use f-strings: f'{age}\\n'"
+                ]
+            },
+            {
+                number: 18,
+                part: 1,
+                title: "Friends List",
+                description: "Ask for three friends' names and write each one to a new line in friends.txt.",
+                difficulty: "beginner",
+                explanation: "Combine everything you've learned: input, loops, line breaks, and file writing.",
+                steps: [
+                    "Get three names from user",
+                    "Write each with a newline",
+                    "Confirm success"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise18.py" },
+                    { type: "input", text: "Friend 1: Alice" },
+                    { type: "input", text: "Friend 2: Bob" },
+                    { type: "input", text: "Friend 3: Charlie" },
+                    { type: "output", text: "Friends saved!" }
+                ],
+                tips: [
+                    "Consider using a for loop with range(3)",
+                    "Makes your code more efficient"
+                ]
+            },
+            {
+                number: 19,
+                part: 1,
+                title: "Read and Format",
+                description: "Read all lines from friends.txt and print them nicely formatted.",
+                difficulty: "beginner",
+                explanation: "Practice reading and adding nice formatting to your output.",
+                steps: [
+                    "Read the file line by line",
+                    "Add formatting like 'Friend: {name}'"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise19.py" },
+                    { type: "output", text: "Friend: Alice" },
+                    { type: "output", text: "Friend: Bob" },
+                    { type: "output", text: "Friend: Charlie" }
+                ],
+                tips: [
+                    "Use f-strings for nice formatting",
+                    "You can add decorative elements like emojis"
+                ]
+            },
+            {
+                number: 20,
+                part: 1,
+                title: "Clean Output with rstrip()",
+                description: "Use rstrip() to remove the extra newlines when printing.",
+                difficulty: "beginner",
+                explanation: "Learn about the rstrip() method to clean up unwanted whitespace and newlines.",
+                steps: [
+                    "When printing each line, use .rstrip()",
+                    "This removes trailing whitespace and \\n"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise20.py" },
+                    { type: "comment", text: "Without rstrip:" },
+                    { type: "output", text: "Alice\n\n" },
+                    { type: "comment", text: "With rstrip:" },
+                    { type: "output", text: "Alice" }
+                ],
+                tips: [
+                    "rstrip() removes characters from the right side",
+                    "lstrip() removes from the left",
+                    "strip() removes from both sides"
+                ]
+            },
+            // Part 2: Using with open() (21-30)
+            {
+                number: 21,
+                part: 2,
+                title: "Safer File Handling",
+                description: "Rewrite your friends.txt program using with open().",
+                difficulty: "intermediate",
+                explanation: "The 'with' statement automatically closes files, even if errors occur. This is the recommended way to work with files!",
+                steps: [
+                    "Use: with open('filename', 'mode') as file:",
+                    "Write your code inside the indented block",
+                    "File closes automatically when done"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise21.py" },
+                    { type: "output", text: "Friends saved safely!" }
+                ],
+                tips: [
+                    "with statements are Python best practice",
+                    "No need to call .close() manually",
+                    "Safer and cleaner code"
+                ]
+            },
+            {
+                number: 22,
+                part: 2,
+                title: "Save Numbers with Context Manager",
+                description: "Write a program that saves 5 numbers to numbers.txt using with open().",
+                difficulty: "intermediate",
+                explanation: "Practice the 'with' statement with numerical data.",
+                steps: [
+                    "Get 5 numbers from user or create them",
+                    "Use with open() in write mode",
+                    "Write each number on a new line"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise22.py" },
+                    { type: "input", text: "Number 1: 10" },
+                    { type: "input", text: "Number 2: 20" },
+                    { type: "input", text: "Number 3: 30" },
+                    { type: "input", text: "Number 4: 40" },
+                    { type: "input", text: "Number 5: 50" },
+                    { type: "output", text: "Numbers saved!" }
+                ],
+                tips: [
+                    "Convert input to int if you need to do math",
+                    "Convert back to string when writing to file"
+                ]
+            },
+            {
+                number: 23,
+                part: 2,
+                title: "Read and Sum Numbers",
+                description: "Read back the 5 numbers and print their sum.",
+                difficulty: "intermediate",
+                explanation: "Combine file reading with numerical operations. You'll need to convert strings to integers.",
+                steps: [
+                    "Read the file line by line",
+                    "Convert each line to int()",
+                    "Calculate the sum",
+                    "Print the result"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise23.py" },
+                    { type: "output", text: "Sum of all numbers: 150" }
+                ],
+                tips: [
+                    "Remember to strip() before converting to int",
+                    "int('50\\n') will cause an error",
+                    "int('50'.strip()) works perfectly"
+                ]
+            },
+            {
+                number: 24,
+                part: 2,
+                title: "Quotes Collection",
+                description: "Write 3 lines into a file named quotes.txt using with open().",
+                difficulty: "intermediate",
+                explanation: "Store inspirational or interesting quotes in a file for later reading.",
+                steps: [
+                    "Create three quote strings",
+                    "Use with open() to write them",
+                    "Each quote on its own line"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise24.py" },
+                    { type: "output", text: "Quotes saved!" }
+                ],
+                tips: [
+                    "You can use triple quotes for multi-line strings",
+                    "Or just regular strings with \\n"
+                ]
+            },
+            {
+                number: 25,
+                part: 2,
+                title: "Display Quotes with Label",
+                description: "Read quotes.txt line by line and print 'Quote:' before each.",
+                difficulty: "intermediate",
+                explanation: "Add formatting to make your output more readable and professional.",
+                steps: [
+                    "Read each line from the file",
+                    "Print 'Quote:' followed by the quote text"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise25.py" },
+                    { type: "output", text: "Quote: The only way to do great work is to love what you do." },
+                    { type: "output", text: "Quote: Success is not final, failure is not fatal." },
+                    { type: "output", text: "Quote: Believe you can and you're halfway there." }
+                ],
+                tips: [
+                    "Use f-strings for clean formatting",
+                    "Don't forget to strip() to remove extra newlines"
+                ]
+            },
+            {
+                number: 26,
+                part: 2,
+                title: "Append New Quote",
+                description: "Ask the user for a new quote and append it to quotes.txt.",
+                difficulty: "intermediate",
+                explanation: "Use append mode ('a') with the with statement to safely add new content.",
+                steps: [
+                    "Get a quote from user input",
+                    "Use with open() in append mode",
+                    "Add the new quote"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise26.py" },
+                    { type: "input", text: "Enter a quote: Life is beautiful." },
+                    { type: "output", text: "Quote added!" }
+                ],
+                tips: [
+                    "with open('file.txt', 'a') for append mode",
+                    "Don't forget to add \\n after the quote"
+                ]
+            },
+            {
+                number: 27,
+                part: 2,
+                title: "Sorted Quotes",
+                description: "Read and print all quotes sorted alphabetically.",
+                difficulty: "intermediate",
+                explanation: "Combine file reading with Python's sorting capabilities.",
+                steps: [
+                    "Read all lines into a list",
+                    "Use .sort() or sorted()",
+                    "Print the sorted list"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise27.py" },
+                    { type: "output", text: "Believe you can and you're halfway there." },
+                    { type: "output", text: "Life is beautiful." },
+                    { type: "output", text: "Success is not final, failure is not fatal." },
+                    { type: "output", text: "The only way to do great work is to love what you do." }
+                ],
+                tips: [
+                    "readlines() returns a list of all lines",
+                    "sorted() returns a new sorted list",
+                    ".sort() sorts the list in place"
+                ]
+            },
+            {
+                number: 28,
+                part: 2,
+                title: "Countries Collection",
+                description: "Write 3 country names into countries.txt, then read and print them.",
+                difficulty: "intermediate",
+                explanation: "Practice the complete cycle: write, close, read, display.",
+                steps: [
+                    "Write three country names",
+                    "Read them back",
+                    "Display them"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise28.py" },
+                    { type: "output", text: "Countries saved!" },
+                    { type: "output", text: "Reading countries:" },
+                    { type: "output", text: "Georgia" },
+                    { type: "output", text: "Japan" },
+                    { type: "output", text: "Canada" }
+                ],
+                tips: [
+                    "You can do both operations in the same program",
+                    "Just use with open() twice with different modes"
+                ]
+            },
+            {
+                number: 29,
+                part: 2,
+                title: "Append and Display",
+                description: "Append one more country to the same file and print all again.",
+                difficulty: "intermediate",
+                explanation: "Use append mode to add data without losing existing content.",
+                steps: [
+                    "Open in append mode",
+                    "Add one new country",
+                    "Read and display all countries"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise29.py" },
+                    { type: "input", text: "Add a country: Brazil" },
+                    { type: "output", text: "All countries:" },
+                    { type: "output", text: "Georgia, Japan, Canada, Brazil" }
+                ],
+                tips: [
+                    "First append, then read in a separate operation",
+                    "Or read first to show 'before', then append and show 'after'"
+                ]
+            },
+            {
+                number: 30,
+                part: 2,
+                title: "Count File Lines",
+                description: "Write a program that counts how many lines are in countries.txt.",
+                difficulty: "intermediate",
+                explanation: "Learn to process files by counting their contents.",
+                steps: [
+                    "Read the file",
+                    "Count the lines using len() or a counter",
+                    "Print the total"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise30.py" },
+                    { type: "output", text: "Total countries: 4" }
+                ],
+                tips: [
+                    "len(file.readlines()) gives you the count",
+                    "Or count manually in a loop",
+                    "Both approaches work!"
+                ]
+            },
+            // Part 3: Lists and Sorting (31-40)
+            {
+                number: 31,
+                part: 3,
+                title: "File to List",
+                description: "Read names from friends.txt into a list and print it.",
+                difficulty: "intermediate",
+                explanation: "Learn to store file contents in a Python list for easier manipulation.",
+                steps: [
+                    "Read all lines from the file",
+                    "Store them in a list",
+                    "Print the list"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise31.py" },
+                    { type: "output", text: "['Alice', 'Bob', 'Charlie']" }
+                ],
+                tips: [
+                    "readlines() returns a list",
+                    "You might want to strip() each name",
+                    "List comprehensions are useful here"
+                ]
+            },
+            {
+                number: 32,
+                part: 3,
+                title: "Sort Names Alphabetically",
+                description: "Sort the names alphabetically and print them.",
+                difficulty: "intermediate",
+                explanation: "Use Python's built-in sorting to organize your data.",
+                steps: [
+                    "Read names into a list",
+                    "Use .sort() or sorted()",
+                    "Print the sorted names"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise32.py" },
+                    { type: "output", text: "Alice" },
+                    { type: "output", text: "Bob" },
+                    { type: "output", text: "Charlie" }
+                ],
+                tips: [
+                    "sorted() is often cleaner",
+                    "names.sort() modifies the original list",
+                    "sorted(names) returns a new list"
+                ]
+            },
+            {
+                number: 33,
+                part: 3,
+                title: "Avoid Duplicates",
+                description: "Write new names into friends.txt only if they're not already there.",
+                difficulty: "intermediate",
+                explanation: "Learn to check existing data before adding new entries. This prevents duplicate names.",
+                steps: [
+                    "Read existing names into a list",
+                    "Check if new name is in the list",
+                    "Only append if it's not there"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise33.py" },
+                    { type: "input", text: "Add friend: Alice" },
+                    { type: "output", text: "Alice already exists!" },
+                    { type: "input", text: "Add friend: David" },
+                    { type: "output", text: "David added!" }
+                ],
+                tips: [
+                    "Use 'if name in names_list:' to check",
+                    "Read first, check, then append if needed",
+                    "Consider using a set for faster lookups"
+                ]
+            },
+            {
+                number: 34,
+                part: 3,
+                title: "Sorted Fruits List",
+                description: "Ask for five fruit names, write them to fruits.txt, then print them sorted.",
+                difficulty: "intermediate",
+                explanation: "Combine input collection, file writing, and sorting in one program.",
+                steps: [
+                    "Collect five fruit names",
+                    "Write to file",
+                    "Read back and sort",
+                    "Display sorted list"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise34.py" },
+                    { type: "input", text: "Fruit 1: Orange" },
+                    { type: "input", text: "Fruit 2: Apple" },
+                    { type: "input", text: "Fruit 3: Mango" },
+                    { type: "input", text: "Fruit 4: Banana" },
+                    { type: "input", text: "Fruit 5: Cherry" },
+                    { type: "output", text: "Sorted fruits:" },
+                    { type: "output", text: "Apple, Banana, Cherry, Mango, Orange" }
+                ],
+                tips: [
+                    "You can sort while reading",
+                    "Or collect, write, then read and sort"
+                ]
+            },
+            {
+                number: 35,
+                part: 3,
+                title: "Word Counter",
+                description: "Read words from a file and count how many words there are.",
+                difficulty: "intermediate",
+                explanation: "Count the number of lines/words in a file.",
+                steps: [
+                    "Read the file",
+                    "Count lines or split words",
+                    "Print the count"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise35.py" },
+                    { type: "output", text: "Total words: 5" }
+                ],
+                tips: [
+                    "One word per line? Count lines",
+                    "Multiple words per line? Use .split()",
+                    "len() is your friend"
+                ]
+            },
+            {
+                number: 36,
+                part: 3,
+                title: "Cities Collection",
+                description: "Create a program that saves five cities into cities.txt.",
+                difficulty: "intermediate",
+                explanation: "Build a collection of cities for travel or reference.",
+                steps: [
+                    "Get five city names",
+                    "Save to cities.txt",
+                    "Confirm success"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise36.py" },
+                    { type: "input", text: "City 1: Tbilisi" },
+                    { type: "input", text: "City 2: Tokyo" },
+                    { type: "input", text: "City 3: Paris" },
+                    { type: "input", text: "City 4: New York" },
+                    { type: "input", text: "City 5: Sydney" },
+                    { type: "output", text: "Cities saved!" }
+                ],
+                tips: [
+                    "Use a for loop with range(5)",
+                    "Store in a list first, then write"
+                ]
+            },
+            {
+                number: 37,
+                part: 3,
+                title: "Travel Dreams",
+                description: "Read the cities back and print: 'I'd like to visit {city} one day.'",
+                difficulty: "intermediate",
+                explanation: "Create personalized messages based on file data.",
+                steps: [
+                    "Read each city",
+                    "Format with an f-string",
+                    "Print the message"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise37.py" },
+                    { type: "output", text: "I'd like to visit Tbilisi one day." },
+                    { type: "output", text: "I'd like to visit Tokyo one day." },
+                    { type: "output", text: "I'd like to visit Paris one day." }
+                ],
+                tips: [
+                    "f-strings make this easy and readable",
+                    "Remember to strip() each line"
+                ]
+            },
+            {
+                number: 38,
+                part: 3,
+                title: "Uppercase Conversion",
+                description: "Read names from a file, convert each to uppercase, and print.",
+                difficulty: "intermediate",
+                explanation: "Transform text data using Python string methods.",
+                steps: [
+                    "Read each name",
+                    "Use .upper() method",
+                    "Print the result"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise38.py" },
+                    { type: "output", text: "ALICE" },
+                    { type: "output", text: "BOB" },
+                    { type: "output", text: "CHARLIE" }
+                ],
+                tips: [
+                    "name.upper() converts to all caps",
+                    "name.lower() converts to lowercase",
+                    "name.title() capitalizes each word"
+                ]
+            },
+            {
+                number: 39,
+                part: 3,
+                title: "Find Longest Line",
+                description: "Read a file and print the longest line.",
+                difficulty: "intermediate",
+                explanation: "Use Python's max() function with a key parameter to find the longest string.",
+                steps: [
+                    "Read all lines",
+                    "Find the one with maximum length",
+                    "Print it"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise39.py" },
+                    { type: "output", text: "Longest line: Christopher" }
+                ],
+                tips: [
+                    "max(lines, key=len) finds longest",
+                    "The key=len tells max to compare by length"
+                ]
+            },
+            {
+                number: 40,
+                part: 3,
+                title: "Find Shortest Line",
+                description: "Read a file and print the shortest line.",
+                difficulty: "intermediate",
+                explanation: "Similar to finding the longest, but use min() instead.",
+                steps: [
+                    "Read all lines",
+                    "Find the one with minimum length",
+                    "Print it"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise40.py" },
+                    { type: "output", text: "Shortest line: Bo" }
+                ],
+                tips: [
+                    "min(lines, key=len) finds shortest",
+                    "Make sure to strip() lines first"
+                ]
+            },
+            // Part 4: CSV Basics (41-50)
+            {
+                number: 41,
+                part: 4,
+                title: "Create CSV File",
+                description: "Create a CSV file named students.csv with lines like 'Alice,Math'.",
+                difficulty: "intermediate",
+                explanation: "CSV (Comma-Separated Values) files store data in a structured format. Each line is a record, each comma separates fields.",
+                steps: [
+                    "Create students.csv",
+                    "Write lines in format: name,subject",
+                    "Each entry on a new line"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise41.py" },
+                    { type: "output", text: "CSV file created!" },
+                    { type: "comment", text: "File contents:" },
+                    { type: "output", text: "Alice,Math" },
+                    { type: "output", text: "Bob,Science" },
+                    { type: "output", text: "Charlie,History" }
+                ],
+                tips: [
+                    "CSV is just a text file with commas",
+                    "No spaces after commas (usually)",
+                    "Very common for data storage"
+                ]
+            },
+            {
+                number: 42,
+                part: 4,
+                title: "Read and Display CSV",
+                description: "Read the file and print each student with their subject.",
+                difficulty: "intermediate",
+                explanation: "Read CSV data and display it in a readable format.",
+                steps: [
+                    "Read each line",
+                    "Split by comma to get parts",
+                    "Display nicely"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise42.py" },
+                    { type: "output", text: "Alice studies Math" },
+                    { type: "output", text: "Bob studies Science" },
+                    { type: "output", text: "Charlie studies History" }
+                ],
+                tips: [
+                    "Use .split(',') to separate fields",
+                    "Returns a list of values"
+                ]
+            },
+            {
+                number: 43,
+                part: 4,
+                title: "Append to CSV",
+                description: "Add one more student entry and print all students again.",
+                difficulty: "intermediate",
+                explanation: "Use append mode to add new CSV records.",
+                steps: [
+                    "Append a new line to the CSV",
+                    "Read and display all entries"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise43.py" },
+                    { type: "input", text: "Add student: David,English" },
+                    { type: "output", text: "Student added!" },
+                    { type: "output", text: "All students:" },
+                    { type: "output", text: "Alice, Bob, Charlie, David" }
+                ],
+                tips: [
+                    "Make sure to add \\n after each entry",
+                    "Follow the same format as existing entries"
+                ]
+            },
+            {
+                number: 44,
+                part: 4,
+                title: "Split CSV Fields",
+                description: "Read each line, split by comma, and print both values separately.",
+                difficulty: "intermediate",
+                explanation: "Learn to extract individual fields from CSV data.",
+                steps: [
+                    "Read line by line",
+                    "Split each line",
+                    "Access parts[0] and parts[1]"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise44.py" },
+                    { type: "output", text: "Name: Alice" },
+                    { type: "output", text: "Subject: Math" },
+                    { type: "output", text: "---" },
+                    { type: "output", text: "Name: Bob" },
+                    { type: "output", text: "Subject: Science" }
+                ],
+                tips: [
+                    "line.split(',') returns ['Alice', 'Math']",
+                    "You can assign: name, subject = line.split(',')"
+                ]
+            },
+            {
+                number: 45,
+                part: 4,
+                title: "Formatted CSV Output",
+                description: "Print 'Student {name} studies {subject}' for each line.",
+                difficulty: "intermediate",
+                explanation: "Create human-readable output from CSV data.",
+                steps: [
+                    "Read and split each line",
+                    "Format with f-string",
+                    "Print nicely"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise45.py" },
+                    { type: "output", text: "Student Alice studies Math" },
+                    { type: "output", text: "Student Bob studies Science" },
+                    { type: "output", text: "Student Charlie studies History" }
+                ],
+                tips: [
+                    "f-strings make formatting easy",
+                    "Remember to strip() values"
+                ]
+            },
+            {
+                number: 46,
+                part: 4,
+                title: "Add New CSV Entry",
+                description: "Ask for a new student and subject and append it to students.csv.",
+                difficulty: "intermediate",
+                explanation: "Interactive CSV editing - get user input and add it to the file.",
+                steps: [
+                    "Get student name from user",
+                    "Get subject from user",
+                    "Format as CSV: name,subject",
+                    "Append to file"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise46.py" },
+                    { type: "input", text: "Student name: Emma" },
+                    { type: "input", text: "Subject: Physics" },
+                    { type: "output", text: "Emma added to students!" }
+                ],
+                tips: [
+                    "Combine inputs with comma: f'{name},{subject}\\n'",
+                    "Use append mode"
+                ]
+            },
+            {
+                number: 47,
+                part: 4,
+                title: "Sort CSV Data",
+                description: "Read and print all student names alphabetically.",
+                difficulty: "intermediate",
+                explanation: "Extract just the names from CSV and sort them.",
+                steps: [
+                    "Read each line and split",
+                    "Get just the first field (name)",
+                    "Sort and print"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise47.py" },
+                    { type: "output", text: "Alice" },
+                    { type: "output", text: "Bob" },
+                    { type: "output", text: "Charlie" },
+                    { type: "output", text: "David" },
+                    { type: "output", text: "Emma" }
+                ],
+                tips: [
+                    "List comprehension is perfect here",
+                    "names = [line.split(',')[0] for line in lines]"
+                ]
+            },
+            {
+                number: 48,
+                part: 4,
+                title: "Change CSV Format",
+                description: "Change your program to store 'name, age' instead of 'name, subject'.",
+                difficulty: "intermediate",
+                explanation: "Learn that CSV can store any type of data - you choose what fields to use.",
+                steps: [
+                    "Modify to use name,age format",
+                    "Update your read/write code"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise48.py" },
+                    { type: "comment", text: "File contents:" },
+                    { type: "output", text: "Alice,20" },
+                    { type: "output", text: "Bob,22" },
+                    { type: "output", text: "Charlie,19" }
+                ],
+                tips: [
+                    "CSV is flexible - you define the structure",
+                    "Just be consistent!"
+                ]
+            },
+            {
+                number: 49,
+                part: 4,
+                title: "Multiple CSV Entries",
+                description: "Ask for 3 students' names and ages, save them, and print them all.",
+                difficulty: "intermediate",
+                explanation: "Combine loops with CSV writing for efficient data entry.",
+                steps: [
+                    "Loop 3 times",
+                    "Get name and age each time",
+                    "Write in CSV format",
+                    "Read back and display"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise49.py" },
+                    { type: "input", text: "Student 1 name: Frank" },
+                    { type: "input", text: "Student 1 age: 21" },
+                    { type: "input", text: "Student 2 name: Grace" },
+                    { type: "input", text: "Student 2 age: 20" },
+                    { type: "input", text: "Student 3 name: Henry" },
+                    { type: "input", text: "Student 3 age: 23" }
+                ],
+                tips: [
+                    "Use a for loop with range(3)",
+                    "Collect in a list, then write all at once"
+                ]
+            },
+            {
+                number: 50,
+                part: 4,
+                title: "Input Validation",
+                description: "Add a check: skip empty input when adding a new student.",
+                difficulty: "intermediate",
+                explanation: "Make your program more robust by checking for valid input.",
+                steps: [
+                    "Check if input is not empty",
+                    "Only add if both name and age are provided",
+                    "Show error message if empty"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise50.py" },
+                    { type: "input", text: "Name: " },
+                    { type: "output", text: "Error: Name cannot be empty!" },
+                    { type: "input", text: "Name: Ivan" },
+                    { type: "input", text: "Age: 25" },
+                    { type: "output", text: "Student added!" }
+                ],
+                tips: [
+                    "Use: if name.strip() == '':",
+                    "Or: if not name.strip():",
+                    "Both check for empty input"
+                ]
+            },
+            // Part 5: CSV with Dictionaries (51-60)
+            {
+                number: 51,
+                part: 5,
+                title: "Dictionary Introduction",
+                description: "Use a list of dictionaries: {'name': 'Alice', 'age': 20} for each student.",
+                difficulty: "advanced",
+                explanation: "Dictionaries provide named access to data. Much cleaner than remembering index positions!",
+                steps: [
+                    "Create a list to hold student dictionaries",
+                    "Add dictionaries like {'name': 'Alice', 'age': 20}",
+                    "Print the list"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise51.py" },
+                    { type: "output", text: "[{'name': 'Alice', 'age': 20}, {'name': 'Bob', 'age': 22}]" }
+                ],
+                tips: [
+                    "Dictionaries use key-value pairs",
+                    "Access with student['name']",
+                    "Much more readable than student[0]"
+                ]
+            },
+            {
+                number: 52,
+                part: 5,
+                title: "Loop Through Dictionaries",
+                description: "Print each dictionary in the list using a for loop.",
+                difficulty: "advanced",
+                explanation: "Learn to iterate over a list of dictionaries and access their values.",
+                steps: [
+                    "Loop through the students list",
+                    "Each item is a dictionary",
+                    "Print each one"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise52.py" },
+                    { type: "output", text: "Name: Alice, Age: 20" },
+                    { type: "output", text: "Name: Bob, Age: 22" },
+                    { type: "output", text: "Name: Charlie, Age: 19" }
+                ],
+                tips: [
+                    "Access values with student['name']",
+                    "Can use f-strings for nice formatting"
+                ]
+            },
+            {
+                number: 53,
+                part: 5,
+                title: "Sort by Name",
+                description: "Sort the students by name using a custom key function.",
+                difficulty: "advanced",
+                explanation: "Learn to sort complex data structures using key functions.",
+                steps: [
+                    "Use sorted() with key parameter",
+                    "Define a function that returns the name",
+                    "Or use a lambda function"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise53.py" },
+                    { type: "output", text: "Alice (20)" },
+                    { type: "output", text: "Bob (22)" },
+                    { type: "output", text: "Charlie (19)" }
+                ],
+                tips: [
+                    "sorted(students, key=lambda s: s['name'])",
+                    "Lambda creates a small inline function"
+                ]
+            },
+            {
+                number: 54,
+                part: 5,
+                title: "Sort by Age",
+                description: "Sort the students by age using a lambda function.",
+                difficulty: "advanced",
+                explanation: "Sort by a different field - age instead of name.",
+                steps: [
+                    "Use sorted() with lambda",
+                    "Key function returns age",
+                    "Print sorted result"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise54.py" },
+                    { type: "output", text: "Charlie (19)" },
+                    { type: "output", text: "Alice (20)" },
+                    { type: "output", text: "Bob (22)" }
+                ],
+                tips: [
+                    "sorted(students, key=lambda s: s['age'])",
+                    "Lambda function returns the age for comparison"
+                ]
+            },
+            {
+                number: 55,
+                part: 5,
+                title: "CSV to Dictionaries",
+                description: "Read students.csv and store each row as a dictionary.",
+                difficulty: "advanced",
+                explanation: "Convert CSV data into a structured list of dictionaries for easier manipulation.",
+                steps: [
+                    "Read each line from CSV",
+                    "Split by comma",
+                    "Create dictionary with keys and values",
+                    "Add to list"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise55.py" },
+                    { type: "output", text: "Loaded 3 students:" },
+                    { type: "output", text: "{'name': 'Alice', 'age': '20'}" },
+                    { type: "output", text: "{'name': 'Bob', 'age': '22'}" }
+                ],
+                tips: [
+                    "name, age = line.strip().split(',')",
+                    "student = {'name': name, 'age': age}",
+                    "students.append(student)"
+                ]
+            },
+            {
+                number: 56,
+                part: 5,
+                title: "Filter by Age",
+                description: "Print only the students whose age is over 18.",
+                difficulty: "advanced",
+                explanation: "Use conditional logic to filter data based on criteria.",
+                steps: [
+                    "Loop through students",
+                    "Check if age > 18",
+                    "Print only those who qualify"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise56.py" },
+                    { type: "output", text: "Adults (over 18):" },
+                    { type: "output", text: "Alice - 20 years old" },
+                    { type: "output", text: "Bob - 22 years old" },
+                    { type: "output", text: "Charlie - 19 years old" }
+                ],
+                tips: [
+                    "Convert age to int for comparison",
+                    "if int(student['age']) > 18:",
+                    "List comprehensions can make this cleaner"
+                ]
+            },
+            {
+                number: 57,
+                part: 5,
+                title: "Search by Name",
+                description: "Ask for a student's name and print their corresponding data.",
+                difficulty: "advanced",
+                explanation: "Implement a simple search function to find specific records.",
+                steps: [
+                    "Get search name from user",
+                    "Loop through students",
+                    "If name matches, print data"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise57.py" },
+                    { type: "input", text: "Search for: Alice" },
+                    { type: "output", text: "Found: Alice, Age 20" },
+                    { type: "input", text: "Search for: Zoe" },
+                    { type: "output", text: "Not found!" }
+                ],
+                tips: [
+                    "Use .lower() for case-insensitive search",
+                    "if student['name'].lower() == search.lower():"
+                ]
+            },
+            {
+                number: 58,
+                part: 5,
+                title: "Add More Fields",
+                description: "Modify your program to also store 'grade' in addition to name and age.",
+                difficulty: "advanced",
+                explanation: "Expand your data structure to include more information.",
+                steps: [
+                    "Add 'grade' field to dictionaries",
+                    "Update CSV format to name,age,grade",
+                    "Modify read/write code"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise58.py" },
+                    { type: "comment", text: "CSV format: name,age,grade" },
+                    { type: "output", text: "Alice,20,A" },
+                    { type: "output", text: "Bob,22,B" }
+                ],
+                tips: [
+                    "Just add another field when splitting",
+                    "name, age, grade = line.split(',')",
+                    "Dictionary: {'name': name, 'age': age, 'grade': grade}"
+                ]
+            },
+            {
+                number: 59,
+                part: 5,
+                title: "Helper Function",
+                description: "Write a function get_name(student) that returns the student's name.",
+                difficulty: "advanced",
+                explanation: "Create reusable functions to make your code cleaner and more organized.",
+                steps: [
+                    "Define function get_name(student)",
+                    "Return student['name']",
+                    "Use it when printing or sorting"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise59.py" },
+                    { type: "output", text: "Name: Alice" },
+                    { type: "output", text: "Name: Bob" }
+                ],
+                tips: [
+                    "Functions make code reusable",
+                    "Can be used as key in sorting",
+                    "sorted(students, key=get_name)"
+                ]
+            },
+            {
+                number: 60,
+                part: 5,
+                title: "Sort with Function",
+                description: "Sort students using this function and print the sorted list.",
+                difficulty: "advanced",
+                explanation: "Combine custom functions with Python's sorting capabilities.",
+                steps: [
+                    "Use your get_name function",
+                    "Pass it as key to sorted()",
+                    "Print the sorted result"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise60.py" },
+                    { type: "output", text: "Sorted students:" },
+                    { type: "output", text: "1. Alice (20)" },
+                    { type: "output", text: "2. Bob (22)" },
+                    { type: "output", text: "3. Charlie (19)" }
+                ],
+                tips: [
+                    "sorted(students, key=get_name)",
+                    "This is equivalent to lambda s: s['name']",
+                    "But more readable for complex operations"
+                ]
+            },
+            // Part 6: CSV with csv.reader and csv.DictReader (61-70)
+            {
+                number: 61,
+                part: 6,
+                title: "Using csv.reader",
+                description: "Use csv.reader to read students.csv and print each row list.",
+                difficulty: "advanced",
+                explanation: "Python's csv module provides better tools for reading CSV files. No manual splitting needed!",
+                steps: [
+                    "Import csv module",
+                    "Use csv.reader(file)",
+                    "Loop through rows"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise61.py" },
+                    { type: "output", text: "['Alice', '20']" },
+                    { type: "output", text: "['Bob', '22']" },
+                    { type: "output", text: "['Charlie', '19']" }
+                ],
+                tips: [
+                    "import csv at the top",
+                    "reader = csv.reader(file)",
+                    "Handles edge cases better than split()"
+                ]
+            },
+            {
+                number: 62,
+                part: 6,
+                title: "Format csv.reader Output",
+                description: "Modify to print 'Name: {row[0]}, Home: {row[1]}'.",
+                difficulty: "advanced",
+                explanation: "Access row elements by index and format them nicely.",
+                steps: [
+                    "Use csv.reader",
+                    "Access row[0] for name, row[1] for home",
+                    "Format and print"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise62.py" },
+                    { type: "output", text: "Name: Alice, Home: Tbilisi" },
+                    { type: "output", text: "Name: Bob, Home: Tokyo" },
+                    { type: "output", text: "Name: Charlie, Home: Paris" }
+                ],
+                tips: [
+                    "Each row is a list",
+                    "Index access: row[0], row[1], etc."
+                ]
+            },
+            {
+                number: 63,
+                part: 6,
+                title: "Using csv.DictReader",
+                description: "Change the CSV header to 'name,home' and use csv.DictReader.",
+                difficulty: "advanced",
+                explanation: "DictReader is even better - it uses column names as dictionary keys!",
+                steps: [
+                    "Add header line to CSV: name,home",
+                    "Use csv.DictReader(file)",
+                    "Access row['name'] and row['home']"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise63.py" },
+                    { type: "comment", text: "CSV with header:" },
+                    { type: "output", text: "name,home" },
+                    { type: "output", text: "Alice,Tbilisi" },
+                    { type: "output", text: "Bob,Tokyo" }
+                ],
+                tips: [
+                    "First line must be column names",
+                    "DictReader automatically uses them as keys",
+                    "Much more readable than row[0], row[1]"
+                ]
+            },
+            {
+                number: 64,
+                part: 6,
+                title: "Format DictReader Output",
+                description: "Print 'Student {name} lives in {home}' for each row.",
+                difficulty: "advanced",
+                explanation: "Use dictionary-style access with DictReader for clean code.",
+                steps: [
+                    "Use csv.DictReader",
+                    "Access row['name'] and row['home']",
+                    "Format with f-string"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise64.py" },
+                    { type: "output", text: "Student Alice lives in Tbilisi" },
+                    { type: "output", text: "Student Bob lives in Tokyo" },
+                    { type: "output", text: "Student Charlie lives in Paris" }
+                ],
+                tips: [
+                    "f\"Student {row['name']} lives in {row['home']}\"",
+                    "Much clearer than using indices"
+                ]
+            },
+            {
+                number: 65,
+                part: 6,
+                title: "Using csv.DictWriter",
+                description: "Add a new student with csv.DictWriter.",
+                difficulty: "advanced",
+                explanation: "DictWriter lets you write dictionaries directly to CSV files.",
+                steps: [
+                    "Import csv",
+                    "Use csv.DictWriter with fieldnames",
+                    "Write dictionary directly"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise65.py" },
+                    { type: "input", text: "Name: David" },
+                    { type: "input", text: "Home: Sydney" },
+                    { type: "output", text: "Student added!" }
+                ],
+                tips: [
+                    "writer = csv.DictWriter(file, fieldnames=['name', 'home'])",
+                    "writer.writerow({'name': name, 'home': home})",
+                    "No manual comma formatting needed!"
+                ]
+            },
+            {
+                number: 66,
+                part: 6,
+                title: "Append Multiple Entries",
+                description: "Append several students and confirm the file content.",
+                difficulty: "advanced",
+                explanation: "Use DictWriter in append mode to add multiple records.",
+                steps: [
+                    "Open in append mode",
+                    "Use DictWriter",
+                    "Write multiple rows",
+                    "Read back to confirm"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise66.py" },
+                    { type: "output", text: "Added 3 students" },
+                    { type: "output", text: "Total students in file: 6" }
+                ],
+                tips: [
+                    "Use mode='a' for append",
+                    "writer.writerow() for each student",
+                    "Or writer.writerows() for a list"
+                ]
+            },
+            {
+                number: 67,
+                part: 6,
+                title: "Count CSV Entries",
+                description: "Read the file and count how many total students are listed.",
+                difficulty: "advanced",
+                explanation: "Count records in a CSV file using DictReader.",
+                steps: [
+                    "Use DictReader to read",
+                    "Count rows in a loop",
+                    "Print the total"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise67.py" },
+                    { type: "output", text: "Total students: 6" }
+                ],
+                tips: [
+                    "len(list(reader)) works but reads whole file",
+                    "Or count manually in a loop",
+                    "Manual counting is more memory efficient"
+                ]
+            },
+            {
+                number: 68,
+                part: 6,
+                title: "Filter CSV Data",
+                description: "Print only students whose name starts with 'A'.",
+                difficulty: "advanced",
+                explanation: "Apply filtering logic while reading CSV data.",
+                steps: [
+                    "Read with DictReader",
+                    "Check if name starts with 'A'",
+                    "Print matching records"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise68.py" },
+                    { type: "output", text: "Students starting with A:" },
+                    { type: "output", text: "Alice - Tbilisi" },
+                    { type: "output", text: "Anna - Berlin" }
+                ],
+                tips: [
+                    "if row['name'].startswith('A'):",
+                    "Or: if row['name'][0] == 'A':",
+                    "startswith() is more readable"
+                ]
+            },
+            {
+                number: 69,
+                part: 6,
+                title: "Extract Unique Values",
+                description: "Print all homes (no duplicates) from the CSV file.",
+                difficulty: "advanced",
+                explanation: "Use a set to collect unique values from a column.",
+                steps: [
+                    "Read all homes into a set",
+                    "Sets automatically remove duplicates",
+                    "Print the unique homes"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise69.py" },
+                    { type: "output", text: "Unique homes:" },
+                    { type: "output", text: "Tbilisi" },
+                    { type: "output", text: "Tokyo" },
+                    { type: "output", text: "Paris" },
+                    { type: "output", text: "Sydney" }
+                ],
+                tips: [
+                    "homes = set()",
+                    "homes.add(row['home'])",
+                    "Or: homes = {row['home'] for row in reader}"
+                ]
+            },
+            {
+                number: 70,
+                part: 6,
+                title: "Create New File from CSV",
+                description: "Read the CSV and create a new file homes.txt listing all unique homes.",
+                difficulty: "advanced",
+                explanation: "Extract data from one file and write it to another in a different format.",
+                steps: [
+                    "Read CSV and collect unique homes",
+                    "Open new file homes.txt",
+                    "Write each home on a line",
+                    "Confirm success"
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python exercise70.py" },
+                    { type: "output", text: "Extracted unique homes to homes.txt" },
+                    { type: "comment", text: "homes.txt contents:" },
+                    { type: "output", text: "Tbilisi" },
+                    { type: "output", text: "Tokyo" },
+                    { type: "output", text: "Paris" },
+                    { type: "output", text: "Sydney" }
+                ],
+                tips: [
+                    "Combine DictReader with regular file writing",
+                    "Process data and transform it",
+                    "This is data pipeline basics!"
+                ]
+            }
+        ];
+
+        // State
+        let currentExercise = 0;
+
+        // Initialize
+        function init() {
+            renderExercises();
+            renderSidebar();
+            showExercise(0);
+            updateNavigation();
+            setupEventListeners();
+        }
+
+        // Render all exercises
+        function renderExercises() {
+            const container = document.getElementById('exercises-container');
+            exercises.forEach((ex, index) => {
+                const exerciseEl = createExerciseElement(ex, index);
+                container.appendChild(exerciseEl);
+            });
+        }
+
+        // Create exercise element
+        function createExerciseElement(ex, index) {
+            const div = document.createElement('div');
+            div.className = 'exercise';
+            div.id = `exercise-${index}`;
+            
+            let html = `
+                <div class="exercise-header">
+                    <div>
+                        <span class="exercise-number-badge">Exercise ${ex.number}</span>
+                        <span class="difficulty-badge difficulty-${ex.difficulty}">
+                            ${ex.difficulty.charAt(0).toUpperCase() + ex.difficulty.slice(1)}
+                        </span>
+                    </div>
+                    <h2 class="exercise-title">${ex.title}</h2>
+                    <p class="exercise-description">${ex.description}</p>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">What You'll Learn</h3>
+                    <div class="section-content">
+                        <p>${ex.explanation}</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <h3 class="section-title">Steps to Complete</h3>
+                    <div class="section-content">
+                        <ul>
+                            ${ex.steps.map(step => `<li>${step}</li>`).join('')}
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            // Add terminal example if available
+            if (ex.terminal && ex.terminal.length > 0) {
+                html += `
+                    <div class="section">
+                        <h3 class="section-title">Example Output</h3>
+                        <div class="terminal">
+                            <div class="terminal-header">Terminal</div>
+                            ${ex.terminal.map(line => {
+                                let className = 'terminal-line';
+                                let prefix = '';
+                                if (line.type === 'prompt') {
+                                    return `<div class="${className}"><span class="terminal-prompt">${line.text}</span></div>`;
+                                } else if (line.type === 'input') {
+                                    return `<div class="${className}"><span class="terminal-input">${line.text}</span></div>`;
+                                } else if (line.type === 'output') {
+                                    return `<div class="${className}"><span class="terminal-output">${line.text}</span></div>`;
+                                } else if (line.type === 'comment') {
+                                    return `<div class="${className}"><span class="terminal-comment"># ${line.text}</span></div>`;
+                                }
+                            }).join('')}
+                        </div>
+                    </div>
+                `;
+            }
+
+            // Add tips if available
+            if (ex.tips && ex.tips.length > 0) {
+                html += `
+                    <div class="tip">
+                        <div class="tip-title">💡 Tips</div>
+                        <ul>
+                            ${ex.tips.map(tip => `<li>${tip}</li>`).join('')}
+                        </ul>
+                    </div>
+                `;
+            }
+
+            div.innerHTML = html;
+            return div;
+        }
+
+        // Render sidebar navigation
+        function renderSidebar() {
+            const parts = {
+                1: { container: 'part1-nav', range: [1, 20] },
+                2: { container: 'part2-nav', range: [21, 30] },
+                3: { container: 'part3-nav', range: [31, 40] },
+                4: { container: 'part4-nav', range: [41, 50] },
+                5: { container: 'part5-nav', range: [51, 60] },
+                6: { container: 'part6-nav', range: [61, 70] }
+            };
+
+            Object.entries(parts).forEach(([part, data]) => {
+                const container = document.getElementById(data.container);
+                const partExercises = exercises.filter(ex => 
+                    ex.number >= data.range[0] && ex.number <= data.range[1]
+                );
+                
+                partExercises.forEach((ex, index) => {
+                    const item = document.createElement('a');
+                    item.className = 'sidebar-item';
+                    item.setAttribute('data-index', exercises.indexOf(ex));
+                    item.innerHTML = `<span class="exercise-number">${ex.number}.</span> ${ex.title}`;
+                    item.addEventListener('click', (e) => {
+                        e.preventDefault();
+                        const idx = parseInt(item.getAttribute('data-index'));
+                        showExercise(idx);
+                        // Close sidebar on mobile
+                        if (window.innerWidth <= 768) {
+                            toggleSidebar();
+                        }
+                    });
+                    container.appendChild(item);
+                });
+            });
+        }
+
+        // Show specific exercise
+        function showExercise(index) {
+            // Hide all exercises
+            document.querySelectorAll('.exercise').forEach(ex => {
+                ex.classList.remove('active');
+            });
+            
+            // Show selected exercise
+            const exerciseEl = document.getElementById(`exercise-${index}`);
+            if (exerciseEl) {
+                exerciseEl.classList.add('active');
+                currentExercise = index;
+                updateNavigation();
+                updateSidebar();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Update navigation buttons
+        function updateNavigation() {
+            const prevBtn = document.getElementById('prevBtn');
+            const nextBtn = document.getElementById('nextBtn');
+            const progress = document.getElementById('progress');
+
+            prevBtn.disabled = currentExercise === 0;
+            nextBtn.disabled = currentExercise === exercises.length - 1;
+
+            progress.textContent = `Exercise ${currentExercise + 1} of ${exercises.length}`;
+        }
+
+        // Update sidebar active state
+        function updateSidebar() {
+            document.querySelectorAll('.sidebar-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            const activeItem = document.querySelector(`.sidebar-item[data-index="${currentExercise}"]`);
+            if (activeItem) {
+                activeItem.classList.add('active');
+                // Scroll sidebar to show active item
+                activeItem.scrollIntoView({ block: 'nearest', behavior: 'smooth' });
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            // Previous button
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                if (currentExercise > 0) {
+                    showExercise(currentExercise - 1);
+                }
+            });
+
+            // Next button
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                if (currentExercise < exercises.length - 1) {
+                    showExercise(currentExercise + 1);
+                }
+            });
+
+            // Burger menu
+            document.getElementById('burgerMenu').addEventListener('click', toggleSidebar);
+            
+            // Overlay click
+            document.getElementById('overlay').addEventListener('click', toggleSidebar);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' && currentExercise > 0) {
+                    showExercise(currentExercise - 1);
+                } else if (e.key === 'ArrowRight' && currentExercise < exercises.length - 1) {
+                    showExercise(currentExercise + 1);
+                }
+            });
+        }
+
+        // Toggle sidebar on mobile
+        function toggleSidebar() {
+            const sidebar = document.getElementById('sidebar');
+            const overlay = document.getElementById('overlay');
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+        }
+
+        // Start the app
+        init();
+    </script>
+</body>
+</html>

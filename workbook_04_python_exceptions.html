@@ -1,0 +1,1206 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Exception Handling Exercises</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            color: #e2e8f0;
+            min-height: 100vh;
+            display: flex;
+            margin: 0;
+            padding: 0;
+        }
+
+        .sidebar {
+            width: 320px;
+            height: 100vh;
+            background: rgba(15, 23, 42, 0.95);
+            border-right: 1px solid #334155;
+            backdrop-filter: blur(10px);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .sidebar-header {
+            padding: 2rem 2rem 2rem 2rem;
+            border-bottom: 1px solid #334155;
+            flex-shrink: 0;
+        }
+
+        .sidebar-header h1 {
+            color: #60a5fa;
+            font-size: 1.5rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            color: #94a3b8;
+            font-size: 0.9rem;
+        }
+
+        .progress-section {
+            padding: 2rem 2rem 2rem 2rem;
+            border-bottom: 1px solid #334155;
+            flex-shrink: 0;
+        }
+
+        .progress-label {
+            color: #94a3b8;
+            font-size: 0.8rem;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .progress-bar {
+            background: #1e293b;
+            border-radius: 10px;
+            height: 8px;
+            overflow: hidden;
+            margin-bottom: 0.5rem;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #60a5fa, #3b82f6);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .progress-text {
+            color: #60a5fa;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .exercises-container {
+            flex: 1;
+            overflow-y: auto;
+            padding: 2rem 0;
+            position: relative;
+        }
+
+        .exercises-container::before {
+            content: '';
+            position: sticky;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(to bottom, rgba(15, 23, 42, 0.95), transparent);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .exercises-container::after {
+            content: '';
+            position: sticky;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            height: 20px;
+            background: linear-gradient(to top, rgba(15, 23, 42, 0.95), transparent);
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .exercises-container::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .exercises-container::-webkit-scrollbar-track {
+            background: rgba(30, 41, 59, 0.3);
+        }
+
+        .exercises-container::-webkit-scrollbar-thumb {
+            background: rgba(96, 165, 250, 0.3);
+            border-radius: 3px;
+        }
+
+        .exercises-container::-webkit-scrollbar-thumb:hover {
+            background: rgba(96, 165, 250, 0.5);
+        }
+
+        .level-group {
+            margin-bottom: 1.5rem;
+        }
+
+        .level-title {
+            color: #60a5fa;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.8rem;
+            padding: 0 2rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .exercise-item {
+            display: flex;
+            align-items: center;
+            padding: 0.8rem 2rem;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            position: relative;
+        }
+
+        .exercise-item:hover {
+            background: rgba(51, 65, 85, 0.3);
+            border-left-color: #60a5fa;
+        }
+
+        .exercise-item.active {
+            background: rgba(96, 165, 250, 0.1);
+            border-left-color: #60a5fa;
+        }
+
+        .exercise-item.completed {
+            border-left-color: #22c55e;
+        }
+
+        .exercise-number {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            background: #334155;
+            color: #94a3b8;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.8rem;
+            font-weight: 600;
+            margin-right: 1rem;
+            transition: all 0.2s ease;
+        }
+
+        .exercise-item.completed .exercise-number {
+            background: #22c55e;
+            color: white;
+        }
+
+        .exercise-item.active .exercise-number {
+            background: #60a5fa;
+            color: white;
+        }
+
+        .exercise-title {
+            flex: 1;
+            font-size: 0.9rem;
+            color: #e2e8f0;
+        }
+
+        .check-icon {
+            width: 16px;
+            height: 16px;
+            color: #22c55e;
+            opacity: 0;
+            transition: opacity 0.2s ease;
+        }
+
+        .exercise-item.completed .check-icon {
+            opacity: 1;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 3rem;
+            overflow-y: auto;
+        }
+
+        .exercise-content {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .exercise-header {
+            margin-bottom: 2rem;
+        }
+
+        .exercise-level {
+            color: #60a5fa;
+            font-size: 0.9rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .exercise-title-main {
+            color: #f1f5f9;
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            line-height: 1.2;
+        }
+
+        .exercise-description {
+            background: rgba(15, 23, 42, 0.8);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+            backdrop-filter: blur(10px);
+        }
+
+        .exercise-description p {
+            color: #cbd5e1;
+            line-height: 1.6;
+            font-size: 1.1rem;
+        }
+
+        .code-hint {
+            background: rgba(30, 41, 59, 0.8);
+            border: 1px solid #475569;
+            border-radius: 8px;
+            padding: 1rem;
+            margin: 1rem 0;
+            font-family: 'Courier New', monospace;
+            color: #fbbf24;
+            font-size: 0.9rem;
+            white-space: pre-wrap;
+        }
+
+        .exercise-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .btn {
+            padding: 1rem 2rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-size: 1rem;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #3b82f6, #2563eb);
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(59, 130, 246, 0.3);
+        }
+
+        .btn-secondary {
+            background: rgba(51, 65, 85, 0.8);
+            color: #e2e8f0;
+            border: 1px solid #475569;
+        }
+
+        .btn-secondary:hover {
+            background: rgba(71, 85, 105, 0.8);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(34, 197, 94, 0.3);
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid #334155;
+        }
+
+        .nav-btn {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 1rem 1.5rem;
+            background: rgba(51, 65, 85, 0.5);
+            border: 1px solid #475569;
+            border-radius: 8px;
+            color: #e2e8f0;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(71, 85, 105, 0.8);
+            transform: translateY(-1px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .completion-badge {
+            background: linear-gradient(135deg, #22c55e, #16a34a);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-top: 1rem;
+        }
+
+        .mobile-header {
+            display: none;
+            background: rgba(15, 23, 42, 0.98);
+            border-bottom: 1px solid #334155;
+            padding: 0.75rem 1rem;
+            backdrop-filter: blur(10px);
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 100;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+
+        .burger-menu {
+            background: none;
+            border: none;
+            color: #60a5fa;
+            font-size: 1.3rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 40px;
+            height: 40px;
+        }
+
+        .burger-menu:hover {
+            background-color: rgba(96, 165, 250, 0.15);
+            transform: scale(1.05);
+        }
+
+        .mobile-title {
+            color: #60a5fa;
+            font-size: 1rem;
+            font-weight: 600;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .mobile-progress {
+            background: rgba(30, 41, 59, 0.8);
+            border-radius: 10px;
+            height: 4px;
+            width: 60px;
+            overflow: hidden;
+            margin-right: 0.5rem;
+        }
+
+        .mobile-progress-fill {
+            background: linear-gradient(90deg, #60a5fa, #3b82f6);
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .sidebar-overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.6);
+            z-index: 200;
+            backdrop-filter: blur(8px);
+        }
+
+        .sidebar-close {
+            display: none;
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background: none;
+            border: none;
+            color: #94a3b8;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 4px;
+            transition: all 0.2s ease;
+            z-index: 10;
+        }
+
+        .sidebar-close:hover {
+            color: #60a5fa;
+            background-color: rgba(96, 165, 250, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .mobile-header {
+                display: flex;
+            }
+            
+            .sidebar {
+                position: fixed;
+                top: 0;
+                left: -100%;
+                width: 85vw;
+                max-width: 320px;
+                height: 100vh;
+                z-index: 300;
+                transition: left 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                border-right: none;
+                box-shadow: 2px 0 20px rgba(0, 0, 0, 0.4);
+                transform: translateZ(0);
+            }
+
+            .sidebar.open {
+                left: 0;
+            }
+
+            .sidebar-close {
+                display: block;
+            }
+
+            .main-content {
+                padding: 1rem;
+                width: 100%;
+                min-height: calc(100vh - 60px);
+                margin-top: 60px;
+            }
+
+            .exercise-content {
+                max-width: 100%;
+                margin: 0;
+            }
+
+            .exercise-header {
+                margin-bottom: 1.5rem;
+            }
+
+            .exercise-title-main {
+                font-size: 1.5rem;
+                line-height: 1.3;
+            }
+
+            .exercise-description {
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+            }
+
+            .exercise-actions {
+                flex-direction: column;
+                gap: 0.8rem;
+                margin-top: 1.5rem;
+            }
+
+            .btn {
+                padding: 0.875rem 1.5rem;
+                font-size: 0.95rem;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 0.8rem;
+                margin-top: 2rem;
+                padding-top: 1.5rem;
+            }
+
+            .nav-btn {
+                justify-content: center;
+                padding: 0.875rem 1.5rem;
+            }
+
+            .code-hint {
+                font-size: 0.85rem;
+                padding: 1rem;
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="mobile-header">
+        <button class="burger-menu" id="burgerMenu">☰</button>
+        <div class="mobile-title">Python Exercises</div>
+        <div style="display: flex; align-items: center;">
+            <div class="mobile-progress">
+                <div class="mobile-progress-fill" id="mobileProgressFill"></div>
+            </div>
+        </div>
+    </div>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <div class="sidebar" id="sidebar">
+        <button class="sidebar-close" id="sidebarClose">✕</button>
+        
+        <div class="sidebar-header">
+            <h1>🧩 Python Exercises</h1>
+            <p>Exception Handling Edition</p>
+        </div>
+
+        <div class="progress-section">
+            <div class="progress-label">Overall Progress</div>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressFill"></div>
+            </div>
+            <div class="progress-text" id="progressText">0 / 50 completed</div>
+        </div>
+
+        <div class="exercises-container">
+            <div id="exercisesList"></div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="exercise-content" id="exerciseContent">
+            <div class="exercise-header">
+                <div class="exercise-level">Loading...</div>
+                <h1 class="exercise-title-main">Loading Exercises...</h1>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // All exercise data
+        const allExercises = [
+            {
+                level: "Level 1 – Basic Understanding of Errors & Input",
+                title: "Division by 2 and String Error",
+                description: "Write a program that prints a number divided by 2. Then intentionally cause a runtime error by dividing a string by 2.",
+                hint: 'print(10 / 2)  # This works\nprint("hello" / 2)  # This will cause an error'
+            },
+            {
+                level: "Level 1 – Basic Understanding of Errors & Input",
+                title: "Syntax Error Practice",
+                description: "Remove a quotation mark in a print statement and observe the syntax error. Fix it.",
+                hint: 'print("Hello World)  # Missing closing quote - syntax error\nprint("Hello World")  # Fixed'
+            },
+            {
+                level: "Level 1 – Basic Understanding of Errors & Input",
+                title: "Input Type Check",
+                description: "Write x = input() and print the type of x.",
+                hint: 'x = input("Enter something: ")\nprint(type(x))  # Always returns <class \'str\'>'
+            },
+            {
+                level: "Level 1 – Basic Understanding of Errors & Input",
+                title: "Converting Input to Integer",
+                description: "Ask for a number and convert it with int(). Try giving text to see the error.",
+                hint: 'number = int(input("Enter a number: "))\nprint(number)  # Try entering "hello" to see ValueError'
+            },
+            {
+                level: "Level 1 – Basic Understanding of Errors & Input",
+                title: "Adding Two Inputs",
+                description: "Write a program that asks for two numbers and prints their sum. Try entering \"5\" and \"cat\".",
+                hint: 'a = int(input("First number: "))\nb = int(input("Second number: "))\nprint(a + b)'
+            },
+            // Level 2
+            {
+                level: "Level 2 – First Try/Except Blocks",
+                title: "Basic Try/Except",
+                description: "Wrap int(input(\"Number: \")) in a try/except and print \"Not a number\" on error.",
+                hint: 'try:\n    num = int(input("Number: "))\nexcept ValueError:\n    print("Not a number")'
+            },
+            {
+                level: "Level 2 – First Try/Except Blocks",
+                title: "Try/Except with Normal End",
+                description: "Repeat the previous exercise but after printing error, let program end normally.",
+                hint: 'try:\n    num = int(input("Number: "))\nexcept ValueError:\n    print("Not a number")\nprint("Program continues...")'
+            },
+            {
+                level: "Level 2 – First Try/Except Blocks",
+                title: "Success Message",
+                description: "Use try/except but this time print \"Valid!\" when input is correct.",
+                hint: 'try:\n    num = int(input("Number: "))\n    print("Valid!")\nexcept ValueError:\n    print("Not a number")'
+            },
+            {
+                level: "Level 2 – First Try/Except Blocks",
+                title: "Variable Scope Issue",
+                description: "Ask for a number and store it in a variable. Try printing it outside the try (should cause NameError).",
+                hint: 'try:\n    number = int(input("Number: "))\nexcept ValueError:\n    print("Error")\nprint(number)  # NameError if exception occurred'
+            },
+            {
+                level: "Level 2 – First Try/Except Blocks",
+                title: "Using Else Block",
+                description: "Use else: to print the number only if no error happens.",
+                hint: 'try:\n    number = int(input("Number: "))\nexcept ValueError:\n    print("Error")\nelse:\n    print(f"You entered: {number}")'
+            },
+            // Level 3
+            {
+                level: "Level 3 – Loop Until Correct Input (while True)",
+                title: "Loop Until Valid Input",
+                description: "Ask for a number using while True and break only when correct input is given.",
+                hint: 'while True:\n    try:\n        num = int(input("Number: "))\n        break\n    except ValueError:\n        continue'
+            },
+            {
+                level: "Level 3 – Loop Until Correct Input (while True)",
+                title: "Try Again Message",
+                description: "Repeat exercise but show message \"Try again…\" for wrong input.",
+                hint: 'while True:\n    try:\n        num = int(input("Number: "))\n        break\n    except ValueError:\n        print("Try again...")'
+            },
+            {
+                level: "Level 3 – Loop Until Correct Input (while True)",
+                title: "Silent Retry",
+                description: "Remove the error message and just ask again silently using pass.",
+                hint: 'while True:\n    try:\n        num = int(input("Number: "))\n        break\n    except ValueError:\n        pass'
+            },
+            {
+                level: "Level 3 – Loop Until Correct Input (while True)",
+                title: "Greater Than 10",
+                description: "Ask for input until user enters an integer greater than 10.",
+                hint: 'while True:\n    try:\n        num = int(input("Number > 10: "))\n        if num > 10:\n            break\n        print("Must be greater than 10")\n    except ValueError:\n        print("Invalid number")'
+            },
+            {
+                level: "Level 3 – Loop Until Correct Input (while True)",
+                title: "Even Number Only",
+                description: "Ask for input until user enters an even number.",
+                hint: 'while True:\n    try:\n        num = int(input("Even number: "))\n        if num % 2 == 0:\n            break\n        print("Must be even")\n    except ValueError:\n        print("Invalid number")'
+            },
+            // Level 4
+            {
+                level: "Level 4 – Returning from a Function (get_int)",
+                title: "get_int() Function",
+                description: "Put the input code into a get_int() function and return the number.",
+                hint: 'def get_int():\n    while True:\n        try:\n            return int(input("Number: "))\n        except ValueError:\n            pass'
+            },
+            {
+                level: "Level 4 – Returning from a Function (get_int)",
+                title: "Custom Prompt",
+                description: "Pass a custom prompt like get_int(\"Enter age: \").",
+                hint: 'def get_int(prompt):\n    while True:\n        try:\n            return int(input(prompt))\n        except ValueError:\n            pass'
+            },
+            {
+                level: "Level 4 – Returning from a Function (get_int)",
+                title: "Positive Numbers Only",
+                description: "Create a function get_positive_int() that only accepts positive numbers.",
+                hint: 'def get_positive_int():\n    while True:\n        try:\n            num = int(input("Positive number: "))\n            if num > 0:\n                return num\n        except ValueError:\n            pass'
+            },
+            {
+                level: "Level 4 – Returning from a Function (get_int)",
+                title: "Main Function",
+                description: "Write main() that calls get_int() and prints result.",
+                hint: 'def get_int():\n    # function code here\n    \ndef main():\n    number = get_int()\n    print(f"You entered: {number}")\n\nmain()'
+            },
+            {
+                level: "Level 4 – Returning from a Function (get_int)",
+                title: "Silent get_int()",
+                description: "Modify get_int() so it silently retries without printing anything.",
+                hint: 'def get_int():\n    while True:\n        try:\n            return int(input("Number: "))\n        except ValueError:\n            pass  # Silent retry'
+            },
+            // Level 5
+            {
+                level: "Level 5 – Different Prompts and Feedback",
+                title: "Lucky Number",
+                description: "Create get_int(\"Enter your lucky number: \") that keeps looping.",
+                hint: 'def get_int(prompt):\n    while True:\n        try:\n            return int(input(prompt))\n        except ValueError:\n            pass\n\nlucky = get_int("Enter your lucky number: ")'
+            },
+            {
+                level: "Level 5 – Different Prompts and Feedback",
+                title: "Sum of Two Numbers",
+                description: "Ask for two numbers using get_int() and print their sum.",
+                hint: 'def get_int(prompt):\n    # function code\n\na = get_int("First number: ")\nb = get_int("Second number: ")\nprint(f"Sum: {a + b}")'
+            },
+            {
+                level: "Level 5 – Different Prompts and Feedback",
+                title: "Even or Odd",
+                description: "Ask for a number and print whether it's even or odd.",
+                hint: 'num = get_int("Enter a number: ")\nif num % 2 == 0:\n    print("Even")\nelse:\n    print("Odd")'
+            },
+            {
+                level: "Level 5 – Different Prompts and Feedback",
+                title: "Age Validation",
+                description: "Ask for age but ensure it's between 1 and 120.",
+                hint: 'def get_age():\n    while True:\n        try:\n            age = int(input("Age (1-120): "))\n            if 1 <= age <= 120:\n                return age\n        except ValueError:\n            pass'
+            },
+            {
+                level: "Level 5 – Different Prompts and Feedback",
+                title: "Thank You Message",
+                description: "Ask for a number but print \"Thank you!\" only once after valid input.",
+                hint: 'num = get_int("Number: ")\nprint("Thank you!")\nprint(f"Your number: {num}")'
+            },
+            // Level 6
+            {
+                level: "Level 6 – Slight Variations to Build Automaticity",
+                title: "Square a Number",
+                description: "Ask for a number and square it.",
+                hint: 'num = get_int("Number to square: ")\nprint(f"{num} squared is {num**2}")'
+            },
+            {
+                level: "Level 6 – Slight Variations to Build Automaticity",
+                title: "Half a Number",
+                description: "Ask for a number and print its half.",
+                hint: 'num = get_int("Number: ")\nprint(f"Half of {num} is {num/2}")'
+            },
+            {
+                level: "Level 6 – Slight Variations to Build Automaticity",
+                title: "Minimum Value Check",
+                description: "Ask for a number and print \"Too small\" if less than 5, else accept it.",
+                hint: 'while True:\n    num = get_int("Number (min 5): ")\n    if num >= 5:\n        break\n    print("Too small")'
+            },
+            {
+                level: "Level 6 – Slight Variations to Build Automaticity",
+                title: "Average of Three",
+                description: "Let user input three numbers using validation and print their average.",
+                hint: 'a = get_int("First: ")\nb = get_int("Second: ")\nc = get_int("Third: ")\naverage = (a + b + c) / 3\nprint(f"Average: {average}")'
+            },
+            {
+                level: "Level 6 – Slight Variations to Build Automaticity",
+                title: "Safe Division",
+                description: "Ask for two numbers and prevent division by zero using try/except.",
+                hint: 'a = get_int("First number: ")\nb = get_int("Second number: ")\ntry:\n    result = a / b\n    print(f"Result: {result}")\nexcept ZeroDivisionError:\n    print("Cannot divide by zero")'
+            },
+            // Level 7
+            {
+                level: "Level 7 – More Realistic Scenarios",
+                title: "Year Input",
+                description: "Ask user for a year and ensure it's a number.",
+                hint: 'year = get_int("Enter a year: ")\nprint(f"Year: {year}")'
+            },
+            {
+                level: "Level 7 – More Realistic Scenarios",
+                title: "Temperature Value",
+                description: "Ask for a temperature value and ensure it's numeric.",
+                hint: 'def get_float(prompt):\n    while True:\n        try:\n            return float(input(prompt))\n        except ValueError:\n            pass\n\ntemp = get_float("Temperature: ")'
+            },
+            {
+                level: "Level 7 – More Realistic Scenarios",
+                title: "Menu Choice",
+                description: "Prompt user for a menu choice (1, 2, or 3) and validate input.",
+                hint: 'while True:\n    choice = get_int("Menu (1-3): ")\n    if 1 <= choice <= 3:\n        break\n    print("Must be 1, 2, or 3")'
+            },
+            {
+                level: "Level 7 – More Realistic Scenarios",
+                title: "Password Input",
+                description: "Ask for a password but don't crash if user inputs number.",
+                hint: 'try:\n    password = input("Password: ")\n    print("Password set")\nexcept:\n    print("Error setting password")'
+            },
+            {
+                level: "Level 7 – More Realistic Scenarios",
+                title: "Age with Custom Message",
+                description: "Ask for age and if input is wrong, say \"That's not a valid age\".",
+                hint: 'while True:\n    try:\n        age = int(input("Age: "))\n        break\n    except ValueError:\n        print("That\'s not a valid age")'
+            },
+            // Level 8
+            {
+                level: "Level 8 – Cleaner Return Usage",
+                title: "get_float() Function",
+                description: "Write a function get_float() that works like get_int() but for floats.",
+                hint: 'def get_float(prompt="Enter float: "):\n    while True:\n        try:\n            return float(input(prompt))\n        except ValueError:\n            pass'
+            },
+            {
+                level: "Level 8 – Cleaner Return Usage",
+                title: "Range Validation",
+                description: "Write get_int_in_range(prompt, min_val, max_val) that validates range.",
+                hint: 'def get_int_in_range(prompt, min_val, max_val):\n    while True:\n        try:\n            num = int(input(prompt))\n            if min_val <= num <= max_val:\n                return num\n        except ValueError:\n            pass'
+            },
+            {
+                level: "Level 8 – Cleaner Return Usage",
+                title: "Two Numbers Tuple",
+                description: "Write a function that asks for two valid numbers and returns them as a tuple.",
+                hint: 'def get_two_numbers():\n    a = get_int("First: ")\n    b = get_int("Second: ")\n    return (a, b)\n\nnums = get_two_numbers()'
+            },
+            {
+                level: "Level 8 – Cleaner Return Usage",
+                title: "Safe Division Function",
+                description: "Write safe_division() that asks for two numbers and handles division safely.",
+                hint: 'def safe_division():\n    a = get_int("Dividend: ")\n    b = get_int("Divisor: ")\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return "Cannot divide by zero"'
+            },
+            {
+                level: "Level 8 – Cleaner Return Usage",
+                title: "Input Until Zero",
+                description: "Write a function that keeps asking for input until user enters 0 (valid integer).",
+                hint: 'def wait_for_zero():\n    while True:\n        num = get_int("Enter 0 to quit: ")\n        if num == 0:\n            return\n        print("Try again...")'
+            },
+            // Level 9
+            {
+                level: "Level 9 – Gentle Combining of Concepts",
+                title: "Multiplication Table",
+                description: "Ask for a number and print multiplication table (only after valid input).",
+                hint: 'num = get_int("Number for table: ")\nfor i in range(1, 11):\n    print(f"{num} x {i} = {num * i}")'
+            },
+            {
+                level: "Level 9 – Gentle Combining of Concepts",
+                title: "Student Count",
+                description: "Ask for number of students and validate it before printing \"Processing...\".",
+                hint: 'count = get_int("Number of students: ")\nprint("Processing...")\nprint(f"Ready for {count} students")'
+            },
+            {
+                level: "Level 9 – Gentle Combining of Concepts",
+                title: "Price and Quantity",
+                description: "Ask for a price and quantity separately and multiply them.",
+                hint: 'price = get_float("Price: $")\nquantity = get_int("Quantity: ")\ntotal = price * quantity\nprint(f"Total: ${total:.2f}")'
+            },
+            {
+                level: "Level 9 – Gentle Combining of Concepts",
+                title: "Three Exam Scores",
+                description: "Ask user for three exam scores and validate each separately.",
+                hint: 'scores = []\nfor i in range(3):\n    score = get_int_in_range(f"Exam {i+1} (0-100): ", 0, 100)\n    scores.append(score)\nprint(f"Average: {sum(scores)/3:.1f}")'
+            },
+            {
+                level: "Level 9 – Gentle Combining of Concepts",
+                title: "Loading Message",
+                description: "Ask for a number and print \"Loading...\" only once after valid input (use break correctly).",
+                hint: 'num = get_int("Enter number: ")\nprint("Loading...")\nprint(f"Processing {num}...")'
+            },
+            // Level 10
+            {
+                level: "Level 10 – Final Reinforcement Challenges",
+                title: "Labeled Input Function",
+                description: "Build a ask_for_number(name_of_value) function that takes a label and validates input.",
+                hint: 'def ask_for_number(name_of_value):\n    return get_int(f"Enter {name_of_value}: ")\n\nage = ask_for_number("your age")\nheight = ask_for_number("your height")'
+            },
+            {
+                level: "Level 10 – Final Reinforcement Challenges",
+                title: "BMI Calculator",
+                description: "Ask for user height and weight using validated input and print BMI formula.",
+                hint: 'height = get_float("Height (m): ")\nweight = get_float("Weight (kg): ")\nbmi = weight / (height ** 2)\nprint(f"BMI = {weight} / ({height}²) = {bmi:.1f}")'
+            },
+            {
+                level: "Level 10 – Final Reinforcement Challenges",
+                title: "Silent safe_input()",
+                description: "Create a safe_input() function that catches ValueError and keeps retrying silently.",
+                hint: 'def safe_input(prompt, input_type=int):\n    while True:\n        try:\n            return input_type(input(prompt))\n        except ValueError:\n            pass'
+            },
+            {
+                level: "Level 10 – Final Reinforcement Challenges",
+                title: "Simple Calculator",
+                description: "Create a calculator that asks for two numbers, validates each, and prints result.",
+                hint: 'a = get_float("First number: ")\nop = input("Operation (+,-,*,/): ")\nb = get_float("Second number: ")\nif op == "+":\n    print(f"Result: {a + b}")\n# ... other operations'
+            },
+            {
+                level: "Level 10 – Final Reinforcement Challenges",
+                title: "Clean Minimal Input",
+                description: "Final mini challenge: Ask user for an integer. If valid, print \"You entered X\". If not, ask again without any error messages. Keep it clean and minimal.",
+                hint: 'while True:\n    try:\n        num = int(input("Enter integer: "))\n        print(f"You entered {num}")\n        break\n    except ValueError:\n        pass'
+            }
+        ];
+
+        // Global state
+        let currentExercise = 0;
+        let completedExercises = new Set();
+
+        // Initialize app
+        function init() {
+            loadProgress();
+            buildSidebar();
+            showExercise(0);
+            updateProgress();
+        }
+
+        // Load progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem('python-exercises-progress');
+            if (saved) {
+                try {
+                    const data = JSON.parse(saved);
+                    completedExercises = new Set(data.completed || []);
+                    currentExercise = data.current || 0;
+                } catch (e) {
+                    console.log('Error loading progress:', e);
+                }
+            }
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            const data = {
+                completed: Array.from(completedExercises),
+                current: currentExercise
+            };
+            localStorage.setItem('python-exercises-progress', JSON.stringify(data));
+        }
+
+        // Update progress bar
+        function updateProgress() {
+            const total = allExercises.length;
+            const completed = completedExercises.size;
+            const percentage = total > 0 ? (completed / total) * 100 : 0;
+            
+            const progressFill = document.getElementById('progressFill');
+            const progressText = document.getElementById('progressText');
+            const mobileProgressFill = document.getElementById('mobileProgressFill');
+            
+            if (progressFill) progressFill.style.width = percentage + '%';
+            if (progressText) progressText.textContent = completed + ' / ' + total + ' completed';
+            if (mobileProgressFill) mobileProgressFill.style.width = percentage + '%';
+        }
+
+        // Build sidebar with exercises
+        function buildSidebar() {
+            const container = document.getElementById('exercisesList');
+            if (!container) return;
+
+            container.innerHTML = '';
+
+            // Group exercises by level
+            const levels = {};
+            allExercises.forEach((exercise, index) => {
+                if (!levels[exercise.level]) {
+                    levels[exercise.level] = [];
+                }
+                levels[exercise.level].push({...exercise, index});
+            });
+
+            // Create level groups
+            Object.keys(levels).forEach(levelName => {
+                const levelGroup = document.createElement('div');
+                levelGroup.className = 'level-group';
+
+                const levelTitle = document.createElement('div');
+                levelTitle.className = 'level-title';
+                levelTitle.textContent = levelName;
+                levelGroup.appendChild(levelTitle);
+
+                levels[levelName].forEach(exercise => {
+                    const item = document.createElement('div');
+                    item.className = 'exercise-item';
+                    
+                    if (exercise.index === currentExercise) {
+                        item.classList.add('active');
+                    }
+                    if (completedExercises.has(exercise.index)) {
+                        item.classList.add('completed');
+                    }
+
+                    const number = document.createElement('div');
+                    number.className = 'exercise-number';
+                    number.textContent = exercise.index + 1;
+
+                    const title = document.createElement('div');
+                    title.className = 'exercise-title';
+                    title.textContent = exercise.title;
+
+                    const checkIcon = document.createElement('div');
+                    checkIcon.className = 'check-icon';
+                    checkIcon.innerHTML = '✓';
+
+                    item.appendChild(number);
+                    item.appendChild(title);
+                    item.appendChild(checkIcon);
+
+                    item.addEventListener('click', function() {
+                        // Close mobile sidebar immediately on exercise selection
+                        if (window.innerWidth <= 768 && mobileController) {
+                            mobileController.closeSidebar();
+                        }
+                        showExercise(exercise.index);
+                    });
+
+                    levelGroup.appendChild(item);
+                });
+
+                container.appendChild(levelGroup);
+            });
+        }
+
+        // Show specific exercise
+        function showExercise(index) {
+            if (index < 0 || index >= allExercises.length) return;
+
+            currentExercise = index;
+            const exercise = allExercises[index];
+            const isCompleted = completedExercises.has(index);
+
+            // Update content
+            const content = document.getElementById('exerciseContent');
+            if (!content) return;
+
+            content.innerHTML = '';
+
+            // Header
+            const header = document.createElement('div');
+            header.className = 'exercise-header';
+
+            const level = document.createElement('div');
+            level.className = 'exercise-level';
+            level.textContent = exercise.level;
+
+            const title = document.createElement('h1');
+            title.className = 'exercise-title-main';
+            title.textContent = 'Exercise ' + (index + 1) + ': ' + exercise.title;
+
+            header.appendChild(level);
+            header.appendChild(title);
+
+            if (isCompleted) {
+                const badge = document.createElement('div');
+                badge.className = 'completion-badge';
+                badge.innerHTML = '✓ Completed';
+                header.appendChild(badge);
+            }
+
+            // Description
+            const desc = document.createElement('div');
+            desc.className = 'exercise-description';
+
+            const descText = document.createElement('p');
+            descText.textContent = exercise.description;
+            desc.appendChild(descText);
+
+            if (exercise.hint) {
+                const hint = document.createElement('div');
+                hint.className = 'code-hint';
+                hint.textContent = exercise.hint;
+                desc.appendChild(hint);
+            }
+
+            // Actions
+            const actions = document.createElement('div');
+            actions.className = 'exercise-actions';
+
+            const completeBtn = document.createElement('button');
+            completeBtn.className = 'btn ' + (isCompleted ? 'btn-success' : 'btn-primary');
+            completeBtn.textContent = isCompleted ? '✓ Completed' : 'Mark as Complete';
+            completeBtn.onclick = function() { toggleComplete(index); };
+
+            const editorBtn = document.createElement('button');
+            editorBtn.className = 'btn btn-secondary';
+            editorBtn.textContent = 'Open Python Editor';
+            editorBtn.onclick = function() { 
+                window.open('https://replit.com/languages/python3', '_blank'); 
+            };
+
+            actions.appendChild(completeBtn);
+            actions.appendChild(editorBtn);
+
+            // Navigation
+            const nav = document.createElement('div');
+            nav.className = 'navigation';
+
+            const prevBtn = document.createElement('button');
+            prevBtn.className = 'nav-btn';
+            prevBtn.innerHTML = '← Previous';
+            prevBtn.disabled = index === 0;
+            prevBtn.onclick = function() { 
+                if (index > 0) showExercise(index - 1); 
+            };
+
+            const nextBtn = document.createElement('button');
+            nextBtn.className = 'nav-btn';
+            nextBtn.innerHTML = 'Next →';
+            nextBtn.disabled = index === allExercises.length - 1;
+            nextBtn.onclick = function() { 
+                if (index < allExercises.length - 1) showExercise(index + 1); 
+            };
+
+            nav.appendChild(prevBtn);
+            nav.appendChild(nextBtn);
+
+            // Append all
+            content.appendChild(header);
+            content.appendChild(desc);
+            content.appendChild(actions);
+            content.appendChild(nav);
+
+            // Update sidebar
+            buildSidebar();
+            saveProgress();
+        }
+
+        // Toggle completion status
+        function toggleComplete(index) {
+            if (completedExercises.has(index)) {
+                completedExercises.delete(index);
+            } else {
+                completedExercises.add(index);
+            }
+            updateProgress();
+            showExercise(index);
+            saveProgress();
+        }
+
+        // Keyboard shortcuts
+        document.addEventListener('keydown', function(e) {
+            if (e.ctrlKey || e.metaKey) {
+                if (e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    if (currentExercise > 0) showExercise(currentExercise - 1);
+                } else if (e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    if (currentExercise < allExercises.length - 1) showExercise(currentExercise + 1);
+                } else if (e.key === ' ') {
+                    e.preventDefault();
+                    toggleComplete(currentExercise);
+                }
+            }
+        });
+
+        // Mobile sidebar functionality
+        function initMobileSidebar() {
+            const burgerMenu = document.getElementById('burgerMenu');
+            const sidebar = document.getElementById('sidebar');
+            const sidebarClose = document.getElementById('sidebarClose');
+            const sidebarOverlay = document.getElementById('sidebarOverlay');
+
+            function openSidebar() {
+                sidebar.classList.add('open');
+                sidebarOverlay.style.display = 'block';
+                document.body.style.overflow = 'hidden';
+                document.body.style.position = 'fixed';
+                document.body.style.width = '100%';
+            }
+
+            function closeSidebar() {
+                sidebar.classList.remove('open');
+                sidebarOverlay.style.display = 'none';
+                document.body.style.overflow = '';
+                document.body.style.position = '';
+                document.body.style.width = '';
+            }
+
+            if (burgerMenu) {
+                burgerMenu.addEventListener('click', openSidebar);
+            }
+
+            if (sidebarClose) {
+                sidebarClose.addEventListener('click', closeSidebar);
+            }
+
+            if (sidebarOverlay) {
+                sidebarOverlay.addEventListener('click', closeSidebar);
+            }
+
+            // Close sidebar on escape key
+            document.addEventListener('keydown', function(e) {
+                if (e.key === 'Escape' && sidebar.classList.contains('open')) {
+                    closeSidebar();
+                }
+            });
+
+            // Return close function for use in other parts of the app
+            return { closeSidebar };
+        }
+
+        // Global mobile sidebar controller
+        let mobileController = null;
+
+        // Start the app when page loads
+        document.addEventListener('DOMContentLoaded', function() {
+            init();
+            mobileController = initMobileSidebar();
+        });
+    </script>
+</body>
+</html>

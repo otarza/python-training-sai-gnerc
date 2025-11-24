@@ -1,0 +1,572 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Conditional Exercises Workbook</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segura UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            display: grid;
+            grid-template-columns: 300px 1fr;
+            gap: 30px;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+            height: fit-content;
+            position: sticky;
+            top: 20px;
+        }
+
+        .sidebar h2 {
+            color: #4a5568;
+            margin-bottom: 20px;
+            font-size: 1.3rem;
+            border-bottom: 2px solid #e2e8f0;
+            padding-bottom: 10px;
+        }
+
+        .toc-section {
+            margin-bottom: 20px;
+        }
+
+        .toc-section h3 {
+            color: #2d3748;
+            font-size: 0.95rem;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .toc-list {
+            list-style: none;
+        }
+
+        .toc-item {
+            margin-bottom: 4px;
+        }
+
+        .toc-link {
+            display: block;
+            padding: 6px 12px;
+            text-decoration: none;
+            color: #4a5568;
+            border-radius: 8px;
+            transition: all 0.2s ease;
+            font-size: 0.9rem;
+        }
+
+        .toc-link:hover {
+            background: rgba(102, 126, 234, 0.1);
+            color: #667eea;
+            transform: translateX(4px);
+        }
+
+        .toc-link.active {
+            background: #667eea;
+            color: white;
+            font-weight: 600;
+        }
+
+        .main-content {
+            background: rgba(255, 255, 255, 0.95);
+            backdrop-filter: blur(10px);
+            border-radius: 15px;
+            padding: 35px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+        }
+
+        .exercise {
+            display: none;
+        }
+
+        .exercise.active {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exercise-header {
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+
+        .exercise-title {
+            color: #2d3748;
+            font-size: 1.8rem;
+            margin-bottom: 8px;
+        }
+
+        .exercise-subtitle {
+            color: #4a5568;
+            font-size: 1.1rem;
+            font-weight: 500;
+        }
+
+        .exercise-content {
+            line-height: 1.6;
+            margin-bottom: 30px;
+        }
+
+        .exercise-description {
+            background: rgba(102, 126, 234, 0.05);
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            font-size: 1.05rem;
+        }
+
+        .code-block {
+            background: #2d3748;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            overflow-x: auto;
+        }
+
+        .code-block pre {
+            margin: 0;
+        }
+
+        .hint {
+            background: rgba(72, 187, 120, 0.05);
+            border-left: 4px solid #48bb78;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+        }
+
+        .hint-title {
+            font-weight: 600;
+            color: #2f855a;
+            margin-bottom: 5px;
+        }
+
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .nav-button {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+        }
+
+        .nav-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+        }
+
+        .nav-button:disabled {
+            background: #cbd5e0;
+            color: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        .progress-indicator {
+            text-align: center;
+            color: #4a5568;
+            font-weight: 500;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                grid-template-columns: 1fr;
+                gap: 20px;
+            }
+            
+            .sidebar {
+                position: static;
+            }
+        }
+
+        .part-exercises {
+            display: grid;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+
+        .single-exercise {
+            background: rgba(245, 247, 250, 0.8);
+            border-radius: 8px;
+            padding: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .single-exercise h4 {
+            color: #2d3748;
+            margin-bottom: 10px;
+            font-size: 1.1rem;
+        }
+
+        .single-exercise p {
+            color: #4a5568;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="sidebar">
+            <h2>📚 Table of Contents</h2>
+            <div id="toc-content"></div>
+        </div>
+
+        <div class="main-content">
+            <div id="exercises-content"></div>
+            
+            <div class="navigation">
+                <button id="prevBtn" class="nav-button">← Previous</button>
+                <div id="progressIndicator" class="progress-indicator"></div>
+                <button id="nextBtn" class="nav-button">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const exercises = [
+            {
+                part: "Part 1: Basic `if` Statements",
+                exercises: [
+                    "Ask the user for a number. If it's greater than 10, print `\"Big number\"`.",
+                    "Ask the user for a number. If it's less than 5, print `\"Small number\"`.",
+                    "Ask the user for their age. If age is 18 or more, print `\"You are an adult\"`.",
+                    "Ask the user for their age. If age is less than 18, print `\"You are a minor\"`.",
+                    "Ask the user for a password. If it equals `\"secret\"`, print `\"Access granted\"`."
+                ]
+            },
+            {
+                part: "Part 2: `if...else`",
+                exercises: [
+                    "Ask for a number. Print `\"Positive\"` if it's > 0, otherwise print `\"Not positive\"`.",
+                    "Ask for a number. Print `\"Even\"` if divisible by 2, otherwise `\"Odd\"`.",
+                    "Ask for a word. If it equals `\"Python\"`, print `\"Correct\"`, else `\"Wrong word\"`.",
+                    "Ask for a temperature. If ≥ 30, print `\"Hot\"`, else `\"Not hot\"`.",
+                    "Ask for a grade. If ≥ 50, print `\"Pass\"`, else `\"Fail\"`."
+                ]
+            },
+            {
+                part: "Part 3: `elif` and Multiple Conditions",
+                exercises: [
+                    "Ask for a number. If < 0 print `\"Negative\"`, if 0 print `\"Zero\"`, else `\"Positive\"`.",
+                    "Ask for age. If < 13 print `\"Child\"`, if < 20 print `\"Teenager\"`, else `\"Adult\"`.",
+                    "Ask for a number. If < 10 print `\"Small\"`, if < 100 print `\"Medium\"`, else `\"Large\"`.",
+                    "Ask for a day of the week (number 1–7). Print the correct weekday name.",
+                    "Ask for a score (0–100). Print `\"A\"` for ≥90, `\"B\"` for ≥80, `\"C\"` for ≥70, `\"D\"` for ≥60, else `\"F\"`."
+                ]
+            },
+            {
+                part: "Part 4: `or` Conditions",
+                exercises: [
+                    "Ask for a letter. If it's `\"a\"` or `\"e\"`, print `\"Vowel\"`, else `\"Not vowel\"`.",
+                    "Ask for a number. If < 0 or > 100, print `\"Out of range\"`, else `\"In range\"`.",
+                    "Ask for a username. If `\"admin\"` or `\"root\"`, print `\"Special user\"`.",
+                    "Ask for a color. If `\"red\"` or `\"blue\"`, print `\"Primary color\"`.",
+                    "Ask for an age. If < 0 or > 120, print `\"Impossible age\"`."
+                ]
+            },
+            {
+                part: "Part 5: `and` Conditions",
+                exercises: [
+                    "Ask for a number. If > 10 and < 20, print `\"Between 10 and 20\"`.",
+                    "Ask for a password and username. If username is `\"admin\"` and password is `\"1234\"`, print `\"Login successful\"`.",
+                    "Ask for a grade. If ≥50 and ≤100, print `\"Valid pass grade\"`.",
+                    "Ask for a number. If divisible by 2 and divisible by 3, print `\"Divisible by 6\"`.",
+                    "Ask for temperature. If ≥ 15 and ≤ 25, print `\"Comfortable weather\"`."
+                ]
+            },
+            {
+                part: "Part 6: Modulo (Even/Odd Practice)",
+                exercises: [
+                    "Ask for a number. Print `\"Even\"` if divisible by 2, else `\"Odd\"`.",
+                    "Ask for a number. If divisible by 5, print `\"Multiple of 5\"`, else `\"Not multiple of 5\"`.",
+                    "Ask for a number. If divisible by 10, print `\"Round number\"`.",
+                    "Ask for a number. If divisible by 7, print `\"Lucky number\"`.",
+                    "Ask for a number. If divisible by both 2 and 5, print `\"Divisible by 10\"`."
+                ]
+            },
+            {
+                part: "Part 7: Writing Small Functions",
+                exercises: [
+                    "Write a function `is_even(n)` that returns True if even, else False. Test it.",
+                    "Write a function `is_odd(n)` that returns True if odd, else False. Test it.",
+                    "Write a function `is_divisible_by_3(n)` that returns True if divisible by 3.",
+                    "Write a function `grade(score)` that prints `\"Pass\"` if ≥50 else `\"Fail\"`.",
+                    "Write a function `compare(x, y)` that prints whether x is `<`, `>`, or `=` y."
+                ]
+            },
+            {
+                part: "Part 8: More Pythonic Style",
+                exercises: [
+                    "Rewrite `is_even(n)` to return `n % 2 == 0` (no if/else).",
+                    "Rewrite `is_odd(n)` to return `n % 2 != 0`.",
+                    "Rewrite `grade(score)` using only one return statement (ternary operator).",
+                    "Rewrite `compare(x, y)` so it returns a string instead of printing.",
+                    "Rewrite `is_divisible_by_3(n)` to be one line."
+                ]
+            },
+            {
+                part: "Part 9: Using `match`",
+                exercises: [
+                    "Ask for a fruit name. Use `match` to print a color (e.g., `\"apple\" → \"red\"`).",
+                    "Ask for a day number (1–7). Use `match` to print weekday name.",
+                    "Ask for a traffic light color (`\"red\"`, `\"yellow\"`, `\"green\"`). Print an instruction.",
+                    "Ask for an animal (`\"dog\"`, `\"cat\"`, `\"cow\"`). Print its sound.",
+                    "Ask for a school subject. Use `match` to print `\"STEM\"`, `\"Arts\"`, or `\"Other\"`."
+                ]
+            },
+            {
+                part: "Part 10: Combining Concepts",
+                exercises: [
+                    "Ask for two numbers. If equal, print `\"Equal\"`, else print which is larger.",
+                    "Ask for three numbers. Print the largest one.",
+                    "Ask for a number. If even and > 10, print `\"Big even number\"`.",
+                    "Ask for a number. If odd or less than 0, print `\"Odd or negative\"`.",
+                    "Write a program that asks for a score (0–100). Use `match` to print `\"Excellent\"`, `\"Good\"`, `\"Average\"`, `\"Poor\"`, or `\"Fail\"` depending on range."
+                ]
+            }
+        ];
+
+        const sampleSolutions = {
+            "1-1": `number = int(input("Enter a number: "))
+if number > 10:
+    print("Big number")`,
+            "2-1": `number = int(input("Enter a number: "))
+if number > 0:
+    print("Positive")
+else:
+    print("Not positive")`,
+            "3-1": `number = int(input("Enter a number: "))
+if number < 0:
+    print("Negative")
+elif number == 0:
+    print("Zero")
+else:
+    print("Positive")`,
+            "7-1": `def is_even(n):
+    if n % 2 == 0:
+        return True
+    else:
+        return False
+
+# Test the function
+print(is_even(4))  # True
+print(is_even(5))  # False`,
+            "8-1": `def is_even(n):
+    return n % 2 == 0
+
+# Test the function
+print(is_even(4))  # True
+print(is_even(5))  # False`,
+            "9-1": `fruit = input("Enter a fruit name: ")
+match fruit.lower():
+    case "apple":
+        print("red")
+    case "banana":
+        print("yellow")
+    case "orange":
+        print("orange")
+    case "grape":
+        print("purple")
+    case _:
+        print("Unknown color")`
+        };
+
+        let currentExercise = 0;
+        let flatExercises = [];
+
+        // Flatten exercises for easier navigation
+        exercises.forEach((part, partIndex) => {
+            part.exercises.forEach((exercise, exerciseIndex) => {
+                flatExercises.push({
+                    partIndex: partIndex,
+                    exerciseIndex: exerciseIndex,
+                    part: part.part,
+                    exercise: exercise,
+                    id: `${partIndex + 1}-${exerciseIndex + 1}`
+                });
+            });
+        });
+
+        function generateTOC() {
+            const tocContent = document.getElementById('toc-content');
+            let html = '';
+            
+            exercises.forEach((part, partIndex) => {
+                html += `<div class="toc-section">`;
+                html += `<h3>Part ${partIndex + 1}</h3>`;
+                html += `<ul class="toc-list">`;
+                
+                part.exercises.forEach((exercise, exerciseIndex) => {
+                    const globalIndex = flatExercises.findIndex(ex => 
+                        ex.partIndex === partIndex && ex.exerciseIndex === exerciseIndex
+                    );
+                    html += `<li class="toc-item">
+                        <a href="#" class="toc-link" data-exercise="${globalIndex}">
+                            ${partIndex + 1}.${exerciseIndex + 1}
+                        </a>
+                    </li>`;
+                });
+                
+                html += `</ul></div>`;
+            });
+            
+            tocContent.innerHTML = html;
+        }
+
+        function generateExerciseContent(index) {
+            const ex = flatExercises[index];
+            const sampleKey = ex.id;
+            const hasSample = sampleSolutions[sampleKey];
+            
+            return `
+                <div class="exercise active">
+                    <div class="exercise-header">
+                        <h1 class="exercise-title">Exercise ${ex.id}</h1>
+                        <p class="exercise-subtitle">${ex.part}</p>
+                    </div>
+                    <div class="exercise-content">
+                        <div class="exercise-description">
+                            <strong>Task:</strong> ${ex.exercise}
+                        </div>
+                        
+                        ${hasSample ? `
+                        <div class="hint">
+                            <div class="hint-title">💡 Sample Solution:</div>
+                            <div class="code-block">
+                                <pre><code class="language-python">${sampleSolutions[sampleKey]}</code></pre>
+                            </div>
+                        </div>
+                        ` : ''}
+                        
+                        <div class="hint">
+                            <div class="hint-title">💭 Approach:</div>
+                            <p>1. Use <code>input()</code> to get user input</p>
+                            <p>2. Convert to appropriate data type if needed (e.g., <code>int()</code>)</p>
+                            <p>3. Use conditional statements to check the condition</p>
+                            <p>4. Print the appropriate message</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function showExercise(index) {
+            const exercisesContent = document.getElementById('exercises-content');
+            exercisesContent.innerHTML = generateExerciseContent(index);
+            
+            // Update active TOC item
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.classList.remove('active');
+            });
+            document.querySelector(`[data-exercise="${index}"]`).classList.add('active');
+            
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = index === 0;
+            document.getElementById('nextBtn').disabled = index === flatExercises.length - 1;
+            
+            // Update progress indicator
+            document.getElementById('progressIndicator').textContent = 
+                `Exercise ${index + 1} of ${flatExercises.length}`;
+            
+            // Trigger syntax highlighting
+            if (window.Prism) {
+                setTimeout(() => Prism.highlightAll(), 100);
+            }
+        }
+
+        function initializeApp() {
+            generateTOC();
+            showExercise(0);
+            
+            // Add event listeners for TOC links
+            document.querySelectorAll('.toc-link').forEach(link => {
+                link.addEventListener('click', (e) => {
+                    e.preventDefault();
+                    const exerciseIndex = parseInt(e.target.dataset.exercise);
+                    currentExercise = exerciseIndex;
+                    showExercise(currentExercise);
+                });
+            });
+            
+            // Add navigation button listeners
+            document.getElementById('prevBtn').addEventListener('click', () => {
+                if (currentExercise > 0) {
+                    currentExercise--;
+                    showExercise(currentExercise);
+                }
+            });
+            
+            document.getElementById('nextBtn').addEventListener('click', () => {
+                if (currentExercise < flatExercises.length - 1) {
+                    currentExercise++;
+                    showExercise(currentExercise);
+                }
+            });
+            
+            // Add keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowLeft' && currentExercise > 0) {
+                    currentExercise--;
+                    showExercise(currentExercise);
+                } else if (e.key === 'ArrowRight' && currentExercise < flatExercises.length - 1) {
+                    currentExercise++;
+                    showExercise(currentExercise);
+                }
+            });
+        }
+
+        // Initialize the app when DOM is loaded
+        document.addEventListener('DOMContentLoaded', initializeApp);
+    </script>
+</body>
+</html>
