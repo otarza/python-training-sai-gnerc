@@ -1,0 +1,904 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Learning Workbook - Giorgi</title>
+
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap');
+
+        :root {
+            --primary-bg: #0a0d14;
+            --secondary-bg: #1a1d23;
+            --glass-bg: rgba(26, 29, 35, 0.8);
+            --glass-border: rgba(255, 255, 255, 0.1);
+            --accent-blue: #64b5f6;
+            --accent-cyan: #26c6da;
+            --accent-purple: #ab47bc;
+            --text-primary: #e3f2fd;
+            --text-secondary: #b0bec5;
+            --success-green: #4caf50;
+            --terminal-green: #00ff41;
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+            background: var(--primary-bg);
+            color: var(--text-primary);
+            overflow-x: hidden;
+            position: relative;
+            min-height: 100vh;
+        }
+
+        /* Animated Background Orbs */
+        .bg-orb {
+            position: fixed;
+            border-radius: 50%;
+            background: var(--gradient-1);
+            opacity: 0.1;
+            filter: blur(40px);
+            animation: float 20s infinite ease-in-out;
+            z-index: -1;
+        }
+
+        .bg-orb:nth-child(1) {
+            width: 300px;
+            height: 300px;
+            top: 10%;
+            left: 10%;
+            animation-delay: 0s;
+        }
+
+        .bg-orb:nth-child(2) {
+            width: 200px;
+            height: 200px;
+            top: 60%;
+            right: 20%;
+            background: var(--gradient-2);
+            animation-delay: -10s;
+        }
+
+        .bg-orb:nth-child(3) {
+            width: 150px;
+            height: 150px;
+            bottom: 20%;
+            left: 60%;
+            animation-delay: -5s;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translateY(0px) rotate(0deg); }
+            33% { transform: translateY(-30px) rotate(120deg); }
+            66% { transform: translateY(20px) rotate(240deg); }
+        }
+
+        /* Layout */
+        .container {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 320px;
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border-right: 1px solid var(--glass-border);
+            padding: 2rem 1.5rem;
+            position: fixed;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar h1 {
+            font-size: 1.5rem;
+            font-weight: 700;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar .subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            margin-bottom: 2rem;
+        }
+
+        /* Progress Ring */
+        .progress-container {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 2rem;
+        }
+
+        .progress-ring {
+            position: relative;
+            width: 80px;
+            height: 80px;
+        }
+
+        .progress-ring svg {
+            transform: rotate(-90deg);
+            width: 100%;
+            height: 100%;
+        }
+
+        .progress-ring-bg {
+            fill: none;
+            stroke: var(--glass-border);
+            stroke-width: 4;
+        }
+
+        .progress-ring-fill {
+            fill: none;
+            stroke: var(--accent-blue);
+            stroke-width: 4;
+            stroke-linecap: round;
+            stroke-dasharray: 251.2;
+            stroke-dashoffset: 251.2;
+            transition: stroke-dashoffset 0.5s ease;
+        }
+
+        .progress-text {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            font-weight: 700;
+            font-size: 0.9rem;
+            color: var(--accent-blue);
+        }
+
+        /* Exercise List */
+        .section-header {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin: 1.5rem 0 0.5rem 0;
+            padding-left: 0.5rem;
+        }
+
+        .exercise-item {
+            padding: 0.75rem 1rem;
+            margin: 0.25rem 0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border: 1px solid transparent;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .exercise-item:hover {
+            background: rgba(100, 181, 246, 0.1);
+            border-color: var(--accent-blue);
+        }
+
+        .exercise-item.active {
+            background: rgba(100, 181, 246, 0.2);
+            border-color: var(--accent-blue);
+        }
+
+        .exercise-item.completed {
+            background: rgba(76, 175, 80, 0.1);
+            border-color: var(--success-green);
+        }
+
+        .exercise-number {
+            font-weight: 600;
+            color: var(--accent-blue);
+            font-size: 0.9rem;
+            margin-right: 0.5rem;
+        }
+
+        .exercise-title {
+            flex: 1;
+            font-size: 0.85rem;
+        }
+
+        .check-mark {
+            color: var(--success-green);
+            font-weight: bold;
+        }
+
+        /* Main Content */
+        .main-content {
+            flex: 1;
+            margin-left: 320px;
+            padding: 2rem;
+            max-width: 1000px;
+        }
+
+        /* Exercise Header */
+        .exercise-header {
+            margin-bottom: 2rem;
+        }
+
+        .exercise-badge {
+            background: var(--gradient-1);
+            color: white;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            display: inline-block;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-title-main {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            background: var(--gradient-1);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .exercise-description {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+        }
+
+        /* Exercise Card */
+        .exercise-card {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            border-radius: 16px;
+            padding: 2rem;
+            margin: 2rem 0;
+            box-shadow: 0 8px 32px rgba(0,0,0,0.1);
+        }
+
+        .objective-section {
+            margin-bottom: 2rem;
+        }
+
+        .objective-title {
+            color: var(--accent-blue);
+            font-size: 1.4rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .objective-text {
+            color: var(--text-primary);
+            font-size: 1.1rem;
+            line-height: 1.8;
+            padding: 1.5rem;
+            background: rgba(100, 181, 246, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            border-radius: 8px;
+        }
+
+        .hint-section {
+            margin-bottom: 2rem;
+        }
+
+        .hint-title {
+            color: var(--accent-cyan);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .hint-content {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            padding: 1.25rem;
+            background: rgba(38, 198, 218, 0.1);
+            border-left: 4px solid var(--accent-cyan);
+            border-radius: 8px;
+        }
+
+        .challenge-section {
+            margin-top: 2rem;
+        }
+
+        .challenge-title {
+            color: var(--accent-purple);
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .challenge-text {
+            color: var(--text-secondary);
+            font-size: 1rem;
+            line-height: 1.7;
+            padding: 1.25rem;
+            background: rgba(171, 71, 188, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            border-radius: 8px;
+        }
+
+
+
+
+
+        /* Navigation Buttons */
+        .navigation {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+        }
+
+        .nav-btn {
+            background: var(--glass-bg);
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--glass-border);
+            color: var(--text-primary);
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 600;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .nav-btn:hover:not(:disabled) {
+            background: rgba(100, 181, 246, 0.1);
+            border-color: var(--accent-blue);
+            transform: translateY(-2px);
+        }
+
+        .nav-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .complete-btn {
+            background: var(--gradient-1);
+            border: none;
+            margin-left: auto;
+        }
+
+        .complete-btn:hover {
+            background: var(--gradient-2);
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+                padding: 1rem;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1rem;
+            }
+
+            .exercise-title-main {
+                font-size: 1.5rem;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Background Orbs -->
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+    <div class="bg-orb"></div>
+
+    <div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar">
+            <h1>Python Workbook</h1>
+            <p class="subtitle">For Giorgi - Interactive Learning</p>
+            
+            <!-- Progress Ring -->
+            <div class="progress-container">
+                <div class="progress-ring">
+                    <svg>
+                        <circle class="progress-ring-bg" cx="40" cy="40" r="36"></circle>
+                        <circle class="progress-ring-fill" cx="40" cy="40" r="36"></circle>
+                    </svg>
+                    <div class="progress-text">0%</div>
+                </div>
+            </div>
+
+            <!-- Exercise List -->
+            <div id="exercise-list"></div>
+        </div>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div id="exercise-content">
+                <!-- Exercise content will be loaded here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+                    // Exercise Data
+        const exercises = [
+            // Basic Python (1-20)
+            {
+                id: 1,
+                section: "Basic Python",
+                title: "Hello, World!",
+                description: "Your first Python program! Print the classic 'Hello, World!' message to the screen.",
+                hint: "Use the print() function to display text. Remember to put your text inside quotes!"
+            },
+            {
+                id: 2,
+                section: "Basic Python",
+                title: "Print Your Name",
+                description: "Print your name to the screen using the print() function.",
+                hint: "Replace 'Your Name' with your actual name inside the quotes."
+            },
+            {
+                id: 3,
+                section: "Basic Python",
+                title: "Name and Age",
+                description: "Print both your name and age on separate lines.",
+                hint: "Use two separate print() statements, one for name and one for age."
+            },
+            {
+                id: 4,
+                section: "Basic Python",
+                title: "Three Words",
+                description: "Print three different words, each on its own line.",
+                hint: "Use three print() statements, each with a different word."
+            },
+            {
+                id: 5,
+                section: "Basic Python",
+                title: "Repeat a Word",
+                description: "Print the same word three times on the same line, separated by spaces.",
+                hint: "You can use print(\"word word word\") or multiple print() statements with end=\" \""
+            },
+            {
+                id: 6,
+                section: "Basic Python",
+                title: "Name Variable",
+                description: "Create a variable called 'name' and store your name in it, then print it.",
+                hint: "Create a variable like: name = \"Your Name\", then print the variable."
+            },
+            {
+                id: 7,
+                section: "Basic Python",
+                title: "Age Variable",
+                description: "Create a variable called 'age' and store your age in it, then print it.",
+                hint: "Numbers don't need quotes: age = 25. Then print the variable."
+            },
+            {
+                id: 8,
+                section: "Basic Python",
+                title: "First and Last Name",
+                description: "Create separate variables for first name and last name, then print both.",
+                hint: "Create two variables: first_name and last_name, then print them separately."
+            },
+            {
+                id: 9,
+                section: "Basic Python",
+                title: "Favorite Color",
+                description: "Create a variable for your favorite color and use it in a sentence.",
+                hint: "You can combine text and variables: print(\"My favorite color is\", color)"
+            },
+            {
+                id: 10,
+                section: "Basic Python",
+                title: "Addition",
+                description: "Print the result of adding two numbers together.",
+                hint: "Use the + operator: print(5 + 3) or create variables first."
+            },
+            {
+                id: 11,
+                section: "Basic Python",
+                title: "Subtraction",
+                description: "Print the result of subtracting one number from another.",
+                hint: "Use the - operator: print(10 - 4) or with variables."
+            },
+            {
+                id: 12,
+                section: "Basic Python",
+                title: "Multiplication",
+                description: "Print the result of multiplying two numbers.",
+                hint: "Use the * operator: print(6 * 7) or with variables."
+            },
+            {
+                id: 13,
+                section: "Basic Python",
+                title: "Division",
+                description: "Print the result of dividing one number by another.",
+                hint: "Use the / operator: print(20 / 4) or with variables."
+            },
+            {
+                id: 14,
+                section: "Basic Python",
+                title: "Multiply by Two",
+                description: "Create a variable with a number, multiply it by 2, and print the result.",
+                hint: "Create a variable like number = 15, then print number * 2"
+            },
+            {
+                id: 15,
+                section: "Basic Python",
+                title: "Number and Word",
+                description: "Print a number and a word together in the same print statement.",
+                hint: "You can mix numbers and text: print(\"I have\", 5, \"apples\")"
+            },
+            {
+                id: 16,
+                section: "Basic Python",
+                title: "Birth Year",
+                description: "Calculate and print your birth year using your current age.",
+                hint: "Use current year minus your age: print(2024 - age)"
+            },
+            {
+                id: 17,
+                section: "Basic Python",
+                title: "Today's Date",
+                description: "Print today's date in a nice format.",
+                hint: "You can format it like: print(\"Today is August 15, 2024\")"
+            },
+            {
+                id: 18,
+                section: "Basic Python",
+                title: "Three Favorite Foods",
+                description: "Print your three favorite foods in a nice list format.",
+                hint: "You can print them like: \"My favorite foods are: pizza, pasta, ice cream\""
+            },
+            {
+                id: 19,
+                section: "Basic Python",
+                title: "Short Poem",
+                description: "Print a short 2-line poem or saying.",
+                hint: "Use two print() statements for two lines, or \\n for a line break."
+            },
+            {
+                id: 20,
+                section: "Basic Python",
+                title: "Math Results",
+                description: "Perform and print the results of three different math operations.",
+                hint: "Do addition, subtraction, and multiplication, then print each result."
+            },
+
+            // User Input (21-40)
+            {
+                id: 21,
+                section: "User Input",
+                title: "Ask for Name",
+                description: "Ask the user for their name and print a greeting.",
+                hint: "Use input() to get the name, then print a greeting with it."
+            },
+            {
+                id: 22,
+                section: "User Input",
+                title: "Favorite Color Input",
+                description: "Ask the user for their favorite color and respond with it.",
+                hint: "Use input() to get the color, store it in a variable, then use it in a response."
+            },
+            {
+                id: 23,
+                section: "User Input",
+                title: "Age Input",
+                description: "Ask the user for their age and print it back to them.",
+                hint: "Use input() to get age, but remember input() returns text, not numbers."
+            },
+            {
+                id: 24,
+                section: "User Input",
+                title: "Add Two Numbers",
+                description: "Ask the user for two numbers and print their sum.",
+                hint: "Use int() to convert input to numbers: num1 = int(input(\"Enter number: \"))"
+            },
+            {
+                id: 25,
+                section: "User Input",
+                title: "Subtract Two Numbers",
+                description: "Ask the user for two numbers and print the difference.",
+                hint: "Get two numbers with int(input()), then subtract the second from the first."
+            },
+            {
+                id: 26,
+                section: "User Input",
+                title: "Multiply Two Numbers",
+                description: "Ask the user for two numbers and print their product.",
+                hint: "Get two numbers with int(input()), then multiply them together."
+            },
+            {
+                id: 27,
+                section: "User Input",
+                title: "Divide Two Numbers",
+                description: "Ask the user for two numbers and print the division result.",
+                hint: "Get two numbers with int(input()), then divide the first by the second."
+            },
+            {
+                id: 28,
+                section: "User Input",
+                title: "Name and Age Together",
+                description: "Ask for both name and age, then print them together in a sentence.",
+                hint: "Get name with input() and age with int(input()), then combine in one print."
+            },
+            {
+                id: 29,
+                section: "User Input",
+                title: "Birth Year Input",
+                description: "Ask for the user's age and calculate their birth year.",
+                hint: "Get age with int(input()), then calculate 2024 - age."
+            },
+            {
+                id: 30,
+                section: "User Input",
+                title: "City Input",
+                description: "Ask the user what city they live in and respond with a comment about it.",
+                hint: "Get the city with input(), then print something nice about living there."
+            },
+            {
+                id: 31,
+                section: "User Input",
+                title: "Favorite Food Input",
+                description: "Ask for the user's favorite food and respond enthusiastically.",
+                hint: "Get the food with input(), then print an enthusiastic response about it."
+            },
+            {
+                id: 32,
+                section: "User Input",
+                title: "Double a Number",
+                description: "Ask the user for a number and print double that number.",
+                hint: "Get a number with int(input()), then multiply by 2 and print."
+            },
+            {
+                id: 33,
+                section: "User Input",
+                title: "Square a Number",
+                description: "Ask the user for a number and print the square of that number.",
+                hint: "Get a number with int(input()), then multiply it by itself: number * number"
+            },
+            {
+                id: 34,
+                section: "User Input",
+                title: "Add Ten",
+                description: "Ask the user for a number and print that number plus 10.",
+                hint: "Get a number with int(input()), then add 10 to it and print."
+            },
+            {
+                id: 35,
+                section: "User Input",
+                title: "Color and Animal",
+                description: "Ask for a color and an animal, then create a creative sentence with both.",
+                hint: "Get both with input(), then combine them in a fun sentence."
+            },
+            {
+                id: 36,
+                section: "User Input",
+                title: "First and Last Name Input",
+                description: "Ask for first name and last name separately, then print the full name.",
+                hint: "Get both names with input(), then print them together."
+            },
+            {
+                id: 37,
+                section: "User Input",
+                title: "Favorite Movie",
+                description: "Ask for the user's favorite movie and respond with your opinion.",
+                hint: "Get the movie with input(), then print a response about it."
+            },
+            {
+                id: 38,
+                section: "User Input",
+                title: "Age in Ten Years",
+                description: "Ask for the user's current age and tell them how old they'll be in 10 years.",
+                hint: "Get age with int(input()), add 10, then print the result."
+            },
+            {
+                id: 39,
+                section: "User Input",
+                title: "Join Two Words",
+                description: "Ask for two words and print them joined together as one word.",
+                hint: "Get two words with input(), then print them together: word1 + word2"
+            },
+            {
+                id: 40,
+                section: "User Input",
+                title: "Add Five",
+                description: "Ask the user for a number and print that number plus 5.",
+                hint: "Get a number with int(input()), add 5, and print the result."
+            }
+        ];
+
+        // State
+        let currentExercise = 1;
+        let completedExercises = new Set();
+
+        // Load progress from localStorage
+        function loadProgress() {
+            const saved = localStorage.getItem('python-workbook-progress');
+            if (saved) {
+                const data = JSON.parse(saved);
+                currentExercise = data.currentExercise || 1;
+                completedExercises = new Set(data.completedExercises || []);
+            }
+        }
+
+        // Save progress to localStorage
+        function saveProgress() {
+            const data = {
+                currentExercise: currentExercise,
+                completedExercises: Array.from(completedExercises)
+            };
+            localStorage.setItem('python-workbook-progress', JSON.stringify(data));
+        }
+
+        // Update progress ring
+        function updateProgress() {
+            const total = exercises.length;
+            const completed = completedExercises.size;
+            const percentage = Math.round((completed / total) * 100);
+            
+            const progressRing = document.querySelector('.progress-ring-fill');
+            const progressText = document.querySelector('.progress-text');
+            
+            const circumference = 2 * Math.PI * 36;
+            const offset = circumference - (percentage / 100) * circumference;
+            
+            progressRing.style.strokeDashoffset = offset;
+            progressText.textContent = percentage + '%';
+        }
+
+        // Generate exercise list
+        function generateExerciseList() {
+            const listContainer = document.getElementById('exercise-list');
+            listContainer.innerHTML = '';
+
+            let currentSection = '';
+            
+            exercises.forEach(exercise => {
+                // Add section header if needed
+                if (exercise.section !== currentSection) {
+                    currentSection = exercise.section;
+                    const sectionHeader = document.createElement('div');
+                    sectionHeader.className = 'section-header';
+                    sectionHeader.textContent = currentSection;
+                    listContainer.appendChild(sectionHeader);
+                }
+
+                // Create exercise item
+                const item = document.createElement('div');
+                item.className = 'exercise-item';
+                if (exercise.id === currentExercise) item.classList.add('active');
+                if (completedExercises.has(exercise.id)) item.classList.add('completed');
+
+                item.innerHTML = `
+                    <span class="exercise-number">${exercise.id}</span>
+                    <span class="exercise-title">${exercise.title}</span>
+                    ${completedExercises.has(exercise.id) ? '<span class="check-mark">✓</span>' : ''}
+                `;
+
+                item.addEventListener('click', () => {
+                    currentExercise = exercise.id;
+                    showExercise();
+                    saveProgress();
+                });
+
+                listContainer.appendChild(item);
+            });
+        }
+
+        // Show current exercise
+        function showExercise() {
+            const exercise = exercises[currentExercise - 1];
+            const content = document.getElementById('exercise-content');
+
+            content.innerHTML = `
+                <div class="exercise-header">
+                    <div class="exercise-badge">Exercise ${exercise.id} - ${exercise.section}</div>
+                    <h1 class="exercise-title-main">${exercise.title}</h1>
+                    <p class="exercise-description">${exercise.description}</p>
+                </div>
+
+                <div class="exercise-card">
+                    <div class="objective-section">
+                        <h2 class="objective-title">🎯 Your Mission</h2>
+                        <p class="objective-text">${exercise.description}</p>
+                    </div>
+
+                    <div class="hint-section">
+                        <h3 class="hint-title">💡 Helpful Hint</h3>
+                        <p class="hint-content">${exercise.hint}</p>
+                    </div>
+
+                    <div class="challenge-section">
+                        <h3 class="challenge-title">⚡ Challenge Yourself</h3>
+                        <p class="challenge-text">Write your Python code in your favorite editor or IDE. Test it to make sure it works as expected!</p>
+                    </div>
+                </div>
+
+                <div class="navigation">
+                    <button class="nav-btn" id="prev-btn" ${currentExercise === 1 ? 'disabled' : ''}>
+                        ← Previous
+                    </button>
+                    <button class="nav-btn" id="next-btn" ${currentExercise === exercises.length ? 'disabled' : ''}>
+                        Next →
+                    </button>
+                    <button class="nav-btn complete-btn" id="complete-btn">
+                        ${completedExercises.has(currentExercise) ? '✓ Completed' : 'Mark Complete'}
+                    </button>
+                </div>
+            `;
+
+            // Add event listeners
+            document.getElementById('prev-btn')?.addEventListener('click', () => {
+                if (currentExercise > 1) {
+                    currentExercise--;
+                    showExercise();
+                    saveProgress();
+                }
+            });
+
+            document.getElementById('next-btn')?.addEventListener('click', () => {
+                if (currentExercise < exercises.length) {
+                    currentExercise++;
+                    showExercise();
+                    saveProgress();
+                }
+            });
+
+            document.getElementById('complete-btn')?.addEventListener('click', () => {
+                if (completedExercises.has(currentExercise)) {
+                    completedExercises.delete(currentExercise);
+                } else {
+                    completedExercises.add(currentExercise);
+                }
+                saveProgress();
+                updateProgress();
+                generateExerciseList();
+                showExercise();
+            });
+
+            // Update sidebar
+            generateExerciseList();
+        }
+
+        // Initialize
+        function init() {
+            loadProgress();
+            generateExerciseList();
+            showExercise();
+            updateProgress();
+        }
+
+        // Start the application
+        init();
+    </script>
+</body>
+</html>
