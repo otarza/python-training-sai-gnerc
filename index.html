@@ -1,28 +1,33 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; connect-src 'self';">
-  <meta name="description" content="15-day intensive Python programming training for GNERC employees. Phase 1 foundations based on Harvard CS50, covering syntax, data structures, file I/O, APIs, testing, and OOP."/>
-  <meta name="keywords" content="Python training, GNERC, Harvard CS50, programming course, data automation, regulatory tools"/>
-  <meta name="author" content="Otar Zakalashvili"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="Content-Security-Policy"
+    content="default-src 'self'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdnjs.cloudflare.com; font-src 'self' https://fonts.gstatic.com https://cdnjs.cloudflare.com; img-src 'self' https: data:; connect-src 'self';">
+  <meta name="description"
+    content="15-day intensive Python programming training for GNERC employees. Phase 1 foundations based on Harvard CS50, covering syntax, data structures, file I/O, APIs, testing, and OOP." />
+  <meta name="keywords"
+    content="Python training, GNERC, Harvard CS50, programming course, data automation, regulatory tools" />
+  <meta name="author" content="Otar Zakalashvili" />
 
   <!-- Open Graph / Social Media -->
-  <meta property="og:type" content="website"/>
-  <meta property="og:title" content="Python Programming Foundations - GNERC Training Phase 1"/>
-  <meta property="og:description" content="15-day intensive Python training program based on Harvard CS50 for GNERC regulatory automation"/>
-  <meta property="og:image" content="https://gnerc.org/_website/images/logo_ge.svg"/>
+  <meta property="og:type" content="website" />
+  <meta property="og:title" content="Python Programming Foundations - GNERC Training Phase 1" />
+  <meta property="og:description"
+    content="15-day intensive Python training program based on Harvard CS50 for GNERC regulatory automation" />
+  <meta property="og:image" content="https://gnerc.org/_website/images/logo_ge.svg" />
 
   <!-- Twitter Card -->
-  <meta name="twitter:card" content="summary_large_image"/>
-  <meta name="twitter:title" content="Python Programming Foundations - GNERC Training"/>
-  <meta name="twitter:description" content="15-day intensive Python training program for regulatory data automation"/>
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="twitter:title" content="Python Programming Foundations - GNERC Training" />
+  <meta name="twitter:description" content="15-day intensive Python training program for regulatory data automation" />
 
   <title>Python Foundations | Phase 1 – GNERC Training</title>
 
   <!-- Favicon -->
-  <link rel="icon" type="image/svg+xml" href="https://gnerc.org/_website/images/logo_ge.svg"/>
+  <link rel="icon" type="image/svg+xml" href="https://gnerc.org/_website/images/logo_ge.svg" />
 
   <!-- Preconnect for performance -->
   <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -30,7 +35,9 @@
   <link rel="preconnect" href="https://cdnjs.cloudflare.com">
 
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw==" crossorigin="anonymous" referrerpolicy="no-referrer"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css"
+    integrity="sha512-Avb2QiuDEEvB4bZJYdft2mNjVShBftLdPG8FJ0V7irTLQ8Uo0qcPxh4Plq7G5tGm0rU+1SPhVotteLpBERwTkw=="
+    crossorigin="anonymous" referrerpolicy="no-referrer" />
   <style>
     :root {
       --primary: #1a5fb4;
@@ -43,7 +50,7 @@
       --text-light: #6b7280;
       --border: #e5e7eb;
       --bg: #f9fafb;
-      --shadow: 0 10px 25px rgba(0,0,0,0.08);
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.08);
       --phase-bg: #f3f4f6;
       --header-bg: #0d47a1;
       --card-bg: #ffffff;
@@ -61,7 +68,7 @@
       --text-light: #9ca3af;
       --border: #374151;
       --bg: #111827;
-      --shadow: 0 10px 25px rgba(0,0,0,0.5);
+      --shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
       --phase-bg: #1f2937;
       --header-bg: #1f2937;
       --card-bg: #1f2937;
@@ -128,7 +135,7 @@
 
     .theme-toggle:hover {
       transform: translateY(-2px);
-      box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+      box-shadow: 0 12px 30px rgba(0, 0, 0, 0.15);
     }
 
     .theme-toggle i {
@@ -186,7 +193,7 @@
       position: sticky;
       top: 0;
       z-index: 100;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
       transition: background-color 0.3s ease;
     }
 
@@ -201,7 +208,7 @@
       justify-content: space-between;
       align-items: center;
       padding-bottom: 1.5rem;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.15);
     }
 
     .logo-group {
@@ -217,14 +224,14 @@
       padding: 1rem 1.5rem;
       background: white;
       border-radius: 12px;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
       transition: all 0.3s ease;
       text-decoration: none;
     }
 
     .logo-item:hover {
       transform: translateY(-3px);
-      box-shadow: 0 6px 20px rgba(0,0,0,0.15);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.15);
     }
 
     .logo-item.dark-bg {
@@ -244,7 +251,7 @@
     .logo-divider {
       width: 1px;
       height: 30px;
-      background: rgba(255,255,255,0.3);
+      background: rgba(255, 255, 255, 0.3);
     }
 
     .header-meta {
@@ -276,7 +283,7 @@
       display: block;
       font-weight: 500;
       font-size: 1rem;
-      color: rgba(255,255,255,0.85);
+      color: rgba(255, 255, 255, 0.85);
       margin-top: 0.5rem;
     }
 
@@ -300,7 +307,10 @@
     .hero::before {
       content: '';
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
       background: url('data:image/svg+xml,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" opacity="0.05"><defs><pattern id="grid" width="10" height="10" patternUnits="userSpaceOnUse"><path d="M 10 0 L 0 0 0 10" fill="none" stroke="white" stroke-width="0.5"/></pattern></defs><rect width="100" height="100" fill="url(%23grid)"/></svg>');
     }
 
@@ -314,7 +324,7 @@
       font-size: 2.5rem;
       font-weight: 900;
       margin-bottom: 0.75rem;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+      text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     }
 
     .hero p {
@@ -333,13 +343,13 @@
     }
 
     .badge {
-      background: rgba(255,255,255,0.2);
+      background: rgba(255, 255, 255, 0.2);
       backdrop-filter: blur(10px);
       padding: 0.5rem 1rem;
       border-radius: 50px;
       font-size: 0.85rem;
       font-weight: 600;
-      border: 1px solid rgba(255,255,255,0.3);
+      border: 1px solid rgba(255, 255, 255, 0.3);
     }
 
     /* Phase Timeline - Redesigned */
@@ -378,10 +388,10 @@
       right: calc(12.5% + 2rem);
       height: 4px;
       background: linear-gradient(to right,
-        var(--primary) 0%,
-        var(--primary) 33.33%,
-        var(--border) 33.33%,
-        var(--border) 100%);
+          var(--primary) 0%,
+          var(--primary) 33.33%,
+          var(--border) 33.33%,
+          var(--border) 100%);
       z-index: 1;
     }
 
@@ -410,7 +420,7 @@
       font-weight: 700;
       font-size: 1.2rem;
       transition: all 0.3s ease;
-      box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
       position: relative;
       background: var(--card-bg);
     }
@@ -419,7 +429,7 @@
       background: linear-gradient(135deg, var(--primary), var(--primary-dark));
       color: white;
       transform: scale(1.2);
-      box-shadow: 0 8px 25px rgba(26,95,180,0.4);
+      box-shadow: 0 8px 25px rgba(26, 95, 180, 0.4);
     }
 
     .phase.active .phase-circle::after {
@@ -433,10 +443,13 @@
     }
 
     @keyframes pulse {
-      0%, 100% {
+
+      0%,
+      100% {
         transform: scale(1);
         opacity: 0.3;
       }
+
       50% {
         transform: scale(1.1);
         opacity: 0;
@@ -656,6 +669,78 @@
       margin-top: 0.5rem;
     }
 
+    .workbook-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border);
+    }
+
+    .workbook-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      color: #7c3aed;
+      text-decoration: none;
+      font-weight: 500;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      background: #f3e8ff;
+      transition: all 0.2s;
+      white-space: nowrap;
+      border: 1px solid #e9d5ff;
+    }
+
+    .workbook-link:hover {
+      background: #e9d5ff;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(124, 58, 237, 0.2);
+    }
+
+    .workbook-link i {
+      font-size: 0.85rem;
+    }
+
+    .recording-links {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      margin-top: 0.75rem;
+      padding-top: 0.75rem;
+      border-top: 1px dashed var(--border);
+    }
+
+    .recording-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+      color: #dc2626;
+      text-decoration: none;
+      font-weight: 600;
+      font-size: 0.85rem;
+      padding: 0.3rem 0.65rem;
+      border-radius: 6px;
+      background: #fee2e2;
+      transition: all 0.2s;
+      white-space: nowrap;
+      border: 1px solid #fecaca;
+    }
+
+    .recording-link:hover {
+      background: #fecaca;
+      transform: translateY(-1px);
+      box-shadow: 0 2px 4px rgba(220, 38, 38, 0.2);
+    }
+
+    .recording-link i {
+      font-size: 0.9rem;
+    }
+
+
+
     .objectives ul,
     .activities ul {
       margin: 0.5rem 0;
@@ -692,7 +777,7 @@
     }
 
     .project-item {
-      background: rgba(255,255,255,0.15);
+      background: rgba(255, 255, 255, 0.15);
       padding: 1.25rem;
       border-radius: 12px;
       backdrop-filter: blur(10px);
@@ -710,7 +795,7 @@
       border-top: 1px solid var(--border);
       padding: 2rem 0;
       margin-top: 1.5rem;
-      box-shadow: 0 -2px 10px rgba(0,0,0,0.03);
+      box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.03);
     }
 
     .footer-content {
@@ -794,10 +879,10 @@
         height: auto;
         right: auto;
         background: linear-gradient(to bottom,
-          var(--primary) 0%,
-          var(--primary) 25%,
-          var(--border) 25%,
-          var(--border) 100%);
+            var(--primary) 0%,
+            var(--primary) 25%,
+            var(--border) 25%,
+            var(--border) 100%);
       }
 
       .phase {
@@ -873,7 +958,7 @@
         border-radius: 12px;
         overflow: hidden;
         background: var(--card-bg);
-        box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
       }
 
       tbody tr:hover {
@@ -910,7 +995,7 @@
       }
 
       tbody td:first-child:before {
-        color: rgba(255,255,255,0.9);
+        color: rgba(255, 255, 255, 0.9);
         font-size: 0.75rem;
       }
 
@@ -1033,7 +1118,7 @@
 
       .header-top {
         padding-bottom: 1.5rem !important;
-        border-bottom: 1px solid rgba(255,255,255,0.15) !important;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.15) !important;
       }
 
       .logo-group {
@@ -1044,7 +1129,7 @@
 
       .logo-item {
         background: white !important;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.15) !important;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15) !important;
         padding: 1rem 1.5rem !important;
         border-radius: 8px !important;
       }
@@ -1060,7 +1145,7 @@
       .logo-divider {
         width: 1px !important;
         height: 40px !important;
-        background: rgba(255,255,255,0.3) !important;
+        background: rgba(255, 255, 255, 0.3) !important;
       }
 
       .header-meta {
@@ -1140,8 +1225,8 @@
 
       .badge {
         color: white !important;
-        background: rgba(255,255,255,0.2) !important;
-        border: 1px solid rgba(255,255,255,0.3) !important;
+        background: rgba(255, 255, 255, 0.2) !important;
+        border: 1px solid rgba(255, 255, 255, 0.3) !important;
       }
 
       .badge i {
@@ -1199,7 +1284,7 @@
         justify-content: center !important;
         font-weight: 700 !important;
         font-size: 1.2rem !important;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.1) !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
         position: relative !important;
       }
 
@@ -1207,7 +1292,7 @@
         background: linear-gradient(135deg, #1a5fb4, #0d47a1) !important;
         color: white !important;
         border: none !important;
-        box-shadow: 0 6px 20px rgba(26,95,180,0.3) !important;
+        box-shadow: 0 6px 20px rgba(26, 95, 180, 0.3) !important;
       }
 
       .phase.active .phase-circle::after {
@@ -1405,6 +1490,7 @@
     }
   </style>
 </head>
+
 <body>
   <!-- Skip to content for accessibility -->
   <a href="#main-content" class="skip-link">Skip to main content</a>
@@ -1429,15 +1515,18 @@
       <div class="header-content">
         <div class="header-top">
           <div class="logo-group">
-            <a href="https://cs50.harvard.edu/python/" target="_blank" rel="noopener noreferrer" class="logo-item dark-bg" aria-label="Visit Harvard CS50 Python Course">
+            <a href="https://cs50.harvard.edu/python/" target="_blank" rel="noopener noreferrer"
+              class="logo-item dark-bg" aria-label="Visit Harvard CS50 Python Course">
               <img src="https://pll.harvard.edu/themes/custom/twel_scholar/logo.svg" alt="Harvard CS50">
             </a>
             <div class="logo-divider"></div>
-            <a href="https://sai.ge/ka/" target="_blank" rel="noopener noreferrer" class="logo-item dark-bg" aria-label="Visit Public Audit Institute Georgia">
+            <a href="https://sai.ge/ka/" target="_blank" rel="noopener noreferrer" class="logo-item dark-bg"
+              aria-label="Visit Public Audit Institute Georgia">
               <img src="https://www.sai.ge/Uploads/2020/9/logo-GEO.png" alt="Public Audit Institute Georgia">
             </a>
             <div class="logo-divider"></div>
-            <a href="https://gnerc.org/" target="_blank" rel="noopener noreferrer" class="logo-item" aria-label="Visit GNERC">
+            <a href="https://gnerc.org/" target="_blank" rel="noopener noreferrer" class="logo-item"
+              aria-label="Visit GNERC">
               <img src="https://gnerc.org/_website/images/logo_ge.svg" alt="GNERC">
             </a>
           </div>
@@ -1478,7 +1567,8 @@
     <div class="container">
       <div class="hero-content">
         <h1>Python Programming for GNERC</h1>
-        <p>A 15-day intensive Phase 1 training program based on Harvard's CS50 Introduction to Programming with Python — tailored for regulatory data automation, validation, and reporting.</p>
+        <p>A 15-day intensive Phase 1 training program based on Harvard's CS50 Introduction to Programming with Python —
+          tailored for regulatory data automation, validation, and reporting.</p>
         <div class="badges">
           <div class="badge"><i class="fas fa-graduation-cap"></i> Beginner Level</div>
           <div class="badge"><i class="fas fa-clock"></i> 2 Hours/Session</div>
@@ -1600,12 +1690,38 @@
               <input type="checkbox" class="day-checkbox" id="day1" aria-label="Mark Day 1 as completed">
               <label for="day1">Day 1</label>
             </td>
-            <td data-label="Objectives"><ul><li>Get started with Python</li><li>Write first programs</li></ul></td>
-            <td data-label="Topics"><code>print()</code>, <code>input()</code>, variables, strings, <code>f-strings</code></td>
-            <td data-label="Activities"><ul><li>Hello World</li><li>Simple calculator</li><li>Format name & age</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Get started with Python</li>
+                <li>Write first programs</li>
+              </ul>
+            </td>
+            <td data-label="Topics"><code>print()</code>, <code>input()</code>, variables, strings,
+              <code>f-strings</code>
+            </td>
+            <td data-label="Activities">
+              <ul>
+                <li>Hello World</li>
+                <li>Simple calculator</li>
+                <li>Format name & age</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/0/" target="_blank" class="notes-link">Week 0</a>
+              </div>
+              <div class="workbook-links">
+                <a href="workbook_00_python_vars.html" target="_blank" class="workbook-link">
+                  <i class="fas fa-book"></i> Workbook 00
+                </a>
+                <a href="workbook_01_python_functions.html" target="_blank" class="workbook-link">
+                  <i class="fas fa-book"></i> Workbook 01
+                </a>
+              </div>
+              <div class="recording-links">
+                <a href="https://www.youtube.com/watch?v=WI5vWv_b04U" target="_blank" class="recording-link">
+                  <i class="fab fa-youtube"></i> Recording
+                </a>
               </div>
             </td>
           </tr>
@@ -1614,13 +1730,34 @@
               <input type="checkbox" class="day-checkbox" id="day2" aria-label="Mark Day 2 as completed">
               <label for="day2">Day 2</label>
             </td>
-            <td data-label="Objectives"><ul><li>Master functions</li><li>Decision-making</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Master functions</li>
+                <li>Decision-making</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>def</code>, <code>if/elif/else</code>, <code>match</code>, operators</td>
-            <td data-label="Activities"><ul><li>Grade classifier</li><li>Even/odd checker</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Grade classifier</li>
+                <li>Even/odd checker</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/0/" target="_blank" class="notes-link">Week 0</a>
                 <a href="https://cs50.harvard.edu/python/notes/1/" target="_blank" class="notes-link">Week 1</a>
+              </div>
+              <div class="workbook-links">
+                <a href="workbook_02_python_conditionals.html" target="_blank" class="workbook-link">
+                  <i class="fas fa-book"></i> Workbook 02
+                </a>
+              </div>
+              <div class="recording-links">
+                <a href="https://drive.google.com/file/d/1cLHb2bZOnyDmZihxDvhU8tTFAXmF-oFa/view?usp=sharing"
+                  target="_blank" class="recording-link">
+                  <i class="fas fa-video"></i> Recording
+                </a>
               </div>
             </td>
           </tr>
@@ -1629,9 +1766,19 @@
               <input type="checkbox" class="day-checkbox" id="day3" aria-label="Mark Day 3 as completed">
               <label for="day3">Day 3</label>
             </td>
-            <td data-label="Objectives"><ul><li>Control flow with loops</li><li>Input validation</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Control flow with loops</li>
+                <li>Input validation</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>while</code>, <code>break</code>, infinite loops</td>
-            <td data-label="Activities"><ul><li>Repeated meow</li><li>Retry logic</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Repeated meow</li>
+                <li>Retry logic</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/1/" target="_blank" class="notes-link">Week 1</a>
@@ -1641,9 +1788,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 4</td>
-            <td data-label="Objectives"><ul><li>Iterate with <code>for</code></li><li>Work with lists</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Iterate with <code>for</code></li>
+                <li>Work with lists</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>range()</code>, <code>list</code>, <code>append()</code></td>
-            <td data-label="Activities"><ul><li>Print pyramids</li><li>Sort names</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Print pyramids</li>
+                <li>Sort names</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/2/" target="_blank" class="notes-link">Week 2</a>
@@ -1652,9 +1809,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 5</td>
-            <td data-label="Objectives"><ul><li>Organize data</li><li>Nested structures</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Organize data</li>
+                <li>Nested structures</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>dict</code>, key-value, list of dicts</td>
-            <td data-label="Activities"><ul><li>Student registry</li><li>Lookup system</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Student registry</li>
+                <li>Lookup system</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/2/" target="_blank" class="notes-link">Week 2</a>
@@ -1664,9 +1831,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 6</td>
-            <td data-label="Objectives"><ul><li>Robust error handling</li><li>Defensive coding</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Robust error handling</li>
+                <li>Defensive coding</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>try/except</code>, <code>ValueError</code>, <code>pass</code></td>
-            <td data-label="Activities"><ul><li>Safe input</li><li>ID validator</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Safe input</li>
+                <li>ID validator</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/3/" target="_blank" class="notes-link">Week 3</a>
@@ -1675,9 +1852,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 7</td>
-            <td data-label="Objectives"><ul><li>Use external libraries</li><li>CLI arguments</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Use external libraries</li>
+                <li>CLI arguments</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>random</code>, <code>sys.argv</code>, <code>exit()</code></td>
-            <td data-label="Activities"><ul><li>Coin flip</li><li>CLI greeter</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Coin flip</li>
+                <li>CLI greeter</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/4/" target="_blank" class="notes-link">Week 4</a>
@@ -1686,9 +1873,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 8</td>
-            <td data-label="Objectives"><ul><li>Work with APIs</li><li>Install packages</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Work with APIs</li>
+                <li>Install packages</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>requests</code>, JSON, <code>pip</code></td>
-            <td data-label="Activities"><ul><li>iTunes search</li><li>Custom module</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>iTunes search</li>
+                <li>Custom module</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/4/" target="_blank" class="notes-link">Week 4</a>
@@ -1697,9 +1894,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 9</td>
-            <td data-label="Objectives"><ul><li>Test-driven development</li><li>Code quality</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Test-driven development</li>
+                <li>Code quality</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>pytest</code>, <code>assert</code>, test files</td>
-            <td data-label="Activities"><ul><li>Test calculator</li><li>Exception tests</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Test calculator</li>
+                <li>Exception tests</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/5/" target="_blank" class="notes-link">Week 5</a>
@@ -1708,9 +1915,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 10</td>
-            <td data-label="Objectives"><ul><li>File I/O operations</li><li>CSV processing</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>File I/O operations</li>
+                <li>CSV processing</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>open()</code>, <code>csv.reader</code>, <code>DictWriter</code></td>
-            <td data-label="Activities"><ul><li>Log system</li><li>Export report</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Log system</li>
+                <li>Export report</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/6/" target="_blank" class="notes-link">Week 6</a>
@@ -1719,9 +1936,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 11</td>
-            <td data-label="Objectives"><ul><li>Binary files & images</li><li>Data sorting</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Binary files & images</li>
+                <li>Data sorting</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>Pillow</code>, <code>lambda</code>, <code>sorted()</code></td>
-            <td data-label="Activities"><ul><li>Animated GIF</li><li>Sort CSV</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Animated GIF</li>
+                <li>Sort CSV</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/6/" target="_blank" class="notes-link">Week 6</a>
@@ -1730,9 +1957,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 12</td>
-            <td data-label="Objectives"><ul><li>Pattern matching</li><li>Data cleaning</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Pattern matching</li>
+                <li>Data cleaning</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>re.search()</code>, groups, flags</td>
-            <td data-label="Activities"><ul><li>Email validator</li><li>Log parser</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Email validator</li>
+                <li>Log parser</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/7/" target="_blank" class="notes-link">Week 7</a>
@@ -1741,9 +1978,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 13</td>
-            <td data-label="Objectives"><ul><li>OOP fundamentals</li><li>Reusable classes</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>OOP fundamentals</li>
+                <li>Reusable classes</li>
+              </ul>
+            </td>
             <td data-label="Topics"><code>class</code>, <code>@property</code>, <code>raise</code></td>
-            <td data-label="Activities"><ul><li>Employee class</li><li>Form validator</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Employee class</li>
+                <li>Form validator</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/8/" target="_blank" class="notes-link">Week 8</a>
@@ -1752,9 +1999,19 @@
           </tr>
           <tr>
             <td class="day" data-label="Day">Day 14</td>
-            <td data-label="Objectives"><ul><li>Advanced Python</li><li>CLI tools</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Advanced Python</li>
+                <li>CLI tools</li>
+              </ul>
+            </td>
             <td data-label="Topics">Inheritance, <code>argparse</code>, generators</td>
-            <td data-label="Activities"><ul><li>Payroll processor</li><li>Type-checked script</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Payroll processor</li>
+                <li>Type-checked script</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/8/" target="_blank" class="notes-link">Week 8</a>
@@ -1764,9 +2021,19 @@
           </tr>
           <tr style="background:#ecfdf5;">
             <td class="day" data-label="Day">Day 15</td>
-            <td data-label="Objectives"><ul><li>Integrate all skills</li><li>Build real tool</li></ul></td>
+            <td data-label="Objectives">
+              <ul>
+                <li>Integrate all skills</li>
+                <li>Build real tool</li>
+              </ul>
+            </td>
             <td data-label="Topics">Full review + project</td>
-            <td data-label="Activities"><ul><li>Final Project</li><li>Demo & peer review</li></ul></td>
+            <td data-label="Activities">
+              <ul>
+                <li>Final Project</li>
+                <li>Demo & peer review</li>
+              </ul>
+            </td>
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/project/" target="_blank" class="notes-link">Final Project</a>
@@ -1907,7 +2174,7 @@
     }
 
     // Programmatic function to set completed days (admin use only)
-    window.setCompletedDays = function(daysArray) {
+    window.setCompletedDays = function (daysArray) {
       if (!Array.isArray(daysArray)) {
         console.error('setCompletedDays: Argument must be an array of day numbers');
         return;
@@ -1922,7 +2189,7 @@
     };
 
     // Function to add a single completed day
-    window.markDayComplete = function(dayNum) {
+    window.markDayComplete = function (dayNum) {
       if (dayNum < 1 || dayNum > totalDays) {
         console.error(`markDayComplete: Day must be between 1 and ${totalDays}`);
         return;
@@ -1939,7 +2206,7 @@
     };
 
     // Function to remove a completed day
-    window.markDayIncomplete = function(dayNum) {
+    window.markDayIncomplete = function (dayNum) {
       if (dayNum < 1 || dayNum > totalDays) {
         console.error(`markDayIncomplete: Day must be between 1 and ${totalDays}`);
         return;
@@ -1956,7 +2223,7 @@
     };
 
     // Function to get current progress
-    window.getProgress = function() {
+    window.getProgress = function () {
       const progress = {
         completedDays: completedDays,
         total: totalDays,
@@ -1968,7 +2235,7 @@
     };
 
     // Function to reset all progress
-    window.resetProgress = function() {
+    window.resetProgress = function () {
       if (confirm('Are you sure you want to reset all progress?')) {
         completedDays = [];
         localStorage.setItem('completedDays', JSON.stringify(completedDays));
@@ -2011,4 +2278,5 @@
     });
   </script>
 </body>
+
 </html>
