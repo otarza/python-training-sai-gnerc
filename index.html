@@ -611,11 +611,7 @@
       position: relative;
     }
 
-    tbody tr.completed .day::after {
-      content: ' ✓';
-      color: var(--success);
-      font-weight: bold;
-    }
+
 
     .day-checkbox {
       cursor: not-allowed;
@@ -1429,11 +1425,7 @@
         opacity: 0.7;
       }
 
-      tbody tr.completed .day::after {
-        content: ' ✓';
-        color: #10b981 !important;
-        font-weight: bold;
-      }
+
 
       .day {
         color: #0d47a1 !important;
@@ -1666,11 +1658,11 @@
         <div class="progress-stats">
           <div class="progress-stat">
             <i class="fas fa-check-circle"></i>
-            <span><strong id="completedDays">0</strong> / 15 Days Completed</span>
+            <span><strong id="completedDays">4</strong> / 15 Days Completed</span>
           </div>
           <div class="progress-stat">
             <i class="fas fa-chart-line"></i>
-            <span><strong id="progressPercent">0</strong>% Progress</span>
+            <span><strong id="progressPercent">27</strong>% Progress</span>
           </div>
         </div>
       </div>
@@ -1685,9 +1677,9 @@
           </tr>
         </thead>
         <tbody>
-          <tr data-day="1">
+          <tr data-day="1" class="completed">
             <td class="day" data-label="Day">
-              <input type="checkbox" class="day-checkbox" id="day1" aria-label="Mark Day 1 as completed">
+              <input type="checkbox" class="day-checkbox" id="day1" aria-label="Mark Day 1 as completed" checked>
               <label for="day1">Day 1</label>
             </td>
             <td data-label="Objectives">
@@ -1725,9 +1717,9 @@
               </div>
             </td>
           </tr>
-          <tr data-day="2">
+          <tr data-day="2" class="completed">
             <td class="day" data-label="Day">
-              <input type="checkbox" class="day-checkbox" id="day2" aria-label="Mark Day 2 as completed">
+              <input type="checkbox" class="day-checkbox" id="day2" aria-label="Mark Day 2 as completed" checked>
               <label for="day2">Day 2</label>
             </td>
             <td data-label="Objectives">
@@ -1761,9 +1753,9 @@
               </div>
             </td>
           </tr>
-          <tr data-day="3">
+          <tr data-day="3" class="completed">
             <td class="day" data-label="Day">
-              <input type="checkbox" class="day-checkbox" id="day3" aria-label="Mark Day 3 as completed">
+              <input type="checkbox" class="day-checkbox" id="day3" aria-label="Mark Day 3 as completed" checked>
               <label for="day3">Day 3</label>
             </td>
             <td data-label="Objectives">
@@ -1797,8 +1789,11 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="day" data-label="Day">Day 4</td>
+          <tr data-day="4" class="completed">
+            <td class="day" data-label="Day">
+              <input type="checkbox" class="day-checkbox" id="day4" aria-label="Mark Day 4 as completed" checked>
+              <label for="day4">Day 4</label>
+            </td>
             <td data-label="Objectives">
               <ul>
                 <li>Iterate with <code>for</code></li>
@@ -2150,6 +2145,26 @@
     // Progress Tracking with localStorage
     const totalDays = 15;
     let completedDays = JSON.parse(localStorage.getItem('completedDays')) || [];
+
+    // Initialize with Days 1-4 completed if no saved progress exists
+    if (completedDays.length === 0) {
+      completedDays = [1, 2, 3, 4];
+      localStorage.setItem('completedDays', JSON.stringify(completedDays));
+    }
+
+    // Force ensure Days 1-4 are marked as completed (one-time initialization)
+    const requiredDays = [1, 2, 3, 4];
+    let needsUpdate = false;
+    requiredDays.forEach(day => {
+      if (!completedDays.includes(day)) {
+        completedDays.push(day);
+        needsUpdate = true;
+      }
+    });
+    if (needsUpdate) {
+      completedDays.sort((a, b) => a - b);
+      localStorage.setItem('completedDays', JSON.stringify(completedDays));
+    }
 
     // Add checkboxes to all day rows dynamically
     const tableRows = document.querySelectorAll('tbody tr');
