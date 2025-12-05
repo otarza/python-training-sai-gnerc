@@ -1658,11 +1658,11 @@
         <div class="progress-stats">
           <div class="progress-stat">
             <i class="fas fa-check-circle"></i>
-            <span><strong id="completedDays">4</strong> / 15 Days Completed</span>
+            <span><strong id="completedDays">6</strong> / 15 Days Completed</span>
           </div>
           <div class="progress-stat">
             <i class="fas fa-chart-line"></i>
-            <span><strong id="progressPercent">27</strong>% Progress</span>
+            <span><strong id="progressPercent">40</strong>% Progress</span>
           </div>
         </div>
       </div>
@@ -1819,8 +1819,11 @@
               </div>
             </td>
           </tr>
-          <tr>
-            <td class="day" data-label="Day">Day 5</td>
+          <tr data-day="5" class="completed">
+            <td class="day" data-label="Day">
+              <input type="checkbox" class="day-checkbox" id="day5" aria-label="Mark Day 5 as completed" checked>
+              <label for="day5">Day 5</label>
+            </td>
             <td data-label="Objectives">
               <ul>
                 <li>Organize data</li>
@@ -1839,10 +1842,19 @@
                 <a href="https://cs50.harvard.edu/python/notes/2/" target="_blank" class="notes-link">Week 2</a>
                 <a href="https://cs50.harvard.edu/python/notes/3/" target="_blank" class="notes-link">Week 3</a>
               </div>
+              <div class="recording-links">
+                <a href="https://drive.google.com/file/d/1kuhuysqiE8-vc4LITOB_GuiYaBWar5Jw/view?usp=sharing"
+                  target="_blank" class="recording-link">
+                  <i class="fas fa-video"></i> Recording
+                </a>
+              </div>
             </td>
           </tr>
-          <tr>
-            <td class="day" data-label="Day">Day 6</td>
+          <tr data-day="6" class="completed">
+            <td class="day" data-label="Day">
+              <input type="checkbox" class="day-checkbox" id="day6" aria-label="Mark Day 6 as completed" checked>
+              <label for="day6">Day 6</label>
+            </td>
             <td data-label="Objectives">
               <ul>
                 <li>Robust error handling</li>
@@ -1859,6 +1871,12 @@
             <td data-label="CS50 Notes">
               <div class="notes-links">
                 <a href="https://cs50.harvard.edu/python/notes/3/" target="_blank" class="notes-link">Week 3</a>
+              </div>
+              <div class="recording-links">
+                <a href="https://drive.google.com/file/d/1KC-zzkng7Wnyl1AaGc2XxyjeuU71ROw3/view?usp=sharing"
+                  target="_blank" class="recording-link">
+                  <i class="fas fa-video"></i> Recording
+                </a>
               </div>
             </td>
           </tr>
@@ -2152,14 +2170,14 @@
     const totalDays = 15;
     let completedDays = JSON.parse(localStorage.getItem('completedDays')) || [];
 
-    // Initialize with Days 1-4 completed if no saved progress exists
+    // Initialize with Days 1-6 completed if no saved progress exists
     if (completedDays.length === 0) {
-      completedDays = [1, 2, 3, 4];
+      completedDays = [1, 2, 3, 4, 5, 6];
       localStorage.setItem('completedDays', JSON.stringify(completedDays));
     }
 
-    // Force ensure Days 1-4 are marked as completed (one-time initialization)
-    const requiredDays = [1, 2, 3, 4];
+    // Force ensure Days 1-6 are marked as completed (one-time initialization)
+    const requiredDays = [1, 2, 3, 4, 5, 6];
     let needsUpdate = false;
     requiredDays.forEach(day => {
       if (!completedDays.includes(day)) {
