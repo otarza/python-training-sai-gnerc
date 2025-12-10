@@ -1,0 +1,2165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Unit Testing Practice Workbook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-primary: #58a6ff;
+            --accent-hover: #79c0ff;
+            --border-color: #30363d;
+            --success: #3fb950;
+            --terminal-bg: #0d1117;
+            --terminal-text: #58a6ff;
+            --sidebar-width: 320px;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        header {
+            background: var(--bg-secondary);
+            border-bottom: 1px solid var(--border-color);
+            padding: 1rem 1.5rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .burger-menu {
+            display: none;
+            background: none;
+            border: none;
+            color: var(--text-primary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 6px;
+            transition: background 0.2s;
+        }
+
+        .burger-menu:hover {
+            background: var(--bg-tertiary);
+        }
+
+        .header-title {
+            flex: 1;
+        }
+
+        .header-title h1 {
+            font-size: 1.25rem;
+            font-weight: 600;
+            color: var(--text-primary);
+        }
+
+        .header-title .exercise-number {
+            color: var(--accent-primary);
+            font-size: 0.875rem;
+            margin-top: 0.25rem;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            left: 0;
+            top: 73px;
+            width: var(--sidebar-width);
+            height: calc(100vh - 73px);
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            padding: 1.5rem 0;
+            z-index: 50;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: var(--bg-secondary);
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: var(--bg-tertiary);
+            border-radius: 4px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: var(--border-color);
+        }
+
+        .sidebar-section {
+            margin-bottom: 2rem;
+        }
+
+        .sidebar-section-title {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            padding: 0 1.5rem;
+            margin-bottom: 0.5rem;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+
+        .sidebar-item {
+            padding: 0.75rem 1.5rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+        }
+
+        .sidebar-item:hover {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .sidebar-item.active {
+            background: var(--bg-tertiary);
+            border-left-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: var(--sidebar-width);
+            padding: 2rem;
+            max-width: 900px;
+            min-height: calc(100vh - 73px);
+        }
+
+        .exercise-container {
+            display: none;
+        }
+
+        .exercise-container.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .exercise-header {
+            margin-bottom: 2rem;
+        }
+
+        .exercise-header h2 {
+            font-size: 2rem;
+            color: var(--text-primary);
+            margin-bottom: 0.5rem;
+        }
+
+        .exercise-meta {
+            display: flex;
+            gap: 1rem;
+            color: var(--text-secondary);
+            font-size: 0.875rem;
+        }
+
+        .exercise-badge {
+            background: var(--bg-tertiary);
+            padding: 0.25rem 0.75rem;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .exercise-content {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        .exercise-description {
+            font-size: 1.1rem;
+            line-height: 1.8;
+            margin-bottom: 1.5rem;
+        }
+
+        .exercise-hints {
+            background: var(--bg-tertiary);
+            border-left: 3px solid var(--accent-primary);
+            padding: 1rem 1.5rem;
+            margin: 1.5rem 0;
+            border-radius: 4px;
+        }
+
+        .exercise-hints h4 {
+            color: var(--accent-primary);
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .exercise-hints ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        .exercise-hints li {
+            padding: 0.25rem 0;
+            color: var(--text-secondary);
+        }
+
+        .exercise-hints li:before {
+            content: "→";
+            color: var(--accent-primary);
+            margin-right: 0.5rem;
+        }
+
+        /* Terminal */
+        .terminal {
+            background: var(--terminal-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            overflow: hidden;
+            margin: 1.5rem 0;
+        }
+
+        .terminal-header {
+            background: var(--bg-tertiary);
+            padding: 0.5rem 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .terminal-dot {
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+        }
+
+        .terminal-dot.red { background: #ff5f56; }
+        .terminal-dot.yellow { background: #ffbd2e; }
+        .terminal-dot.green { background: #27c93f; }
+
+        .terminal-body {
+            padding: 1.5rem;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.6;
+        }
+
+        .terminal-line {
+            margin: 0.25rem 0;
+        }
+
+        .terminal-prompt {
+            color: var(--success);
+        }
+
+        .terminal-command {
+            color: var(--terminal-text);
+        }
+
+        .terminal-output {
+            color: var(--text-secondary);
+        }
+
+        .terminal-error {
+            color: #f85149;
+        }
+
+        .terminal-success {
+            color: var(--success);
+        }
+
+        /* Example Box */
+        .example-box {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+        }
+
+        .example-box h4 {
+            color: var(--accent-primary);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .example-item {
+            margin: 0.75rem 0;
+            padding: 0.75rem;
+            background: var(--bg-secondary);
+            border-radius: 6px;
+            font-family: 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+        }
+
+        .example-label {
+            color: var(--text-secondary);
+            font-size: 0.8rem;
+            margin-bottom: 0.25rem;
+        }
+
+        .example-code {
+            color: var(--terminal-text);
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            gap: 1rem;
+            margin-top: 3rem;
+            padding-top: 2rem;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .nav-button {
+            flex: 1;
+            padding: 1rem 1.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            color: var(--text-primary);
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+
+        .nav-button:hover {
+            background: var(--bg-tertiary);
+            border-color: var(--accent-primary);
+            color: var(--accent-primary);
+        }
+
+        .nav-button:disabled {
+            opacity: 0.4;
+            cursor: not-allowed;
+        }
+
+        .nav-button:disabled:hover {
+            background: var(--bg-secondary);
+            border-color: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .burger-menu {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+                top: 0;
+                height: 100vh;
+                box-shadow: none;
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+                box-shadow: 2px 0 10px rgba(0, 0, 0, 0.5);
+            }
+
+            .sidebar-overlay {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.7);
+                z-index: 40;
+            }
+
+            .sidebar-overlay.open {
+                display: block;
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 1.5rem;
+            }
+
+            .exercise-header h2 {
+                font-size: 1.5rem;
+            }
+
+            .exercise-content {
+                padding: 1.5rem;
+            }
+
+            .navigation {
+                flex-direction: column;
+            }
+        }
+
+        /* Utility */
+        .text-muted {
+            color: var(--text-secondary);
+        }
+
+        .mb-2 {
+            margin-bottom: 1rem;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <button class="burger-menu" id="burgerMenu">☰</button>
+        <div class="header-title">
+            <h1>Python Unit Testing Practice</h1>
+            <div class="exercise-number" id="headerExercise">Exercise 1 of 70</div>
+        </div>
+    </header>
+
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Part 1: Manual Testing</div>
+            <div id="part1-items"></div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Part 2: Using assert</div>
+            <div id="part2-items"></div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Part 3: pytest Basics</div>
+            <div id="part3-items"></div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Part 4: Edge Cases</div>
+            <div id="part4-items"></div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Part 5: Testing Strings</div>
+            <div id="part5-items"></div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Part 6: Multiple Files</div>
+            <div id="part6-items"></div>
+        </div>
+        <div class="sidebar-section">
+            <div class="sidebar-section-title">Part 7: Advanced Concepts</div>
+            <div id="part7-items"></div>
+        </div>
+    </aside>
+
+    <main class="main-content" id="mainContent">
+        <!-- Exercises will be dynamically loaded here -->
+    </main>
+
+    <script>
+        const exercises = [
+            // Part 1: Manual Testing (1-10)
+            {
+                id: 1,
+                part: 1,
+                title: "Write and Test double() Function",
+                description: "Create a function called `double(n)` that takes a number as input and returns twice that number. Test it manually using print statements to verify it works correctly.",
+                hints: [
+                    "Start by defining the function with proper syntax",
+                    "Use the return statement to send back the result",
+                    "Test with different numbers: positive, negative, zero",
+                    "Print both the input and output to verify correctness"
+                ],
+                examples: [
+                    { label: "Example call", code: "result = double(5)" },
+                    { label: "Expected output", code: "10" },
+                    { label: "Test manually", code: "print(double(5))  # Should print: 10" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "10" },
+                    { type: "output", text: "14" },
+                    { type: "output", text: "-6" },
+                    { type: "success", text: "Manual tests passed! ✓" }
+                ]
+            },
+            {
+                id: 2,
+                part: 1,
+                title: "Write and Test triple() Function",
+                description: "Create a function called `triple(n)` that takes a number and returns three times that number. Use print statements to manually verify the function works as expected.",
+                hints: [
+                    "Similar pattern to double(), but multiply by 3",
+                    "Test with at least 3 different values",
+                    "Include edge cases like 0 and negative numbers"
+                ],
+                examples: [
+                    { label: "Example call", code: "result = triple(4)" },
+                    { label: "Expected output", code: "12" },
+                    { label: "Manual test", code: "print(triple(0))  # Should print: 0" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "triple(4) = 12" },
+                    { type: "output", text: "triple(0) = 0" },
+                    { type: "output", text: "triple(-2) = -6" }
+                ]
+            },
+            {
+                id: 3,
+                part: 1,
+                title: "Write and Test square() Function",
+                description: "Create a `square(n)` function that returns the square of a number. Test it manually with the values 2, 3, and 4 using print statements.",
+                hints: [
+                    "Remember: squaring means multiplying a number by itself",
+                    "You can use n * n or n ** 2",
+                    "Verify 2² = 4, 3² = 9, 4² = 16"
+                ],
+                examples: [
+                    { label: "Example call", code: "result = square(3)" },
+                    { label: "Expected output", code: "9" },
+                    { label: "Test cases", code: "print(square(2), square(3), square(4))" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "4 9 16" },
+                    { type: "success", text: "All three test cases passed!" }
+                ]
+            },
+            {
+                id: 4,
+                part: 1,
+                title: "Modify square() to Print Instead of Return",
+                description: "Change your `square()` function to print the result instead of returning it. Observe how this makes testing more difficult since you can't capture or compare the output programmatically.",
+                hints: [
+                    "Replace the return statement with print()",
+                    "Try to save the result to a variable - what happens?",
+                    "Notice how you lose the ability to use the result in calculations",
+                    "This exercise shows why returning is better than printing for testable code"
+                ],
+                examples: [
+                    { label: "Modified function", code: "def square(n):\n    print(n * n)  # Prints instead of returns" },
+                    { label: "Calling it", code: "result = square(5)  # Prints 25" },
+                    { label: "Problem", code: "print(result)  # Prints None!" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "25" },
+                    { type: "output", text: "None" },
+                    { type: "output", text: "Cannot use result in calculations!" }
+                ]
+            },
+            {
+                id: 5,
+                part: 1,
+                title: "Change square() Back to Return",
+                description: "Revert your `square()` function to return a value instead of printing. Use print statements to confirm the function works correctly again.",
+                hints: [
+                    "Replace print() with return statement",
+                    "Now you can save results to variables",
+                    "You can use the result in further calculations",
+                    "This demonstrates why return is essential for testable functions"
+                ],
+                examples: [
+                    { label: "Corrected function", code: "def square(n):\n    return n * n" },
+                    { label: "Using the result", code: "result = square(5)\nprint(result)  # 25" },
+                    { label: "In calculations", code: "total = square(3) + square(4)  # 9 + 16 = 25" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "25" },
+                    { type: "success", text: "Function now returns properly ✓" }
+                ]
+            },
+            {
+                id: 6,
+                part: 1,
+                title: "Write and Test add() Function",
+                description: "Create an `add(a, b)` function that takes two numbers and returns their sum. Manually test it with 2 + 3 and 0 + 0.",
+                hints: [
+                    "Function takes two parameters: a and b",
+                    "Return the sum of both parameters",
+                    "Test with normal numbers and edge cases like zero",
+                    "Verify: add(2, 3) should equal 5"
+                ],
+                examples: [
+                    { label: "Example call", code: "result = add(2, 3)" },
+                    { label: "Expected output", code: "5" },
+                    { label: "Edge case", code: "print(add(0, 0))  # Should print: 0" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "add(2, 3) = 5" },
+                    { type: "output", text: "add(0, 0) = 0" },
+                    { type: "success", text: "Tests passed!" }
+                ]
+            },
+            {
+                id: 7,
+                part: 1,
+                title: "Write and Test subtract() Function",
+                description: "Create a `subtract(a, b)` function that returns the difference between two numbers. Test with various combinations including negative results.",
+                hints: [
+                    "Return a - b (order matters!)",
+                    "Test cases: 5 - 3, 3 - 5, 0 - 5",
+                    "Remember subtraction can produce negative results"
+                ],
+                examples: [
+                    { label: "Example call", code: "result = subtract(10, 4)" },
+                    { label: "Expected output", code: "6" },
+                    { label: "Negative result", code: "print(subtract(3, 5))  # Should print: -2" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "subtract(10, 4) = 6" },
+                    { type: "output", text: "subtract(3, 5) = -2" }
+                ]
+            },
+            {
+                id: 8,
+                part: 1,
+                title: "Write and Test multiply() Function",
+                description: "Create a `multiply(a, b)` function that returns the product of two numbers. Manually print results for at least 3 different pairs of numbers.",
+                hints: [
+                    "Return a * b",
+                    "Test with positive numbers, zero, and negative numbers",
+                    "Remember: anything multiplied by zero equals zero"
+                ],
+                examples: [
+                    { label: "Example call", code: "result = multiply(4, 5)" },
+                    { label: "Expected output", code: "20" },
+                    { label: "Edge cases", code: "print(multiply(0, 10))  # 0\nprint(multiply(-2, 3))  # -6" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "multiply(4, 5) = 20" },
+                    { type: "output", text: "multiply(0, 10) = 0" },
+                    { type: "output", text: "multiply(-2, 3) = -6" }
+                ]
+            },
+            {
+                id: 9,
+                part: 1,
+                title: "Write and Test divide() Function",
+                description: "Create a `divide(a, b)` function that returns the division result as a float. Manually test and print results to verify correctness.",
+                hints: [
+                    "Use / operator for float division",
+                    "Return a / b",
+                    "Test with numbers that divide evenly and those that don't",
+                    "Example: 10 / 2 = 5.0, 10 / 3 = 3.333..."
+                ],
+                examples: [
+                    { label: "Example call", code: "result = divide(10, 2)" },
+                    { label: "Expected output", code: "5.0" },
+                    { label: "Non-even division", code: "print(divide(10, 3))  # 3.3333333333333335" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "divide(10, 2) = 5.0" },
+                    { type: "output", text: "divide(10, 3) = 3.3333333333333335" }
+                ]
+            },
+            {
+                id: 10,
+                part: 1,
+                title: "Test Division by Zero",
+                description: "Try dividing by zero using your divide() function and observe what error occurs. This will help you understand error handling for tests later.",
+                hints: [
+                    "Call divide(5, 0) and see what happens",
+                    "Python raises a ZeroDivisionError",
+                    "This is expected behavior - division by zero is undefined",
+                    "Later, you'll learn to test for this error explicitly"
+                ],
+                examples: [
+                    { label: "Problem call", code: "result = divide(5, 0)" },
+                    { label: "Error raised", code: "ZeroDivisionError: division by zero" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "error", text: "Traceback (most recent call last):" },
+                    { type: "error", text: "  File \"test_functions.py\", line 10, in <module>" },
+                    { type: "error", text: "    result = divide(5, 0)" },
+                    { type: "error", text: "ZeroDivisionError: division by zero" }
+                ]
+            },
+            // Part 2: Using assert (11-20)
+            {
+                id: 11,
+                part: 2,
+                title: "Rewrite square() Tests with assert",
+                description: "Take your manual tests for `square()` and rewrite them using `assert` statements instead of print statements. This introduces you to assertion-based testing.",
+                hints: [
+                    "Use: assert square(2) == 4",
+                    "If the assertion is true, nothing happens",
+                    "If false, Python raises an AssertionError",
+                    "No more print statements needed for simple tests"
+                ],
+                examples: [
+                    { label: "Old way (print)", code: "print(square(2))  # Manually check if it's 4" },
+                    { label: "New way (assert)", code: "assert square(2) == 4  # Automatic check!" },
+                    { label: "Multiple tests", code: "assert square(3) == 9\nassert square(4) == 16" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "success", text: "All assertions passed! ✓" },
+                    { type: "output", text: "(No output means all tests passed)" }
+                ]
+            },
+            {
+                id: 12,
+                part: 2,
+                title: "Test double() with assert",
+                description: "Use an `assert` statement to check that `double(4)` equals `8`. This is your first standalone assertion test.",
+                hints: [
+                    "Write: assert double(4) == 8",
+                    "If the test passes, you'll see no output",
+                    "Silence is good - it means the assertion is true"
+                ],
+                examples: [
+                    { label: "Assertion test", code: "assert double(4) == 8" },
+                    { label: "What happens", code: "# If true: nothing (good!)\n# If false: AssertionError" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "success", text: "Test passed (no output)" }
+                ]
+            },
+            {
+                id: 13,
+                part: 2,
+                title: "Test triple() with assert",
+                description: "Use an `assert` statement to verify that `triple(5)` equals `15`.",
+                hints: [
+                    "Write: assert triple(5) == 15",
+                    "This verifies 5 × 3 = 15"
+                ],
+                examples: [
+                    { label: "Assertion test", code: "assert triple(5) == 15" },
+                    { label: "Additional test", code: "assert triple(0) == 0" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "success", text: "All assertions passed!" }
+                ]
+            },
+            {
+                id: 14,
+                part: 2,
+                title: "Create a Failing Assertion",
+                description: "Add an assertion that you know will fail intentionally to see how `AssertionError` looks and behaves. This helps you recognize test failures.",
+                hints: [
+                    "Write something like: assert square(5) == 100",
+                    "This will fail since 5² = 25, not 100",
+                    "Observe the error message Python provides",
+                    "This teaches you what test failures look like"
+                ],
+                examples: [
+                    { label: "Intentional failure", code: "assert square(5) == 100  # Wrong!" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "error", text: "Traceback (most recent call last):" },
+                    { type: "error", text: "  File \"test_functions.py\", line 5" },
+                    { type: "error", text: "    assert square(5) == 100" },
+                    { type: "error", text: "AssertionError" }
+                ]
+            },
+            {
+                id: 15,
+                part: 2,
+                title: "Multiple Assertions in One Script",
+                description: "Add multiple `assert` statements to test `add()`, `subtract()`, and `multiply()` functions all in the same Python file.",
+                hints: [
+                    "Each function can have multiple assertions",
+                    "Tests run sequentially from top to bottom",
+                    "If any assertion fails, the script stops there",
+                    "Group related tests together for clarity"
+                ],
+                examples: [
+                    { label: "Testing add()", code: "assert add(2, 3) == 5\nassert add(0, 0) == 0" },
+                    { label: "Testing subtract()", code: "assert subtract(5, 3) == 2" },
+                    { label: "Testing multiply()", code: "assert multiply(4, 5) == 20" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "success", text: "6 assertions passed ✓" }
+                ]
+            },
+            {
+                id: 16,
+                part: 2,
+                title: "Write and Test cube() Function",
+                description: "Create a `cube(n)` function that returns n³ (n cubed). Test it with the assertion `assert cube(3) == 27`.",
+                hints: [
+                    "Cubing means n × n × n",
+                    "You can write: n * n * n or n ** 3",
+                    "Test: 3³ = 27, 2³ = 8, 4³ = 64"
+                ],
+                examples: [
+                    { label: "Function example", code: "def cube(n):\n    return n ** 3" },
+                    { label: "Assertion test", code: "assert cube(3) == 27" },
+                    { label: "More tests", code: "assert cube(2) == 8\nassert cube(4) == 64" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "success", text: "cube() tests passed ✓" }
+                ]
+            },
+            {
+                id: 17,
+                part: 2,
+                title: "Test divide() with assert",
+                description: "Use `assert` statements to test your `divide()` function with known results. Make sure to test multiple cases.",
+                hints: [
+                    "Test exact divisions: assert divide(10, 2) == 5.0",
+                    "Test with decimals: assert divide(10, 4) == 2.5",
+                    "Remember to check for float results"
+                ],
+                examples: [
+                    { label: "Test exact division", code: "assert divide(10, 2) == 5.0" },
+                    { label: "Test decimal result", code: "assert divide(7, 2) == 3.5" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "success", text: "divide() tests passed ✓" }
+                ]
+            },
+            {
+                id: 18,
+                part: 2,
+                title: "Handle AssertionError with try/except",
+                description: "Wrap an assert statement in a `try/except AssertionError` block to print a friendly message when a test fails instead of crashing the program.",
+                hints: [
+                    "Use try/except to catch AssertionError",
+                    "Print a custom message in the except block",
+                    "This is useful for providing helpful failure messages",
+                    "Later, pytest will do this automatically"
+                ],
+                examples: [
+                    { label: "With error handling", code: "try:\n    assert square(5) == 100\nexcept AssertionError:\n    print('Test failed: square(5) should be 25, not 100')" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "output", text: "Test failed: square(5) should be 25, not 100" },
+                    { type: "success", text: "Program continued despite failure" }
+                ]
+            },
+            {
+                id: 19,
+                part: 2,
+                title: "Write and Test is_even() Function",
+                description: "Create an `is_even(n)` function that returns True if a number is even, False if odd. Use `assert` to test it with 2, 3, and 10.",
+                hints: [
+                    "A number is even if n % 2 == 0",
+                    "Return True or False (boolean values)",
+                    "Test: is_even(2) should be True",
+                    "Test: is_even(3) should be False"
+                ],
+                examples: [
+                    { label: "Function logic", code: "def is_even(n):\n    return n % 2 == 0" },
+                    { label: "Test even number", code: "assert is_even(2) == True" },
+                    { label: "Test odd number", code: "assert is_even(3) == False" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "success", text: "is_even() tests passed ✓" }
+                ]
+            },
+            {
+                id: 20,
+                part: 2,
+                title: "Write and Test is_odd() Function",
+                description: "Create an `is_odd(n)` function and test it using assertions. It should return True for odd numbers, False for even numbers.",
+                hints: [
+                    "A number is odd if n % 2 == 1 (or != 0)",
+                    "Test with various numbers",
+                    "is_odd(3) should be True",
+                    "is_odd(4) should be False"
+                ],
+                examples: [
+                    { label: "Function logic", code: "def is_odd(n):\n    return n % 2 != 0" },
+                    { label: "Test odd number", code: "assert is_odd(3) == True" },
+                    { label: "Test even number", code: "assert is_odd(4) == False" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python test_functions.py" },
+                    { type: "success", text: "is_odd() tests passed ✓" }
+                ]
+            },
+            // Part 3: pytest Basics (21-30)
+            {
+                id: 21,
+                part: 3,
+                title: "Install and Verify pytest",
+                description: "Install the pytest testing framework using pip and verify it's installed correctly by checking its version.",
+                hints: [
+                    "Use: pip install pytest",
+                    "Verify with: pytest --version",
+                    "pytest is a powerful testing framework",
+                    "It will discover and run all your test files automatically"
+                ],
+                examples: [
+                    { label: "Installation", code: "pip install pytest" },
+                    { label: "Verification", code: "pytest --version" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pip install pytest" },
+                    { type: "output", text: "Successfully installed pytest-7.4.3" },
+                    { type: "prompt", text: "$ pytest --version" },
+                    { type: "success", text: "pytest 7.4.3" }
+                ]
+            },
+            {
+                id: 22,
+                part: 3,
+                title: "Create First pytest File",
+                description: "Create a new file called `test_math_functions.py` and add your first test function `test_square()` using assert statements.",
+                hints: [
+                    "File must start with 'test_' or end with '_test.py'",
+                    "Test functions must also start with 'test_'",
+                    "Use regular assert statements inside test functions",
+                    "pytest will automatically discover and run these tests"
+                ],
+                examples: [
+                    { label: "File name", code: "test_math_functions.py" },
+                    { label: "Test function", code: "def test_square():\n    assert square(2) == 4\n    assert square(3) == 9" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py" },
+                    { type: "success", text: "test_math_functions.py::test_square PASSED" },
+                    { type: "success", text: "1 passed in 0.01s" }
+                ]
+            },
+            {
+                id: 23,
+                part: 3,
+                title: "Add test_add() Function",
+                description: "Add another test function called `test_add()` in the same test file to test your add() function.",
+                hints: [
+                    "Multiple test functions can exist in one file",
+                    "Each test function should test one main function",
+                    "Use descriptive test function names",
+                    "pytest runs all test functions in the file"
+                ],
+                examples: [
+                    { label: "Adding second test", code: "def test_add():\n    assert add(2, 3) == 5\n    assert add(0, 0) == 0" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py" },
+                    { type: "success", text: "test_math_functions.py::test_square PASSED" },
+                    { type: "success", text: "test_math_functions.py::test_add PASSED" },
+                    { type: "success", text: "2 passed in 0.02s" }
+                ]
+            },
+            {
+                id: 24,
+                part: 3,
+                title: "Multiple Assertions in One Test",
+                description: "Add multiple `assert` statements inside a single test function to thoroughly test one function with various inputs.",
+                hints: [
+                    "Each assert tests a different case",
+                    "All asserts must pass for the test to pass",
+                    "If one fails, the test stops at that point",
+                    "Group related test cases together"
+                ],
+                examples: [
+                    { label: "Multiple assertions", code: "def test_multiply():\n    assert multiply(2, 3) == 6\n    assert multiply(0, 5) == 0\n    assert multiply(-2, 3) == -6" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py -v" },
+                    { type: "success", text: "test_multiply PASSED (3 assertions)" }
+                ]
+            },
+            {
+                id: 25,
+                part: 3,
+                title: "Split Tests Into Multiple Functions",
+                description: "Organize your tests by splitting them into separate test functions: `test_square()`, `test_add()`, `test_subtract()`.",
+                hints: [
+                    "Each mathematical operation gets its own test function",
+                    "This makes it clearer what failed if a test breaks",
+                    "pytest reports each function separately",
+                    "Better organization = easier debugging"
+                ],
+                examples: [
+                    { label: "Organized tests", code: "def test_square():\n    assert square(3) == 9\n\ndef test_add():\n    assert add(2, 3) == 5\n\ndef test_subtract():\n    assert subtract(5, 3) == 2" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py -v" },
+                    { type: "success", text: "test_square PASSED" },
+                    { type: "success", text: "test_add PASSED" },
+                    { type: "success", text: "test_subtract PASSED" },
+                    { type: "success", text: "3 passed in 0.03s" }
+                ]
+            },
+            {
+                id: 26,
+                part: 3,
+                title: "Run pytest and Observe Output",
+                description: "Run `pytest` in your terminal and carefully observe the output when all tests pass. Notice the dots and summary.",
+                hints: [
+                    "Each dot (.) represents a passed test",
+                    "Green text indicates success",
+                    "The summary shows total tests and time taken",
+                    "Use -v flag for verbose output with test names"
+                ],
+                examples: [
+                    { label: "Basic run", code: "pytest" },
+                    { label: "Verbose run", code: "pytest -v" },
+                    { label: "Specific file", code: "pytest test_math_functions.py" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest" },
+                    { type: "success", text: "..." },
+                    { type: "success", text: "3 passed in 0.02s" }
+                ]
+            },
+            {
+                id: 27,
+                part: 3,
+                title: "Intentionally Break a Function",
+                description: "Modify one of your functions to return an incorrect value, then rerun pytest to see how test failures are displayed with the red \"F\".",
+                hints: [
+                    "Change a function to return wrong value",
+                    "For example: make square() return n * 3 instead",
+                    "Run pytest and observe the red F for failed test",
+                    "Read the error message carefully",
+                    "pytest shows which assertion failed and why"
+                ],
+                examples: [
+                    { label: "Break the function", code: "def square(n):\n    return n * 3  # Wrong!" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest" },
+                    { type: "error", text: "F.." },
+                    { type: "error", text: "test_square FAILED" },
+                    { type: "error", text: "AssertionError: assert 9 == 4" },
+                    { type: "error", text: "1 failed, 2 passed in 0.03s" }
+                ]
+            },
+            {
+                id: 28,
+                part: 3,
+                title: "Fix the Bug and Rerun",
+                description: "Fix the bug you introduced in the previous exercise and rerun pytest until all tests pass again. Observe the satisfying all-green output.",
+                hints: [
+                    "Correct the function implementation",
+                    "Run pytest again",
+                    "All dots should be green",
+                    "No failures should be reported",
+                    "This is the red-green-refactor cycle!"
+                ],
+                examples: [
+                    { label: "Fixed function", code: "def square(n):\n    return n * n  # Correct!" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest" },
+                    { type: "success", text: "..." },
+                    { type: "success", text: "3 passed in 0.02s ✓" }
+                ]
+            },
+            {
+                id: 29,
+                part: 3,
+                title: "Add test_multiply() Function",
+                description: "Add a new test function called `test_multiply()` to your test file and run all tests together to see the increased test count.",
+                hints: [
+                    "Follow the same pattern as other test functions",
+                    "Test multiply() with multiple cases",
+                    "Run pytest to see all tests execute",
+                    "Each new test increases your code confidence"
+                ],
+                examples: [
+                    { label: "New test", code: "def test_multiply():\n    assert multiply(3, 4) == 12\n    assert multiply(0, 5) == 0" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest" },
+                    { type: "success", text: "...." },
+                    { type: "success", text: "4 passed in 0.02s" }
+                ]
+            },
+            {
+                id: 30,
+                part: 3,
+                title: "Organize Tests in test/ Folder",
+                description: "Create a folder called `test/` and move all your test files into it. Run pytest from the project root to see it discover tests automatically.",
+                hints: [
+                    "Create a directory named 'test'",
+                    "Move test_*.py files into it",
+                    "pytest automatically finds test files in subdirectories",
+                    "This keeps your project organized",
+                    "You can run: pytest test/"
+                ],
+                examples: [
+                    { label: "Directory structure", code: "project/\n├── test/\n│   ├── test_math_functions.py\n│   └── test_string_functions.py\n└── functions.py" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/" },
+                    { type: "success", text: "test/test_math_functions.py ...." },
+                    { type: "success", text: "4 passed in 0.03s" }
+                ]
+            },
+            // Part 4: Edge and Negative Cases (31-40)
+            {
+                id: 31,
+                part: 4,
+                title: "Test square() with Zero and Negative",
+                description: "Add tests for edge cases: `square(0)` should return 0, and `square(-3)` should return 9. Test these cases explicitly.",
+                hints: [
+                    "Zero squared is zero",
+                    "Negative numbers squared become positive",
+                    "(-3)² = 9 because -3 × -3 = 9",
+                    "Always test edge cases!"
+                ],
+                examples: [
+                    { label: "Zero test", code: "assert square(0) == 0" },
+                    { label: "Negative test", code: "assert square(-3) == 9" },
+                    { label: "Why", code: "# -3 * -3 = 9 (negative × negative = positive)" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py::test_square" },
+                    { type: "success", text: "PASSED (including edge cases)" }
+                ]
+            },
+            {
+                id: 32,
+                part: 4,
+                title: "Test with Negative Numbers",
+                description: "Add tests for `add(-2, 5)` and `subtract(5, -2)` to ensure your functions handle negative numbers correctly.",
+                hints: [
+                    "add(-2, 5) should equal 3",
+                    "subtract(5, -2) equals 5 - (-2) = 5 + 2 = 7",
+                    "Subtracting a negative is like adding a positive",
+                    "Test both functions with negative inputs"
+                ],
+                examples: [
+                    { label: "Test add with negative", code: "assert add(-2, 5) == 3" },
+                    { label: "Test subtract with negative", code: "assert subtract(5, -2) == 7" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest -v" },
+                    { type: "success", text: "test_add PASSED" },
+                    { type: "success", text: "test_subtract PASSED" }
+                ]
+            },
+            {
+                id: 33,
+                part: 4,
+                title: "Test multiply() with Negative Numbers",
+                description: "Add a test for `multiply(-2, -2)` which should equal 4. Verify that multiplying two negatives produces a positive result.",
+                hints: [
+                    "Negative × negative = positive",
+                    "-2 × -2 = 4",
+                    "Also test: negative × positive = negative",
+                    "Test: -2 × 3 = -6"
+                ],
+                examples: [
+                    { label: "Both negative", code: "assert multiply(-2, -2) == 4" },
+                    { label: "Mixed signs", code: "assert multiply(-2, 3) == -6" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py::test_multiply" },
+                    { type: "success", text: "PASSED (all sign combinations)" }
+                ]
+            },
+            {
+                id: 34,
+                part: 4,
+                title: "Test divide() with Negative Numbers",
+                description: "Add tests for `divide(-4, 2)` and `divide(4, -2)`. Both should return -2.0 since negative divided by positive (or vice versa) is negative.",
+                hints: [
+                    "-4 ÷ 2 = -2.0",
+                    "4 ÷ -2 = -2.0",
+                    "Negative ÷ positive = negative",
+                    "Positive ÷ negative = negative"
+                ],
+                examples: [
+                    { label: "Negative dividend", code: "assert divide(-4, 2) == -2.0" },
+                    { label: "Negative divisor", code: "assert divide(4, -2) == -2.0" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py::test_divide" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 35,
+                part: 4,
+                title: "Handle Division by Zero",
+                description: "Modify your `divide()` function to catch `ZeroDivisionError` using try/except. Return a sensible error message or None.",
+                hints: [
+                    "Use try/except ZeroDivisionError",
+                    "You could return None or raise the error",
+                    "Or return a string like 'Cannot divide by zero'",
+                    "Document your choice for tests later"
+                ],
+                examples: [
+                    { label: "Error handling", code: "def divide(a, b):\n    try:\n        return a / b\n    except ZeroDivisionError:\n        return None" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ python" },
+                    { type: "output", text: ">>> divide(5, 0)" },
+                    { type: "output", text: "None" }
+                ]
+            },
+            {
+                id: 36,
+                part: 4,
+                title: "Test for ZeroDivisionError with pytest.raises",
+                description: "Use `pytest.raises(ZeroDivisionError)` context manager to test that `divide(5, 0)` raises the expected exception.",
+                hints: [
+                    "Import: import pytest",
+                    "Use: with pytest.raises(ZeroDivisionError):",
+                    "Inside the with block, call divide(5, 0)",
+                    "The test passes if the exception is raised",
+                    "Note: only works if your function doesn't catch the error"
+                ],
+                examples: [
+                    { label: "Import pytest", code: "import pytest" },
+                    { label: "Test exception", code: "def test_divide_by_zero():\n    with pytest.raises(ZeroDivisionError):\n        divide(5, 0)" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py::test_divide_by_zero" },
+                    { type: "success", text: "PASSED (exception raised as expected)" }
+                ]
+            },
+            {
+                id: 37,
+                part: 4,
+                title: "Test for TypeError with String Input",
+                description: "Add a test using `pytest.raises(TypeError)` to verify that calling `square('a')` raises a TypeError since strings can't be squared numerically.",
+                hints: [
+                    "Python raises TypeError for invalid operations",
+                    "square('a') can't multiply a string by itself",
+                    "Use pytest.raises to assert the error happens",
+                    "This ensures your function doesn't handle bad input silently"
+                ],
+                examples: [
+                    { label: "Test type error", code: "def test_square_type_error():\n    with pytest.raises(TypeError):\n        square('a')" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py::test_square_type_error" },
+                    { type: "success", text: "PASSED (TypeError raised)" }
+                ]
+            },
+            {
+                id: 38,
+                part: 4,
+                title: "Test add() with Mixed Types",
+                description: "Add a test expecting `TypeError` when passing a string to add(), like `add('2', 3)`. Verify your function properly rejects invalid input.",
+                hints: [
+                    "add('2', 3) should raise TypeError",
+                    "Python can't add string + int without conversion",
+                    "Use pytest.raises(TypeError)",
+                    "This is type safety testing"
+                ],
+                examples: [
+                    { label: "Test mixed types", code: "def test_add_type_error():\n    with pytest.raises(TypeError):\n        add('2', 3)" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py::test_add_type_error" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 39,
+                part: 4,
+                title: "Test is_even() with Invalid Input",
+                description: "Write a test for `is_even('dog')` expecting a `TypeError`. String inputs to numeric functions should raise errors.",
+                hints: [
+                    "is_even() performs modulo operation",
+                    "'dog' % 2 causes TypeError",
+                    "Use pytest.raises to test for this",
+                    "Always test with invalid input types"
+                ],
+                examples: [
+                    { label: "Test invalid input", code: "def test_is_even_type_error():\n    with pytest.raises(TypeError):\n        is_even('dog')" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py::test_is_even_type_error" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 40,
+                part: 4,
+                title: "Test is_odd() with None",
+                description: "Write a test for `is_odd(None)` expecting a `TypeError`. None cannot be used in mathematical operations.",
+                hints: [
+                    "None % 2 raises TypeError",
+                    "None is not a number",
+                    "Test this edge case explicitly",
+                    "Good tests anticipate bad input"
+                ],
+                examples: [
+                    { label: "Test None input", code: "def test_is_odd_none():\n    with pytest.raises(TypeError):\n        is_odd(None)" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_math_functions.py::test_is_odd_none" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            // Part 5: Testing Strings (41-50)
+            {
+                id: 41,
+                part: 5,
+                title: "Write and Test greet() Function",
+                description: "Create a `greet(name)` function that returns a greeting string like 'Hello, <name>!'. Test with `assert greet('Oto') == 'Hello, Oto!'`",
+                hints: [
+                    "Use f-strings or string concatenation",
+                    "Example: f'Hello, {name}!'",
+                    "Make sure to include punctuation exactly",
+                    "String tests are case-sensitive and space-sensitive"
+                ],
+                examples: [
+                    { label: "Function", code: "def greet(name):\n    return f'Hello, {name}!'" },
+                    { label: "Test", code: "assert greet('Oto') == 'Hello, Oto!'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_greet" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 42,
+                part: 5,
+                title: "Test greet() with Default Value",
+                description: "Modify `greet()` to have a default parameter value so it works when called without arguments. Test both with and without a name.",
+                hints: [
+                    "Add default: def greet(name='Guest'):",
+                    "Now greet() returns 'Hello, Guest!'",
+                    "Test: assert greet() == 'Hello, Guest!'",
+                    "Also test: assert greet('Alice') == 'Hello, Alice!'"
+                ],
+                examples: [
+                    { label: "With default", code: "def greet(name='Guest'):\n    return f'Hello, {name}!'" },
+                    { label: "Test default", code: "assert greet() == 'Hello, Guest!'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_greet" },
+                    { type: "success", text: "PASSED (both cases)" }
+                ]
+            },
+            {
+                id: 43,
+                part: 5,
+                title: "Change greet() to Print",
+                description: "Temporarily change `greet()` to print instead of return. Run pytest and observe what happens - tests will fail!",
+                hints: [
+                    "Change return to print",
+                    "Run pytest and see failures",
+                    "The function returns None instead of string",
+                    "This reinforces why return is essential for testing"
+                ],
+                examples: [
+                    { label: "Broken version", code: "def greet(name='Guest'):\n    print(f'Hello, {name}!')  # Wrong!" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_greet" },
+                    { type: "error", text: "FAILED" },
+                    { type: "error", text: "AssertionError: assert None == 'Hello, Oto!'" }
+                ]
+            },
+            {
+                id: 44,
+                part: 5,
+                title: "Fix greet() to Return",
+                description: "Change `greet()` back to return the greeting string. Confirm that all tests now pass again.",
+                hints: [
+                    "Replace print with return",
+                    "Run pytest to verify",
+                    "All tests should pass now",
+                    "This completes the cycle: break → fix → verify"
+                ],
+                examples: [
+                    { label: "Fixed version", code: "def greet(name='Guest'):\n    return f'Hello, {name}!'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_greet" },
+                    { type: "success", text: "PASSED ✓" }
+                ]
+            },
+            {
+                id: 45,
+                part: 5,
+                title: "Add More greet() Tests",
+                description: "Add additional test cases for `greet('David')` and `greet('Mary')` to ensure the function works with different names.",
+                hints: [
+                    "Test multiple names to be thorough",
+                    "Each assertion verifies a different case",
+                    "More tests = more confidence",
+                    "Edge cases might include empty strings or special characters"
+                ],
+                examples: [
+                    { label: "More tests", code: "assert greet('David') == 'Hello, David!'\nassert greet('Mary') == 'Hello, Mary!'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_greet -v" },
+                    { type: "success", text: "PASSED (4 assertions)" }
+                ]
+            },
+            {
+                id: 46,
+                part: 5,
+                title: "Write and Test shout() Function",
+                description: "Create a `shout(word)` function that returns the word in uppercase. Test with 'hello' → 'HELLO'.",
+                hints: [
+                    "Use the .upper() string method",
+                    "Example: word.upper()",
+                    "Test: assert shout('hello') == 'HELLO'",
+                    "Simple but useful function!"
+                ],
+                examples: [
+                    { label: "Function", code: "def shout(word):\n    return word.upper()" },
+                    { label: "Test", code: "assert shout('hello') == 'HELLO'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_shout" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 47,
+                part: 5,
+                title: "Test shout() with Empty String",
+                description: "Add a test that `shout('')` returns an empty string. Empty input should produce empty output.",
+                hints: [
+                    "Edge case: empty string",
+                    "''.upper() returns ''",
+                    "Test: assert shout('') == ''",
+                    "Always test boundary conditions"
+                ],
+                examples: [
+                    { label: "Empty string test", code: "assert shout('') == ''" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_shout" },
+                    { type: "success", text: "PASSED (including empty string)" }
+                ]
+            },
+            {
+                id: 48,
+                part: 5,
+                title: "Test shout() with Mixed Case",
+                description: "Add a test that `shout('Python')` returns `'PYTHON'`. Verify it converts all characters to uppercase.",
+                hints: [
+                    "Test with mixed case input",
+                    "'Python'.upper() == 'PYTHON'",
+                    "Verifies the function handles all cases correctly"
+                ],
+                examples: [
+                    { label: "Mixed case test", code: "assert shout('Python') == 'PYTHON'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_shout" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 49,
+                part: 5,
+                title: "Write and Test whisper() Function",
+                description: "Create a `whisper(word)` function that returns the word in lowercase. Test with 'HELLO' → 'hello'.",
+                hints: [
+                    "Use the .lower() string method",
+                    "Example: word.lower()",
+                    "Test: assert whisper('HELLO') == 'hello'",
+                    "Opposite of shout()!"
+                ],
+                examples: [
+                    { label: "Function", code: "def whisper(word):\n    return word.lower()" },
+                    { label: "Test", code: "assert whisper('HELLO') == 'hello'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_whisper" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 50,
+                part: 5,
+                title: "Test whisper() Type Error",
+                description: "Add a test that `whisper()` raises a `TypeError` if the input is not a string. Test with a number or None.",
+                hints: [
+                    "Numbers don't have .lower() method",
+                    "Test: whisper(123) should raise TypeError",
+                    "Use pytest.raises(TypeError)",
+                    "Ensures type safety"
+                ],
+                examples: [
+                    { label: "Type error test", code: "def test_whisper_type_error():\n    with pytest.raises(TypeError):\n        whisper(123)" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test_string_functions.py::test_whisper_type_error" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            // Part 6: Multiple Files (51-60)
+            {
+                id: 51,
+                part: 6,
+                title: "Create math_functions.py Module",
+                description: "Create a file called `math_functions.py` and move all your numeric functions (square, add, subtract, multiply, divide) into it.",
+                hints: [
+                    "This is your source code module",
+                    "Keep it separate from test files",
+                    "Later you'll import from this file",
+                    "Good project structure: separate code from tests"
+                ],
+                examples: [
+                    { label: "File structure", code: "math_functions.py  # Your functions here\ntest/\n  test_math_functions.py  # Tests here" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ ls" },
+                    { type: "output", text: "math_functions.py" },
+                    { type: "output", text: "test/" }
+                ]
+            },
+            {
+                id: 52,
+                part: 6,
+                title: "Create string_functions.py Module",
+                description: "Create a file called `string_functions.py` containing all your text-related functions (greet, shout, whisper, etc.).",
+                hints: [
+                    "Separate module for string operations",
+                    "Keeps code organized by functionality",
+                    "Makes importing easier in tests",
+                    "Better project organization"
+                ],
+                examples: [
+                    { label: "File structure", code: "math_functions.py\nstring_functions.py\ntest/\n  test_math_functions.py\n  test_string_functions.py" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ ls" },
+                    { type: "output", text: "math_functions.py" },
+                    { type: "output", text: "string_functions.py" },
+                    { type: "output", text: "test/" }
+                ]
+            },
+            {
+                id: 53,
+                part: 6,
+                title: "Create test/test_math_functions.py",
+                description: "Create a test file in the test/ directory specifically for testing math functions. Import the functions from your module.",
+                hints: [
+                    "At top of file: from math_functions import *",
+                    "Or import specific: from math_functions import square, add",
+                    "Now your tests can use the imported functions",
+                    "Make sure the import path is correct"
+                ],
+                examples: [
+                    { label: "Import statement", code: "from math_functions import square, add, subtract" },
+                    { label: "Then test", code: "def test_square():\n    assert square(3) == 9" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_math_functions.py" },
+                    { type: "success", text: "Tests discovered and passed" }
+                ]
+            },
+            {
+                id: 54,
+                part: 6,
+                title: "Create test/test_string_functions.py",
+                description: "Create a test file in the test/ directory for string functions. Import from your string_functions module.",
+                hints: [
+                    "Import: from string_functions import greet, shout, whisper",
+                    "Add all your string function tests here",
+                    "Keep tests organized by functionality",
+                    "Separate test files for different modules"
+                ],
+                examples: [
+                    { label: "Import statement", code: "from string_functions import greet, shout, whisper" },
+                    { label: "Then test", code: "def test_greet():\n    assert greet('Oto') == 'Hello, Oto!'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_string_functions.py" },
+                    { type: "success", text: "All string tests passed" }
+                ]
+            },
+            {
+                id: 55,
+                part: 6,
+                title: "Add __init__.py to test Folder",
+                description: "Create an empty `__init__.py` file in the test/ folder. This makes it a proper Python package.",
+                hints: [
+                    "Touch or create empty __init__.py",
+                    "Not always required but good practice",
+                    "Makes the directory a Python package",
+                    "Helps with imports in some cases"
+                ],
+                examples: [
+                    { label: "Create file", code: "# In test/__init__.py\n# (This file can be empty)" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ touch test/__init__.py" },
+                    { type: "success", text: "File created" }
+                ]
+            },
+            {
+                id: 56,
+                part: 6,
+                title: "Run All Tests with pytest test",
+                description: "Run `pytest test` to execute all test files in the test directory. Observe how pytest discovers and runs everything.",
+                hints: [
+                    "pytest automatically finds test_*.py files",
+                    "Runs all tests in all files",
+                    "Shows summary of all results",
+                    "Use -v for verbose output"
+                ],
+                examples: [
+                    { label: "Run all tests", code: "pytest test" },
+                    { label: "Verbose mode", code: "pytest test -v" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test" },
+                    { type: "success", text: "test/test_math_functions.py ......." },
+                    { type: "success", text: "test/test_string_functions.py ....." },
+                    { type: "success", text: "12 passed in 0.05s" }
+                ]
+            },
+            {
+                id: 57,
+                part: 6,
+                title: "Add More Math Test Assertions",
+                description: "Add more assertions to your math test file with different numbers. Test more edge cases and combinations.",
+                hints: [
+                    "Test with larger numbers",
+                    "Test with decimals if applicable",
+                    "Test more negative number combinations",
+                    "More tests = more confidence in code"
+                ],
+                examples: [
+                    { label: "Additional tests", code: "assert square(10) == 100\nassert add(100, 200) == 300\nassert multiply(-5, -5) == 25" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_math_functions.py -v" },
+                    { type: "success", text: "10 passed (added 3 more assertions)" }
+                ]
+            },
+            {
+                id: 58,
+                part: 6,
+                title: "Add More String Test Cases",
+                description: "Add more assertions for string cases with different inputs: 'Bob', 'Alice', '123', etc.",
+                hints: [
+                    "Test with different names",
+                    "Test with numbers as strings",
+                    "Test with special characters if relevant",
+                    "Variety in test data improves coverage"
+                ],
+                examples: [
+                    { label: "Various inputs", code: "assert greet('Bob') == 'Hello, Bob!'\nassert shout('alice') == 'ALICE'\nassert whisper('BOB123') == 'bob123'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_string_functions.py -v" },
+                    { type: "success", text: "8 passed (added more test cases)" }
+                ]
+            },
+            {
+                id: 59,
+                part: 6,
+                title: "Intentionally Break a Function",
+                description: "Break one of your functions intentionally to observe how pytest reports multiple failures across different test files.",
+                hints: [
+                    "Modify a widely-used function",
+                    "Run pytest to see multiple test failures",
+                    "Notice how pytest shows which file and test failed",
+                    "Understand the failure report format"
+                ],
+                examples: [
+                    { label: "Break a function", code: "def square(n):\n    return n * 10  # Wrong!" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test" },
+                    { type: "error", text: "test/test_math_functions.py::test_square FAILED" },
+                    { type: "error", text: "test/test_math_functions.py::test_combined FAILED" },
+                    { type: "error", text: "2 failed, 10 passed" }
+                ]
+            },
+            {
+                id: 60,
+                part: 6,
+                title: "Fix and Verify All Tests Pass",
+                description: "Fix the broken function and rerun pytest to confirm all tests pass again. Enjoy the satisfaction of green tests!",
+                hints: [
+                    "Correct the function",
+                    "Run pytest test",
+                    "Verify all tests pass",
+                    "This is the testing workflow!"
+                ],
+                examples: [
+                    { label: "Fixed function", code: "def square(n):\n    return n * n  # Correct!" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test" },
+                    { type: "success", text: "test/test_math_functions.py ......." },
+                    { type: "success", text: "test/test_string_functions.py ....." },
+                    { type: "success", text: "12 passed in 0.04s ✓" }
+                ]
+            },
+            // Part 7: Advanced Concepts (61-70)
+            {
+                id: 61,
+                part: 7,
+                title: "Write and Test reverse_string() Function",
+                description: "Create a `reverse_string(s)` function that reverses a string. Test with 'abc' → 'cba'.",
+                hints: [
+                    "Use string slicing: s[::-1]",
+                    "Or use reversed() function",
+                    "Test: assert reverse_string('abc') == 'cba'",
+                    "Simple but powerful string operation"
+                ],
+                examples: [
+                    { label: "Function", code: "def reverse_string(s):\n    return s[::-1]" },
+                    { label: "Test", code: "assert reverse_string('abc') == 'cba'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_string_functions.py::test_reverse_string" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 62,
+                part: 7,
+                title: "Test reverse_string() with Empty String",
+                description: "Add a test that `reverse_string('')` returns an empty string. Reversing nothing gives nothing.",
+                hints: [
+                    "Edge case: empty string",
+                    "''[::-1] returns ''",
+                    "Test: assert reverse_string('') == ''",
+                    "Always test edge cases!"
+                ],
+                examples: [
+                    { label: "Empty string test", code: "assert reverse_string('') == ''" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_string_functions.py::test_reverse_string" },
+                    { type: "success", text: "PASSED (including empty case)" }
+                ]
+            },
+            {
+                id: 63,
+                part: 7,
+                title: "Test reverse_string() Type Error",
+                description: "Add a test that `reverse_string(123)` raises a `TypeError`. Only strings can be sliced this way.",
+                hints: [
+                    "Numbers don't support string slicing",
+                    "Use pytest.raises(TypeError)",
+                    "Ensures type safety",
+                    "Good defensive programming"
+                ],
+                examples: [
+                    { label: "Type error test", code: "def test_reverse_string_type_error():\n    with pytest.raises(TypeError):\n        reverse_string(123)" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_string_functions.py::test_reverse_string_type_error" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 64,
+                part: 7,
+                title: "Write and Test safe_divide() Function",
+                description: "Create a `safe_divide(a, b)` function that returns 'Error' if b is 0, otherwise returns the division result. Test both normal and zero division cases.",
+                hints: [
+                    "Check if b == 0 first",
+                    "Return 'Error' string if zero",
+                    "Otherwise return a / b",
+                    "Test both branches"
+                ],
+                examples: [
+                    { label: "Function", code: "def safe_divide(a, b):\n    if b == 0:\n        return 'Error'\n    return a / b" },
+                    { label: "Tests", code: "assert safe_divide(10, 2) == 5.0\nassert safe_divide(5, 0) == 'Error'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_math_functions.py::test_safe_divide" },
+                    { type: "success", text: "PASSED (both branches tested)" }
+                ]
+            },
+            {
+                id: 65,
+                part: 7,
+                title: "Write and Test average() Function",
+                description: "Create an `average(numbers)` function that takes a list and returns the mean. Test with [1, 2, 3] → 2.",
+                hints: [
+                    "Sum all numbers and divide by count",
+                    "Use: sum(numbers) / len(numbers)",
+                    "Test: assert average([1, 2, 3]) == 2",
+                    "Note: returns float"
+                ],
+                examples: [
+                    { label: "Function", code: "def average(numbers):\n    return sum(numbers) / len(numbers)" },
+                    { label: "Test", code: "assert average([1, 2, 3]) == 2.0" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_math_functions.py::test_average" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 66,
+                part: 7,
+                title: "Test average() with Empty List",
+                description: "Add a test for `average([])` expecting a `ZeroDivisionError` (division by zero when len is 0), or handle it by returning None.",
+                hints: [
+                    "Empty list has len() == 0",
+                    "Division by zero will occur",
+                    "Either test for ZeroDivisionError",
+                    "Or modify function to handle empty list"
+                ],
+                examples: [
+                    { label: "Test exception", code: "def test_average_empty():\n    with pytest.raises(ZeroDivisionError):\n        average([])" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_math_functions.py::test_average_empty" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 67,
+                part: 7,
+                title: "Write and Test greet_all() Function",
+                description: "Create a `greet_all(names)` function that joins multiple names with commas in a greeting. Test with a list of names.",
+                hints: [
+                    "Use ', '.join(names) to combine names",
+                    "Return something like 'Hello, Alice, Bob, Charlie!'",
+                    "Test with different list sizes",
+                    "Handle edge cases"
+                ],
+                examples: [
+                    { label: "Function", code: "def greet_all(names):\n    return f\"Hello, {', '.join(names)}!\"" },
+                    { label: "Test", code: "assert greet_all(['Alice', 'Bob']) == 'Hello, Alice, Bob!'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_string_functions.py::test_greet_all" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 68,
+                part: 7,
+                title: "Test greet_all() with Empty List",
+                description: "Write a test for `greet_all([])` expecting it to return 'No one to greet' or handle empty lists gracefully.",
+                hints: [
+                    "Check if names list is empty",
+                    "Return special message for empty list",
+                    "Or test what current behavior is",
+                    "Edge case handling is important"
+                ],
+                examples: [
+                    { label: "Updated function", code: "def greet_all(names):\n    if not names:\n        return 'No one to greet'\n    return f\"Hello, {', '.join(names)}!\"" },
+                    { label: "Test", code: "assert greet_all([]) == 'No one to greet'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_string_functions.py::test_greet_all_empty" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 69,
+                part: 7,
+                title: "Write and Test repeat_word() Function",
+                description: "Create a `repeat_word(word, n)` function that repeats a word n times. Test with 'hi', 3 → 'hihihi'.",
+                hints: [
+                    "Use string multiplication: word * n",
+                    "Test: assert repeat_word('hi', 3) == 'hihihi'",
+                    "Simple but useful operation",
+                    "Test with different values of n"
+                ],
+                examples: [
+                    { label: "Function", code: "def repeat_word(word, n):\n    return word * n" },
+                    { label: "Test", code: "assert repeat_word('hi', 3) == 'hihihi'" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_string_functions.py::test_repeat_word" },
+                    { type: "success", text: "PASSED" }
+                ]
+            },
+            {
+                id: 70,
+                part: 7,
+                title: "Test repeat_word() Type Error",
+                description: "Write a test expecting a `TypeError` when n is not an integer. Strings can only be multiplied by integers.",
+                hints: [
+                    "Test with: repeat_word('hi', 'three')",
+                    "Should raise TypeError",
+                    "Use pytest.raises(TypeError)",
+                    "Final exercise - congratulations!"
+                ],
+                examples: [
+                    { label: "Type error test", code: "def test_repeat_word_type_error():\n    with pytest.raises(TypeError):\n        repeat_word('hi', 'three')" }
+                ],
+                terminal: [
+                    { type: "prompt", text: "$ pytest test/test_string_functions.py::test_repeat_word_type_error" },
+                    { type: "success", text: "PASSED ✓" },
+                    { type: "success", text: "Congratulations! You've completed all 70 exercises!" }
+                ]
+            }
+        ];
+
+        // State
+        let currentExerciseIndex = 0;
+        let sidebarOpen = false;
+
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const sidebarOverlay = document.getElementById('sidebarOverlay');
+        const burgerMenu = document.getElementById('burgerMenu');
+        const mainContent = document.getElementById('mainContent');
+        const headerExercise = document.getElementById('headerExercise');
+
+        // Initialize
+        function init() {
+            renderSidebar();
+            renderAllExercises();
+            showExercise(0);
+            setupEventListeners();
+        }
+
+        // Render sidebar items
+        function renderSidebar() {
+            const parts = [
+                { id: 'part1', range: [1, 10] },
+                { id: 'part2', range: [11, 20] },
+                { id: 'part3', range: [21, 30] },
+                { id: 'part4', range: [31, 40] },
+                { id: 'part5', range: [41, 50] },
+                { id: 'part6', range: [51, 60] },
+                { id: 'part7', range: [61, 70] }
+            ];
+
+            parts.forEach(part => {
+                const container = document.getElementById(`${part.id}-items`);
+                const [start, end] = part.range;
+                
+                for (let i = start; i <= end; i++) {
+                    const exercise = exercises[i - 1];
+                    const item = document.createElement('div');
+                    item.className = 'sidebar-item';
+                    item.textContent = `${i}. ${exercise.title}`;
+                    item.dataset.index = i - 1;
+                    item.onclick = () => {
+                        showExercise(i - 1);
+                        if (window.innerWidth <= 768) {
+                            toggleSidebar();
+                        }
+                    };
+                    container.appendChild(item);
+                }
+            });
+        }
+
+        // Render all exercises
+        function renderAllExercises() {
+            exercises.forEach((exercise, index) => {
+                const container = document.createElement('div');
+                container.className = 'exercise-container';
+                container.id = `exercise-${index}`;
+
+                let hintsHTML = '';
+                if (exercise.hints && exercise.hints.length > 0) {
+                    hintsHTML = `
+                        <div class="exercise-hints">
+                            <h4>💡 Hints</h4>
+                            <ul>
+                                ${exercise.hints.map(hint => `<li>${hint}</li>`).join('')}
+                            </ul>
+                        </div>
+                    `;
+                }
+
+                let examplesHTML = '';
+                if (exercise.examples && exercise.examples.length > 0) {
+                    examplesHTML = `
+                        <div class="example-box">
+                            <h4>📝 Examples</h4>
+                            ${exercise.examples.map(ex => `
+                                <div class="example-item">
+                                    <div class="example-label">${ex.label}</div>
+                                    <div class="example-code">${escapeHtml(ex.code)}</div>
+                                </div>
+                            `).join('')}
+                        </div>
+                    `;
+                }
+
+                let terminalHTML = '';
+                if (exercise.terminal && exercise.terminal.length > 0) {
+                    terminalHTML = `
+                        <div class="terminal">
+                            <div class="terminal-header">
+                                <div class="terminal-dot red"></div>
+                                <div class="terminal-dot yellow"></div>
+                                <div class="terminal-dot green"></div>
+                            </div>
+                            <div class="terminal-body">
+                                ${exercise.terminal.map(line => {
+                                    let className = 'terminal-line';
+                                    let text = line.text;
+                                    
+                                    if (line.type === 'prompt') {
+                                        return `<div class="${className}"><span class="terminal-prompt">${text}</span></div>`;
+                                    } else if (line.type === 'command') {
+                                        return `<div class="${className}"><span class="terminal-command">${text}</span></div>`;
+                                    } else if (line.type === 'error') {
+                                        return `<div class="${className}"><span class="terminal-error">${text}</span></div>`;
+                                    } else if (line.type === 'success') {
+                                        return `<div class="${className}"><span class="terminal-success">${text}</span></div>`;
+                                    } else {
+                                        return `<div class="${className}"><span class="terminal-output">${text}</span></div>`;
+                                    }
+                                }).join('')}
+                            </div>
+                        </div>
+                    `;
+                }
+
+                container.innerHTML = `
+                    <div class="exercise-header">
+                        <h2>Exercise ${exercise.id}: ${exercise.title}</h2>
+                        <div class="exercise-meta">
+                            <span class="exercise-badge">Part ${exercise.part}</span>
+                            <span class="exercise-badge">${exercise.id} of 70</span>
+                        </div>
+                    </div>
+                    
+                    <div class="exercise-content">
+                        <div class="exercise-description">
+                            ${exercise.description}
+                        </div>
+                        
+                        ${hintsHTML}
+                        ${examplesHTML}
+                        ${terminalHTML}
+                    </div>
+                    
+                    <div class="navigation">
+                        <button class="nav-button" onclick="previousExercise()" ${index === 0 ? 'disabled' : ''}>
+                            ← Previous
+                        </button>
+                        <button class="nav-button" onclick="nextExercise()" ${index === exercises.length - 1 ? 'disabled' : ''}>
+                            Next →
+                        </button>
+                    </div>
+                `;
+
+                mainContent.appendChild(container);
+            });
+        }
+
+        // Show specific exercise
+        function showExercise(index) {
+            // Hide all exercises
+            document.querySelectorAll('.exercise-container').forEach(ex => {
+                ex.classList.remove('active');
+            });
+
+            // Show selected exercise
+            const exercise = document.getElementById(`exercise-${index}`);
+            if (exercise) {
+                exercise.classList.add('active');
+                currentExerciseIndex = index;
+
+                // Update header
+                headerExercise.textContent = `Exercise ${index + 1} of 70`;
+
+                // Update sidebar active state
+                document.querySelectorAll('.sidebar-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                const activeItem = document.querySelector(`.sidebar-item[data-index="${index}"]`);
+                if (activeItem) {
+                    activeItem.classList.add('active');
+                    activeItem.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+
+                // Scroll to top
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Navigation functions
+        function nextExercise() {
+            if (currentExerciseIndex < exercises.length - 1) {
+                showExercise(currentExerciseIndex + 1);
+            }
+        }
+
+        function previousExercise() {
+            if (currentExerciseIndex > 0) {
+                showExercise(currentExerciseIndex - 1);
+            }
+        }
+
+        // Toggle sidebar
+        function toggleSidebar() {
+            sidebarOpen = !sidebarOpen;
+            if (sidebarOpen) {
+                sidebar.classList.add('open');
+                sidebarOverlay.classList.add('open');
+            } else {
+                sidebar.classList.remove('open');
+                sidebarOverlay.classList.remove('open');
+            }
+        }
+
+        // Setup event listeners
+        function setupEventListeners() {
+            burgerMenu.addEventListener('click', toggleSidebar);
+            sidebarOverlay.addEventListener('click', toggleSidebar);
+
+            // Keyboard navigation
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowRight') {
+                    nextExercise();
+                } else if (e.key === 'ArrowLeft') {
+                    previousExercise();
+                }
+            });
+        }
+
+        // Utility function
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        // Make functions globally available
+        window.nextExercise = nextExercise;
+        window.previousExercise = previousExercise;
+
+        // Initialize on load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>

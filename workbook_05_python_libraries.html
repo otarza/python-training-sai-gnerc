@@ -1,0 +1,2351 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Python Libraries & Modules - Exercise Workbook</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #0f0f0f;
+            color: #e4e4e7;
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* Header */
+        .header {
+            background: #18181b;
+            border-bottom: 1px solid #27272a;
+            padding: 1rem 2rem;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .header h1 {
+            color: #fbbf24;
+            font-size: 1.5rem;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .burger-menu {
+            display: none;
+            background: none;
+            border: none;
+            color: #e4e4e7;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 0.5rem;
+            border-radius: 0.375rem;
+            transition: background-color 0.2s;
+        }
+
+        .burger-menu:hover {
+            background: #27272a;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 320px;
+            height: calc(100vh - 80px);
+            background: #18181b;
+            border-right: 1px solid #27272a;
+            overflow-y: auto;
+            z-index: 900;
+            transition: transform 0.3s ease;
+        }
+
+        .sidebar-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #27272a;
+            background: #1f1f23;
+        }
+
+        .sidebar-header h2 {
+            color: #fbbf24;
+            font-size: 1.25rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .sidebar-header p {
+            color: #a1a1aa;
+            font-size: 0.875rem;
+        }
+
+        .section {
+            margin-bottom: 1rem;
+        }
+
+        .section-title {
+            padding: 1rem 1.5rem 0.5rem;
+            font-weight: 600;
+            color: #3b82f6;
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+
+        .exercise-item {
+            display: block;
+            width: 100%;
+            padding: 0.75rem 1.5rem;
+            text-align: left;
+            background: none;
+            border: none;
+            color: #a1a1aa;
+            cursor: pointer;
+            transition: all 0.2s;
+            border-left: 3px solid transparent;
+            font-size: 0.875rem;
+        }
+
+        .exercise-item:hover {
+            background: #27272a;
+            color: #e4e4e7;
+        }
+
+        .exercise-item.active {
+            background: #1e40af;
+            color: white;
+            border-left-color: #3b82f6;
+        }
+
+        .exercise-number {
+            font-weight: 600;
+            color: #fbbf24;
+            margin-right: 0.5rem;
+        }
+
+        /* Main Content */
+        .main-content {
+            margin-left: 320px;
+            padding: 120px 2rem 2rem;
+            min-height: calc(100vh - 80px);
+            transition: margin-left 0.3s ease;
+        }
+
+        .exercise-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+
+        .exercise-header {
+            margin-bottom: 2rem;
+        }
+
+        .exercise-meta {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-meta span {
+            background: #27272a;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            font-size: 0.75rem;
+            color: #a1a1aa;
+        }
+
+        .exercise-title {
+            font-size: 2rem;
+            font-weight: 700;
+            color: #e4e4e7;
+            margin-bottom: 1rem;
+        }
+
+        .exercise-content {
+            background: #18181b;
+            padding: 2rem;
+            border-radius: 0.75rem;
+            border: 1px solid #27272a;
+            margin-bottom: 2rem;
+        }
+
+        .exercise-content p {
+            font-size: 1.125rem;
+            line-height: 1.7;
+            color: #d4d4d8;
+        }
+
+        .exercise-content code {
+            background: #0f0f0f;
+            padding: 0.125rem 0.375rem;
+            border-radius: 0.25rem;
+            font-family: 'Courier New', monospace;
+            color: #fbbf24;
+            font-size: 0.9em;
+        }
+
+        .exercise-content pre {
+            background: #0f0f0f;
+            padding: 1rem;
+            border-radius: 0.5rem;
+            border: 1px solid #27272a;
+            margin: 1rem 0;
+            overflow-x: auto;
+        }
+
+        .exercise-content pre code {
+            background: none;
+            padding: 0;
+            color: #e4e4e7;
+        }
+
+        /* Enhanced content styles */
+        .explanation {
+            background: #1a1a2e;
+            border: 1px solid #16213e;
+            border-radius: 0.5rem;
+            padding: 1.5rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid #3b82f6;
+        }
+
+        .explanation h4 {
+            color: #60a5fa;
+            margin-bottom: 0.75rem;
+            font-size: 1rem;
+            font-weight: 600;
+        }
+
+        .explanation p {
+            color: #d1d5db;
+            margin: 0;
+            font-size: 1rem;
+        }
+
+        .terminal {
+            background: #0a0a0a;
+            border: 1px solid #27272a;
+            border-radius: 0.5rem;
+            margin: 1.5rem 0;
+            overflow: hidden;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal-header {
+            background: #18181b;
+            padding: 0.75rem 1rem;
+            color: #a1a1aa;
+            font-size: 0.875rem;
+            border-bottom: 1px solid #27272a;
+            font-weight: 500;
+        }
+
+        .terminal-body {
+            padding: 1rem;
+        }
+
+        .terminal .output {
+            color: #22c55e;
+            margin: 0.25rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal .prompt {
+            color: #60a5fa;
+            margin: 0.25rem 0;
+            font-family: 'Courier New', monospace;
+        }
+
+        .terminal .user-input {
+            color: #fbbf24;
+            font-weight: bold;
+        }
+
+        .hint {
+            background: #0f172a;
+            border: 1px solid #1e293b;
+            border-radius: 0.5rem;
+            padding: 1rem;
+            margin: 1.5rem 0;
+            border-left: 4px solid #fbbf24;
+        }
+
+        .hint strong {
+            color: #fbbf24;
+        }
+
+        .hint p {
+            margin: 0;
+            color: #cbd5e1;
+        }
+
+        /* Navigation */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 2rem;
+        }
+
+        .nav-button {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.75rem 1.5rem;
+            background: #3b82f6;
+            color: white;
+            border: none;
+            border-radius: 0.5rem;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background-color 0.2s;
+            text-decoration: none;
+        }
+
+        .nav-button:hover {
+            background: #2563eb;
+        }
+
+        .nav-button:disabled {
+            background: #27272a;
+            color: #71717a;
+            cursor: not-allowed;
+        }
+
+        .progress-info {
+            text-align: center;
+            color: #a1a1aa;
+            font-size: 0.875rem;
+        }
+
+        /* Mobile Styles */
+        @media (max-width: 768px) {
+            .burger-menu {
+                display: block;
+            }
+
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.open {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+                padding: 100px 1rem 2rem;
+            }
+
+            .header {
+                padding: 1rem;
+            }
+
+            .header h1 {
+                font-size: 1.25rem;
+            }
+
+            .exercise-title {
+                font-size: 1.5rem;
+            }
+
+            .exercise-content {
+                padding: 1.5rem;
+            }
+
+            .navigation {
+                flex-direction: column;
+                gap: 1rem;
+            }
+        }
+
+        /* Overlay for mobile */
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.5);
+            z-index: 850;
+        }
+
+        .overlay.show {
+            display: block;
+        }
+
+        /* Scrollbar Styling */
+        .sidebar::-webkit-scrollbar {
+            width: 6px;
+        }
+
+        .sidebar::-webkit-scrollbar-track {
+            background: #18181b;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb {
+            background: #27272a;
+            border-radius: 3px;
+        }
+
+        .sidebar::-webkit-scrollbar-thumb:hover {
+            background: #3f3f46;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <h1>
+            <span>🧠</span>
+            Python Libraries & Modules
+        </h1>
+        <button class="burger-menu" id="burgerMenu">
+            <span id="burgerIcon">☰</span>
+        </button>
+    </header>
+
+    <div class="overlay" id="overlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <h2>Exercise Workbook</h2>
+            <p>70 gentle exercises for mastering libraries, imports, and packages</p>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🧩 Random</div>
+            <button class="exercise-item active" data-exercise="1"><span class="exercise-number">1.</span>Import random and coin toss</button>
+            <button class="exercise-item" data-exercise="2"><span class="exercise-number">2.</span>Coin toss loop</button>
+            <button class="exercise-item" data-exercise="3"><span class="exercise-number">3.</span>From random import choice</button>
+            <button class="exercise-item" data-exercise="4"><span class="exercise-number">4.</span>Dice roll simulation</button>
+            <button class="exercise-item" data-exercise="5"><span class="exercise-number">5.</span>Two dice total</button>
+            <button class="exercise-item" data-exercise="6"><span class="exercise-number">6.</span>Random color picker</button>
+            <button class="exercise-item" data-exercise="7"><span class="exercise-number">7.</span>Shuffle fruits list</button>
+            <button class="exercise-item" data-exercise="8"><span class="exercise-number">8.</span>Random numbers loop</button>
+            <button class="exercise-item" data-exercise="9"><span class="exercise-number">9.</span>Random name picker</button>
+            <button class="exercise-item" data-exercise="10"><span class="exercise-number">10.</span>Shuffle then choose</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📊 Statistics</div>
+            <button class="exercise-item" data-exercise="11"><span class="exercise-number">11.</span>Mean calculation</button>
+            <button class="exercise-item" data-exercise="12"><span class="exercise-number">12.</span>Mean of 1-6</button>
+            <button class="exercise-item" data-exercise="13"><span class="exercise-number">13.</span>Median calculation</button>
+            <button class="exercise-item" data-exercise="14"><span class="exercise-number">14.</span>Mode calculation</button>
+            <button class="exercise-item" data-exercise="15"><span class="exercise-number">15.</span>Mean and median</button>
+            <button class="exercise-item" data-exercise="16"><span class="exercise-number">16.</span>User input average</button>
+            <button class="exercise-item" data-exercise="17"><span class="exercise-number">17.</span>Standard deviation</button>
+            <button class="exercise-item" data-exercise="18"><span class="exercise-number">18.</span>Compare averages</button>
+            <button class="exercise-item" data-exercise="19"><span class="exercise-number">19.</span>Student grades</button>
+            <button class="exercise-item" data-exercise="20"><span class="exercise-number">20.</span>Random stats combo</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🧠 Command-Line Arguments</div>
+            <button class="exercise-item" data-exercise="21"><span class="exercise-number">21.</span>Hello with name</button>
+            <button class="exercise-item" data-exercise="22"><span class="exercise-number">22.</span>Error on no name</button>
+            <button class="exercise-item" data-exercise="23"><span class="exercise-number">23.</span>Error on too many args</button>
+            <button class="exercise-item" data-exercise="24"><span class="exercise-number">24.</span>Combine error conditions</button>
+            <button class="exercise-item" data-exercise="25"><span class="exercise-number">25.</span>Exit on invalid input</button>
+            <button class="exercise-item" data-exercise="26"><span class="exercise-number">26.</span>Print all arguments</button>
+            <button class="exercise-item" data-exercise="27"><span class="exercise-number">27.</span>Count arguments</button>
+            <button class="exercise-item" data-exercise="28"><span class="exercise-number">28.</span>Filename and args</button>
+            <button class="exercise-item" data-exercise="29"><span class="exercise-number">29.</span>Greet multiple names</button>
+            <button class="exercise-item" data-exercise="30"><span class="exercise-number">30.</span>Greetings with validation</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">✂️ Slice</div>
+            <button class="exercise-item" data-exercise="31"><span class="exercise-number">31.</span>Skip first argv</button>
+            <button class="exercise-item" data-exercise="32"><span class="exercise-number">32.</span>Last argument only</button>
+            <button class="exercise-item" data-exercise="33"><span class="exercise-number">33.</span>First two names</button>
+            <button class="exercise-item" data-exercise="34"><span class="exercise-number">34.</span>All except last</button>
+            <button class="exercise-item" data-exercise="35"><span class="exercise-number">35.</span>Reverse order</button>
+            <button class="exercise-item" data-exercise="36"><span class="exercise-number">36.</span>Join all names</button>
+            <button class="exercise-item" data-exercise="37"><span class="exercise-number">37.</span>Middle 3 numbers</button>
+            <button class="exercise-item" data-exercise="38"><span class="exercise-number">38.</span>Slice "gram" from string</button>
+            <button class="exercise-item" data-exercise="39"><span class="exercise-number">39.</span>Last 3 letters</button>
+            <button class="exercise-item" data-exercise="40"><span class="exercise-number">40.</span>First letters only</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📦 Packages</div>
+            <button class="exercise-item" data-exercise="41"><span class="exercise-number">41.</span>Install cowsay</button>
+            <button class="exercise-item" data-exercise="42"><span class="exercise-number">42.</span>Cow says your name</button>
+            <button class="exercise-item" data-exercise="43"><span class="exercise-number">43.</span>T-Rex speaks</button>
+            <button class="exercise-item" data-exercise="44"><span class="exercise-number">44.</span>Name validation</button>
+            <button class="exercise-item" data-exercise="45"><span class="exercise-number">45.</span>Different animals</button>
+            <button class="exercise-item" data-exercise="46"><span class="exercise-number">46.</span>Install requests</button>
+            <button class="exercise-item" data-exercise="47"><span class="exercise-number">47.</span>Fetch GitHub API</button>
+            <button class="exercise-item" data-exercise="48"><span class="exercise-number">48.</span>Print status code</button>
+            <button class="exercise-item" data-exercise="49"><span class="exercise-number">49.</span>iTunes API JSON</button>
+            <button class="exercise-item" data-exercise="50"><span class="exercise-number">50.</span>Extract song names</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🧱 Creating Modules</div>
+            <button class="exercise-item" data-exercise="51"><span class="exercise-number">51.</span>Simple math module</button>
+            <button class="exercise-item" data-exercise="52"><span class="exercise-number">52.</span>Add subtract function</button>
+            <button class="exercise-item" data-exercise="53"><span class="exercise-number">53.</span>Specific import</button>
+            <button class="exercise-item" data-exercise="54"><span class="exercise-number">54.</span>Return values</button>
+            <button class="exercise-item" data-exercise="55"><span class="exercise-number">55.</span>Import all functions</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">📦 Import Variations</div>
+            <button class="exercise-item" data-exercise="56"><span class="exercise-number">56.</span>Module alias</button>
+            <button class="exercise-item" data-exercise="57"><span class="exercise-number">57.</span>Greetings module</button>
+            <button class="exercise-item" data-exercise="58"><span class="exercise-number">58.</span>Specific function import</button>
+            <button class="exercise-item" data-exercise="59"><span class="exercise-number">59.</span>Module loading behavior</button>
+            <button class="exercise-item" data-exercise="60"><span class="exercise-number">60.</span>__name__ == "__main__"</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">⚙️ Advanced Modules</div>
+            <button class="exercise-item" data-exercise="61"><span class="exercise-number">61.</span>Random greet module</button>
+            <button class="exercise-item" data-exercise="62"><span class="exercise-number">62.</span>Name utils module</button>
+            <button class="exercise-item" data-exercise="63"><span class="exercise-number">63.</span>Module interdependency</button>
+            <button class="exercise-item" data-exercise="64"><span class="exercise-number">64.</span>Stats tools module</button>
+            <button class="exercise-item" data-exercise="65"><span class="exercise-number">65.</span>Multiple stats functions</button>
+        </div>
+
+        <div class="section">
+            <div class="section-title">🧩 Package Organization</div>
+            <button class="exercise-item" data-exercise="66"><span class="exercise-number">66.</span>Create package folder</button>
+            <button class="exercise-item" data-exercise="67"><span class="exercise-number">67.</span>Import from package</button>
+            <button class="exercise-item" data-exercise="68"><span class="exercise-number">68.</span>Specific package import</button>
+            <button class="exercise-item" data-exercise="69"><span class="exercise-number">69.</span>Intra-package imports</button>
+            <button class="exercise-item" data-exercise="70"><span class="exercise-number">70.</span>Combo module</button>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <div class="exercise-container">
+            <div class="exercise-header">
+                <div class="exercise-meta">
+                    <span id="currentSection">Random</span>
+                    <span id="exerciseProgress">Exercise 1 of 70</span>
+                </div>
+                <h1 class="exercise-title" id="exerciseTitle">Import random and coin toss</h1>
+            </div>
+
+            <div class="exercise-content" id="exerciseContent">
+                <p>Import the <code>random</code> library and print either "heads" or "tails" using <code>random.choice</code>.</p>
+            </div>
+
+            <div class="navigation">
+                <button class="nav-button" id="prevButton" disabled>
+                    ← Previous
+                </button>
+                <div class="progress-info">
+                    <span id="progressText">1 / 70</span>
+                </div>
+                <button class="nav-button" id="nextButton">
+                    Next →
+                </button>
+            </div>
+        </div>
+    </main>
+
+    <script>
+        const exercises = {
+            1: { section: "Random", title: "Import random and coin toss", content: `
+                <p>Import the <code>random</code> library and print either "heads" or "tails" using <code>random.choice</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to import Python's built-in random library and use the <code>choice()</code> function to pick randomly from a list.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (will vary each run):</div>
+                    <div class="terminal-body">
+                        <div class="output">heads</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Another possible output:</div>
+                    <div class="terminal-body">
+                        <div class="output">tails</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> You'll need to create a list with two strings: "heads" and "tails", then use <code>random.choice()</code> to pick one.
+                </div>
+            ` },
+
+            2: { section: "Random", title: "Coin toss loop", content: `
+                <p>Modify your coin toss program to repeat 5 times inside a <code>for</code> loop.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to combine loops with random choices to simulate multiple events.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (example run):</div>
+                    <div class="terminal-body">
+                        <div class="output">heads</div>
+                        <div class="output">tails</div>
+                        <div class="output">heads</div>
+                        <div class="output">heads</div>
+                        <div class="output">tails</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>for i in range(5):</code> to repeat the coin toss 5 times.
+                </div>
+            ` },
+
+            3: { section: "Random", title: "From random import choice", content: `
+                <p>Use <code>from random import choice</code> and repeat the coin toss program.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>The difference between <code>import random</code> and <code>from random import choice</code>. This selective import lets you use <code>choice()</code> directly without the <code>random.</code> prefix.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (same as before, but cleaner syntax):</div>
+                    <div class="terminal-body">
+                        <div class="output">tails</div>
+                        <div class="output">heads</div>
+                        <div class="output">tails</div>
+                        <div class="output">tails</div>
+                        <div class="output">heads</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> After the import, you can call <code>choice(["heads", "tails"])</code> directly instead of <code>random.choice()</code>.
+                </div>
+            ` },
+
+            4: { section: "Random", title: "Dice roll simulation", content: `
+                <p>Use <code>random.randint(1, 6)</code> to simulate a dice roll.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to generate random integers within a specific range using <code>randint()</code>. This simulates rolling a 6-sided die.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (example runs):</div>
+                    <div class="terminal-body">
+                        <div class="output">4</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Another run might show:</div>
+                    <div class="terminal-body">
+                        <div class="output">1</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> <code>randint(1, 6)</code> includes both 1 and 6 as possible outcomes, giving you numbers 1, 2, 3, 4, 5, or 6.
+                </div>
+            ` },
+
+            5: { section: "Random", title: "Two dice total", content: `
+                <p>Write a program that rolls two dice and prints their total.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to combine multiple random numbers and perform arithmetic operations on them.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (example):</div>
+                    <div class="terminal-body">
+                        <div class="output">Dice 1: 3</div>
+                        <div class="output">Dice 2: 5</div>
+                        <div class="output">Total: 8</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Or a simpler version:</div>
+                    <div class="terminal-body">
+                        <div class="output">7</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Roll two dice by calling <code>randint(1, 6)</code> twice, store the results in variables, then add them together.
+                </div>
+            ` },
+
+            6: { section: "Random", title: "Random color picker", content: `
+                <p>Create a list of colors and print one at random.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to use <code>random.choice()</code> with your own custom lists of strings.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (example):</div>
+                    <div class="terminal-body">
+                        <div class="output">blue</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Other possible outputs:</div>
+                    <div class="terminal-body">
+                        <div class="output">red</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Create a list like <code>["red", "blue", "green", "yellow", "purple"]</code> and use <code>random.choice()</code> on it.
+                </div>
+            ` },
+
+            7: { section: "Random", title: "Shuffle fruits list", content: `
+                <p>Shuffle a list of fruits using <code>random.shuffle</code> and print the new order.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to randomize the order of items in a list using <code>shuffle()</code>. Note that this modifies the original list.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Original list:</div>
+                    <div class="terminal-body">
+                        <div class="output">['apple', 'banana', 'orange', 'grape']</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">After shuffling (example):</div>
+                    <div class="terminal-body">
+                        <div class="output">['orange', 'apple', 'grape', 'banana']</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> <code>random.shuffle()</code> modifies the list in-place. Print the list before and after shuffling to see the difference.
+                </div>
+            ` },
+
+            8: { section: "Random", title: "Random numbers loop", content: `
+                <p>Use a loop to print 5 random numbers between 1 and 100.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to combine loops with random number generation to create multiple random values.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (example):</div>
+                    <div class="terminal-body">
+                        <div class="output">42</div>
+                        <div class="output">17</div>
+                        <div class="output">89</div>
+                        <div class="output">3</div>
+                        <div class="output">66</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>for i in range(5):</code> and <code>random.randint(1, 100)</code> inside the loop.
+                </div>
+            ` },
+
+            9: { section: "Random", title: "Random name picker", content: `
+                <p>Create a list of 5 names and print one random name each time you run the program.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to simulate selecting a random person from a group, useful for choosing team leaders or picking volunteers.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (example runs):</div>
+                    <div class="terminal-body">
+                        <div class="output">Alice</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Another run:</div>
+                    <div class="terminal-body">
+                        <div class="output">Bob</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Create a list with 5 names and use <code>random.choice()</code> to pick one.
+                </div>
+            ` },
+
+            10: { section: "Random", title: "Shuffle then choose", content: `
+                <p>Combine <code>choice</code> and <code>shuffle</code> — shuffle a list, then pick one random element from it.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to chain random operations together. This demonstrates using multiple random functions in sequence.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Original list:</div>
+                    <div class="terminal-body">
+                        <div class="output">['cat', 'dog', 'bird', 'fish']</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">After shuffle + choice (example):</div>
+                    <div class="terminal-body">
+                        <div class="output">Shuffled: ['bird', 'cat', 'fish', 'dog']</div>
+                        <div class="output">Chosen: bird</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> First shuffle the list, then use choice on the shuffled list. Both operations will give random results!
+                </div>
+            ` },
+
+            11: { section: "Statistics", title: "Mean calculation", content: `
+                <p>Import <code>statistics</code> and print the mean of <code>[10, 20, 30]</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to use Python's built-in statistics library to calculate averages mathematically.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">20.0</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>statistics.mean([10, 20, 30])</code>. The mean of 10, 20, and 30 is (10+20+30)/3 = 20.
+                </div>
+            ` },
+
+            12: { section: "Statistics", title: "Mean of 1-6", content: `
+                <p>Compute the mean of <code>[1, 2, 3, 4, 5, 6]</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>Practice with the mean function using consecutive numbers (like dice values).</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">3.5</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> The sum is 1+2+3+4+5+6 = 21, divided by 6 numbers = 3.5.
+                </div>
+            ` },
+
+            13: { section: "Statistics", title: "Median calculation", content: `
+                <p>Try computing the median of a list using <code>statistics.median</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>The difference between mean (average) and median (middle value). The median is the middle number when values are sorted.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example with [1, 3, 5, 7, 9]:</div>
+                    <div class="terminal-body">
+                        <div class="output">5</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example with [10, 20, 30, 40]:</div>
+                    <div class="terminal-body">
+                        <div class="output">25.0</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> With odd numbers of items, median is the middle value. With even numbers, it's the average of the two middle values.
+                </div>
+            ` },
+
+            14: { section: "Statistics", title: "Mode calculation", content: `
+                <p>Compute the mode of <code>[1, 2, 2, 3, 3, 3]</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to find the mode (most frequently occurring value) in a dataset.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">3</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> In the list [1, 2, 2, 3, 3, 3], the number 3 appears most frequently (3 times), so it's the mode.
+                </div>
+            ` },
+
+            15: { section: "Statistics", title: "Mean and median", content: `
+                <p>Print both the mean and median of <code>[10, 20, 30, 40]</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to calculate and compare multiple statistical measures of the same dataset.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Mean: 25.0</div>
+                        <div class="output">Median: 25.0</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> For this evenly spaced dataset, the mean and median happen to be the same value.
+                </div>
+            ` },
+
+            16: { section: "Statistics", title: "User input average", content: `
+                <p>Ask the user for three numbers and print their average using <code>statistics.mean</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to combine user input with statistical calculations. Remember to convert string inputs to numbers!</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example Interaction:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">Enter first number: <span class="user-input">10</span></div>
+                        <div class="prompt">Enter second number: <span class="user-input">15</span></div>
+                        <div class="prompt">Enter third number: <span class="user-input">20</span></div>
+                        <div class="output">Average: 15.0</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>input()</code> to get user input, <code>float()</code> to convert to numbers, then put them in a list for <code>statistics.mean()</code>.
+                </div>
+            ` },
+
+            17: { section: "Statistics", title: "Standard deviation", content: `
+                <p>Use <code>statistics.stdev</code> to find the standard deviation of <code>[5, 10, 15, 20]</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to measure the spread or variability of data using standard deviation. Higher values mean more spread out data.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">6.454972243679028</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Standard deviation measures how spread out the numbers are from the average. These numbers are evenly spaced, so they have a moderate standard deviation.
+                </div>
+            ` },
+
+            18: { section: "Statistics", title: "Compare averages", content: `
+                <p>Compare averages of two lists and print which one is higher.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to calculate multiple statistics and compare them using conditional statements.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example with [1, 2, 3] and [4, 5, 6]:</div>
+                    <div class="terminal-body">
+                        <div class="output">List 1 average: 2.0</div>
+                        <div class="output">List 2 average: 5.0</div>
+                        <div class="output">List 2 has the higher average</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Calculate the mean of both lists, then use an if statement to compare and print which is higher.
+                </div>
+            ` },
+
+            19: { section: "Statistics", title: "Student grades", content: `
+                <p>Store multiple student grades and print their average.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>A practical application of statistics in education - calculating class or student averages.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Student grades: [85, 92, 78, 96, 88]</div>
+                        <div class="output">Class average: 87.8</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Create a list of grade values (like test scores from 0-100) and calculate their mean.
+                </div>
+            ` },
+
+            20: { section: "Statistics", title: "Random stats combo", content: `
+                <p>Combine <code>random</code> and <code>statistics</code>: generate 10 random numbers, then print their mean.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to combine multiple libraries to generate random data and then analyze it statistically.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Random numbers: [42, 17, 89, 3, 66, 23, 91, 55, 8, 34]</div>
+                        <div class="output">Mean: 42.8</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use a loop to generate 10 random numbers, store them in a list, then calculate the mean of that list.
+                </div>
+            ` },
+
+            21: { section: "Command-Line Arguments", title: "Hello with name", content: `
+                <p>Write a program that says hello to the name you type after the filename.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to access command-line arguments using <code>sys.argv</code>. This lets users pass information to your program when they run it.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Running the program:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python hello.py David</div>
+                        <div class="output">Hello, David!</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Another example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python hello.py Sarah</div>
+                        <div class="output">Hello, Sarah!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> <code>sys.argv[0]</code> is the filename, <code>sys.argv[1]</code> is the first argument after the filename.
+                </div>
+            ` },
+
+            22: { section: "Command-Line Arguments", title: "Error on no name", content: `
+                <p>Modify the program to print an error if no name is given.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to validate user input and handle error cases gracefully.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">With name provided:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python hello.py Alice</div>
+                        <div class="output">Hello, Alice!</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Without name:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python hello.py</div>
+                        <div class="output">Error: Please provide a name</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Check <code>len(sys.argv)</code> to see how many arguments were provided. You need at least 2 (filename + name).
+                </div>
+            ` },
+
+            23: { section: "Command-Line Arguments", title: "Error on too many args", content: `
+                <p>Add another condition: print an error if too many arguments are given.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to validate that users provide exactly the right number of arguments.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Correct usage:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python hello.py Bob</div>
+                        <div class="output">Hello, Bob!</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Too many arguments:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python hello.py Bob Smith Jones</div>
+                        <div class="output">Error: Too many arguments provided</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> You want exactly 2 items in <code>sys.argv</code> (filename + one name). More than 2 means too many arguments.
+                </div>
+            ` },
+
+            24: { section: "Command-Line Arguments", title: "Combine error conditions", content: `
+                <p>Combine the above: handle both too few and too many arguments with specific error messages.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to create comprehensive input validation with multiple error conditions.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Various scenarios:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python hello.py</div>
+                        <div class="output">Too few arguments</div>
+                        <div class="prompt">$ python hello.py Alice</div>
+                        <div class="output">Hello, Alice!</div>
+                        <div class="prompt">$ python hello.py Bob Carol</div>
+                        <div class="output">Too many arguments</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use if/elif/else to check: len < 2 (too few), len == 2 (perfect), len > 2 (too many).
+                </div>
+            ` },
+
+            25: { section: "Command-Line Arguments", title: "Exit on invalid input", content: `
+                <p>Use <code>sys.exit()</code> to stop the program when input is invalid.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to gracefully terminate a program when it can't continue due to invalid input.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Program stops on error:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python hello.py</div>
+                        <div class="output">Too few arguments</div>
+                        <div class="prompt"># Program ends here, no further code runs</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Call <code>sys.exit()</code> after printing error messages to stop the program immediately.
+                </div>
+            ` },
+
+            26: { section: "Command-Line Arguments", title: "Print all arguments", content: `
+                <p>Try printing all the command-line arguments with a loop.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to iterate through all command-line arguments, useful for debugging or processing multiple inputs.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python args.py apple banana cherry</div>
+                        <div class="output">args.py</div>
+                        <div class="output">apple</div>
+                        <div class="output">banana</div>
+                        <div class="output">cherry</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>for arg in sys.argv:</code> to loop through all arguments including the filename.
+                </div>
+            ` },
+
+            27: { section: "Command-Line Arguments", title: "Count arguments", content: `
+                <p>Print the number of arguments the user provided using <code>len(sys.argv)</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to count command-line arguments, useful for validation and debugging.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Examples:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python count.py hello world</div>
+                        <div class="output">Total arguments: 3</div>
+                        <div class="prompt">$ python count.py</div>
+                        <div class="output">Total arguments: 1</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Remember that <code>sys.argv</code> includes the filename as the first argument, so the count includes that.
+                </div>
+            ` },
+
+            28: { section: "Command-Line Arguments", title: "Filename and args", content: `
+                <p>Print both the filename and arguments to see how <code>sys.argv[0]</code> works.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>Understanding the structure of <code>sys.argv</code> and how the filename is always the first element.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python show_args.py test data</div>
+                        <div class="output">Filename: show_args.py</div>
+                        <div class="output">Arguments: ['test', 'data']</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> <code>sys.argv[0]</code> is the filename, <code>sys.argv[1:]</code> gives you everything after the filename.
+                </div>
+            ` },
+
+            29: { section: "Command-Line Arguments", title: "Greet multiple names", content: `
+                <p>Add multiple names on the command line and greet each one.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to process multiple command-line arguments in a loop.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python greet_all.py Alice Bob Charlie</div>
+                        <div class="output">Hello, Alice!</div>
+                        <div class="output">Hello, Bob!</div>
+                        <div class="output">Hello, Charlie!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Loop through <code>sys.argv[1:]</code> to skip the filename and greet each name.
+                </div>
+            ` },
+
+            30: { section: "Command-Line Arguments", title: "Greetings with validation", content: `
+                <p>Combine greetings and validation — only greet if one or more names are given.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to combine input validation with processing multiple arguments.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Valid usage:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python safe_greet.py Diana Eve</div>
+                        <div class="output">Hello, Diana!</div>
+                        <div class="output">Hello, Eve!</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">No names provided:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python safe_greet.py</div>
+                        <div class="output">Please provide at least one name</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Check if <code>len(sys.argv) > 1</code> before starting the greeting loop.
+                </div>
+            ` },
+
+            31: { section: "Slice", title: "Skip first argv", content: `
+                <p>Print every name from <code>sys.argv</code>, but skip the first element using slicing (<code>sys.argv[1:]</code>).</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to use list slicing to skip elements. <code>[1:]</code> means "start from index 1 and go to the end".</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python names.py John Jane Jack</div>
+                        <div class="output">John</div>
+                        <div class="output">Jane</div>
+                        <div class="output">Jack</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> <code>sys.argv[1:]</code> gives you all arguments except the filename (which is at index 0).
+                </div>
+            ` },
+
+            32: { section: "Slice", title: "Last argument only", content: `
+                <p>Print only the last argument given on the command line using slicing.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to access the last element of a list using negative indexing with slicing.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python last.py first second third</div>
+                        <div class="output">third</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>sys.argv[-1]</code> to get the last element, or <code>sys.argv[-1:]</code> if you want to practice slicing.
+                </div>
+            ` },
+
+            33: { section: "Slice", title: "First two names", content: `
+                <p>Print only the first two names using slicing.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to limit output to a specific number of elements using slice notation.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python first_two.py Anna Ben Carlos Diana</div>
+                        <div class="output">Anna</div>
+                        <div class="output">Ben</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>sys.argv[1:3]</code> to get elements at index 1 and 2 (the first two names after the filename).
+                </div>
+            ` },
+
+            34: { section: "Slice", title: "All except last", content: `
+                <p>Print all names except the last using slicing.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to exclude the last element using negative slicing.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python except_last.py Tom Dick Harry</div>
+                        <div class="output">Tom</div>
+                        <div class="output">Dick</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>sys.argv[1:-1]</code> to start from index 1 (skip filename) and stop before the last element.
+                </div>
+            ` },
+
+            35: { section: "Slice", title: "Reverse order", content: `
+                <p>Print names in reverse order using slicing with a negative step.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to reverse a list using slice notation with a step value of -1.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python reverse.py Alice Bob Charlie</div>
+                        <div class="output">Charlie</div>
+                        <div class="output">Bob</div>
+                        <div class="output">Alice</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>sys.argv[1:][::-1]</code> or <code>sys.argv[:0:-1]</code> to reverse the names.
+                </div>
+            ` },
+
+            36: { section: "Slice", title: "Join all names", content: `
+                <p>Join all names into one string and print it.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to combine slicing with string methods to join multiple arguments.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python join.py Hello beautiful world</div>
+                        <div class="output">Hello beautiful world</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Or with commas:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python join.py Red Green Blue</div>
+                        <div class="output">Red, Green, Blue</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>" ".join(sys.argv[1:])</code> to join with spaces, or <code>", ".join(sys.argv[1:])</code> for commas.
+                </div>
+            ` },
+
+            37: { section: "Slice", title: "Middle 3 numbers", content: `
+                <p>Create a list <code>[1,2,3,4,5,6,7]</code> and print a slice of the middle 3 numbers.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to extract a specific portion from the middle of a list using slice indices.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">[3, 4, 5]</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> The middle 3 numbers are at indices 2, 3, and 4. Use <code>numbers[2:5]</code> to get them.
+                </div>
+            ` },
+
+            38: { section: "Slice", title: "Slice \"gram\" from string", content: `
+                <p>Slice a string <code>"programming"</code> to print <code>"gram"</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How slicing works with strings - you can extract substrings just like list elements.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">gram</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Find where "gram" appears in "programming". Count the positions: p-r-o-g-r-a-m-m-i-n-g. "gram" starts at index 3.
+                </div>
+            ` },
+
+            39: { section: "Slice", title: "Last 3 letters", content: `
+                <p>Print the last 3 letters of <code>"Python"</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to use negative slicing to get the end of a string.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">hon</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>word[-3:]</code> to get the last 3 characters of any string.
+                </div>
+            ` },
+
+            40: { section: "Slice", title: "First letters only", content: `
+                <p>Combine slicing and loops: print each name's first letter only.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to combine slicing with loops to process parts of multiple strings.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python initials.py Alice Bob Charlie</div>
+                        <div class="output">A</div>
+                        <div class="output">B</div>
+                        <div class="output">C</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Loop through <code>sys.argv[1:]</code> and print <code>name[0]</code> for each name.
+                </div>
+            ` },
+
+            41: { section: "Packages", title: "Install cowsay", content: `
+                <p>Install <code>cowsay</code> using <code>pip install cowsay</code> and make a cow say "Hello, World!".</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to install external Python packages and use them in your programs. This introduces the concept of third-party libraries.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Installation:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ pip install cowsay</div>
+                        <div class="output">Collecting cowsay...</div>
+                        <div class="output">Successfully installed cowsay</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output"> _____________</div>
+                        <div class="output">< Hello, World! ></div>
+                        <div class="output"> -------------</div>
+                        <div class="output">        \\   ^__^</div>
+                        <div class="output">         \\  (oo)\\_______</div>
+                        <div class="output">            (__)\\       )\\/\\</div>
+                        <div class="output">                ||----w |</div>
+                        <div class="output">                ||     ||</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> After installation, use <code>import cowsay</code> and <code>cowsay.cow("Hello, World!")</code>.
+                </div>
+            ` },
+
+            42: { section: "Packages", title: "Cow says your name", content: `
+                <p>Modify the program to let the cow say your name using a command-line argument.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to combine external packages with command-line arguments for interactive programs.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python cow_name.py Alice</div>
+                        <div class="output"> _______</div>
+                        <div class="output">< Alice ></div>
+                        <div class="output"> -------</div>
+                        <div class="output">        \\   ^__^</div>
+                        <div class="output">         \\  (oo)\\_______</div>
+                        <div class="output">            (__)\\       )\\/\\</div>
+                        <div class="output">                ||----w |</div>
+                        <div class="output">                ||     ||</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>sys.argv[1]</code> to get the name and pass it to <code>cowsay.cow()</code>.
+                </div>
+            ` },
+
+            43: { section: "Packages", title: "T-Rex speaks", content: `
+                <p>Use <code>cowsay.trex</code> to make a T-Rex speak.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How packages often provide multiple functions or "animals" in the case of cowsay.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output"> ____</div>
+                        <div class="output">< Hi ></div>
+                        <div class="output"> ----</div>
+                        <div class="output">                    ___====-_  _-====___</div>
+                        <div class="output">              _--^^^#####//      \\#####^^^--_</div>
+                        <div class="output">           _-^##########// (    ) \\##########^-_</div>
+                        <div class="output">          -############//  |\\^^/|  \\############-</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Replace <code>cowsay.cow()</code> with <code>cowsay.trex()</code> to get a different animal.
+                </div>
+            ` },
+
+            44: { section: "Packages", title: "Name validation", content: `
+                <p>Use <code>sys.argv</code> to check if the user gave their name, otherwise print "Missing name".</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to add input validation to programs that use external packages.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">With name:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python safe_cow.py Bob</div>
+                        <div class="output"> _____</div>
+                        <div class="output">< Bob ></div>
+                        <div class="output"> -----</div>
+                        <div class="output">        \\   ^__^</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Without name:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python safe_cow.py</div>
+                        <div class="output">Missing name</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Check <code>len(sys.argv)</code> before accessing <code>sys.argv[1]</code> to avoid errors.
+                </div>
+            ` },
+
+            45: { section: "Packages", title: "Different animals", content: `
+                <p>Try making different animals speak: <code>cow</code>, <code>tux</code>, <code>dragon</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to explore package functionality and use different functions within the same library.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Tux (penguin) example:</div>
+                    <div class="terminal-body">
+                        <div class="output"> ___________</div>
+                        <div class="output">< Hi there! ></div>
+                        <div class="output"> -----------</div>
+                        <div class="output">   \\</div>
+                        <div class="output">    \\</div>
+                        <div class="output">        .--.</div>
+                        <div class="output">       |o_o |</div>
+                        <div class="output">       |:_/ |</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Try <code>cowsay.tux("message")</code> and <code>cowsay.dragon("message")</code> to see different animals.
+                </div>
+            ` },
+
+            46: { section: "Packages", title: "Install requests", content: `
+                <p>Install <code>requests</code> with pip.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to install the popular requests library for making HTTP requests to web APIs.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Installation:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ pip install requests</div>
+                        <div class="output">Collecting requests</div>
+                        <div class="output">Successfully installed requests</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Test import:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python -c "import requests; print('Requests installed!')"</div>
+                        <div class="output">Requests installed!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Just install the package for now - we'll use it in the next exercises.
+                </div>
+            ` },
+
+            47: { section: "Packages", title: "Fetch GitHub API", content: `
+                <p>Fetch a web page using requests and print the response object.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to make HTTP GET requests to web APIs using the requests library.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">&lt;Response [200]&gt;</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>requests.get("https://api.github.com")</code> and print the response object directly.
+                </div>
+            ` },
+
+            48: { section: "Packages", title: "Print status code", content: `
+                <p>Print the response's status code (e.g., 200).</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to access properties of HTTP response objects. Status code 200 means "OK" or success.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">200</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Access the <code>status_code</code> attribute of the response object.
+                </div>
+            ` },
+
+            49: { section: "Packages", title: "iTunes API JSON", content: `
+                <p>Use <code>requests.get</code> and <code>json.dumps</code> to pretty print the iTunes API response for "Weezer".</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to fetch JSON data from APIs and format it for readable output.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Sample output (formatted JSON):</div>
+                    <div class="terminal-body">
+                        <div class="output">{</div>
+                        <div class="output">  "resultCount": 50,</div>
+                        <div class="output">  "results": [</div>
+                        <div class="output">    {</div>
+                        <div class="output">      "artistName": "Weezer",</div>
+                        <div class="output">      "trackName": "Buddy Holly",</div>
+                        <div class="output">      ...</div>
+                        <div class="output">    }</div>
+                        <div class="output">  ]</div>
+                        <div class="output">}</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use the iTunes search API: "https://itunes.apple.com/search?term=weezer" and <code>json.dumps(response.json(), indent=2)</code>.
+                </div>
+            ` },
+
+            50: { section: "Packages", title: "Extract song names", content: `
+                <p>Modify the program to print <strong>only</strong> the song names from the API results.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to parse JSON data and extract specific fields from API responses.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (example):</div>
+                    <div class="terminal-body">
+                        <div class="output">Buddy Holly</div>
+                        <div class="output">Say It Ain't So</div>
+                        <div class="output">Undone - The Sweater Song</div>
+                        <div class="output">Hash Pipe</div>
+                        <div class="output">Island in the Sun</div>
+                        <div class="output">...</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Loop through <code>response.json()["results"]</code> and print each item's <code>"trackName"</code>.
+                </div>
+            ` },
+
+            51: { section: "Creating Modules", title: "Simple math module", content: `
+                <p>Create a file called <code>math_tools.py</code> with a function <code>add(a, b)</code> that prints their sum. In a new file <code>use_math.py</code>, import and call that function.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to create your own Python modules and import functions from them.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Files to create:</div>
+                    <div class="terminal-body">
+                        <div class="output">math_tools.py  # Contains the add function</div>
+                        <div class="output">use_math.py    # Imports and uses the function</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Running use_math.py:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python use_math.py</div>
+                        <div class="output">8</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> In math_tools.py, define <code>def add(a, b): print(a + b)</code>. In use_math.py, use <code>import math_tools</code> then <code>math_tools.add(3, 5)</code>.
+                </div>
+            ` },
+
+            52: { section: "Creating Modules", title: "Add subtract function", content: `
+                <p>In <code>math_tools.py</code>, add another function <code>subtract(a, b)</code> and call it from <code>use_math.py</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to add multiple functions to a module and use them all.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">8</div>
+                        <div class="output">2</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Add <code>def subtract(a, b): print(a - b)</code> to math_tools.py, then call both functions in use_math.py.
+                </div>
+            ` },
+
+            53: { section: "Creating Modules", title: "Specific import", content: `
+                <p>Change <code>use_math.py</code> to import <strong>only</strong> the <code>add</code> function using <code>from math_tools import add</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to import specific functions instead of entire modules, making your code cleaner.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">8</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> After the specific import, you can call <code>add(3, 5)</code> directly without the module prefix.
+                </div>
+            ` },
+
+            54: { section: "Creating Modules", title: "Return values", content: `
+                <p>Modify your <code>math_tools.py</code> so both functions return values instead of printing them. Print the results in <code>use_math.py</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>The difference between functions that print vs. functions that return values. Returning is generally more flexible.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output (same as before):</div>
+                    <div class="terminal-body">
+                        <div class="output">8</div>
+                        <div class="output">2</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Change <code>print(a + b)</code> to <code>return a + b</code> in math_tools.py, then print the results in use_math.py.
+                </div>
+            ` },
+
+            55: { section: "Creating Modules", title: "Import all functions", content: `
+                <p>Add a third function <code>multiply(a, b)</code> and import all functions with <code>from math_tools import *</code>. Test them all.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to import all functions from a module at once using the * wildcard.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">8</div>
+                        <div class="output">2</div>
+                        <div class="output">15</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> After <code>from math_tools import *</code>, you can call <code>add()</code>, <code>subtract()</code>, and <code>multiply()</code> directly.
+                </div>
+            ` },
+
+            56: { section: "Import Variations", title: "Module alias", content: `
+                <p>Import your module as an alias and use it.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to give modules shorter or more convenient names using aliases.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">7</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>import math_tools as mt</code> then call <code>mt.add(3, 4)</code>.
+                </div>
+            ` },
+
+            57: { section: "Import Variations", title: "Greetings module", content: `
+                <p>Create <code>greetings.py</code> with two functions: <code>say_hi(name)</code> and <code>say_bye(name)</code>. Import it in a new file and test both.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to create modules with related functions and organize code by purpose.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Hi, Alice!</div>
+                        <div class="output">Bye, Alice!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Create functions that print greetings, then import and call both functions with the same name.
+                </div>
+            ` },
+
+            58: { section: "Import Variations", title: "Specific function import", content: `
+                <p>Try importing <strong>only</strong> <code>say_hi</code> using <code>from greetings import say_hi</code>. Then call it directly.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How selective importing can make code cleaner when you only need specific functions.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Hi, Bob!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> After the specific import, you can call <code>say_hi("Bob")</code> directly without the module name.
+                </div>
+            ` },
+
+            59: { section: "Import Variations", title: "Module loading behavior", content: `
+                <p>Add a print statement like <code>print("Module loaded!")</code> inside <code>greetings.py</code>. Run your importing script twice to see what happens.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How Python only loads/executes a module once, even if imported multiple times.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">First run:</div>
+                    <div class="terminal-body">
+                        <div class="output">Module loaded!</div>
+                        <div class="output">Hi, Carol!</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Second run (same session):</div>
+                    <div class="terminal-body">
+                        <div class="output">Hi, Carol!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Put the print statement at the top level of greetings.py (not inside a function).
+                </div>
+            ` },
+
+            60: { section: "Import Variations", title: "__name__ == \"__main__\"", content: `
+                <p>Add an <code>if __name__ == "__main__":</code> block to <code>greetings.py</code> that prints "Running directly". Observe how it behaves when imported vs run directly.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to make modules that can be both imported and run as standalone scripts.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Running greetings.py directly:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python greetings.py</div>
+                        <div class="output">Module loaded!</div>
+                        <div class="output">Running directly</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Importing greetings.py:</div>
+                    <div class="terminal-body">
+                        <div class="prompt">$ python test.py</div>
+                        <div class="output">Module loaded!</div>
+                        <div class="output">Hi, Dave!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> The code inside the if block only runs when the file is executed directly, not when imported.
+                </div>
+            ` },
+
+            61: { section: "Advanced Modules", title: "Random greet module", content: `
+                <p>Create a file <code>random_greet.py</code> that imports <code>random</code> and defines a function that prints a random greeting. Import and use it in another script.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to create modules that use other libraries, combining different functionalities.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example outputs (random):</div>
+                    <div class="terminal-body">
+                        <div class="output">Hi!</div>
+                    </div>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Another run:</div>
+                    <div class="terminal-body">
+                        <div class="output">Hello!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> In random_greet.py, import random and use <code>random.choice()</code> with a list of greetings.
+                </div>
+            ` },
+
+            62: { section: "Advanced Modules", title: "Name utils module", content: `
+                <p>Create <code>name_utils.py</code> with a function that capitalizes names properly. Import and test it.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to create utility modules with commonly used functions for text processing.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Alice Smith</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use the <code>.title()</code> method to capitalize names properly: "alice smith" becomes "Alice Smith".
+                </div>
+            ` },
+
+            63: { section: "Advanced Modules", title: "Module interdependency", content: `
+                <p>Modify <code>random_greet.py</code> to import your own <code>name_utils</code> module and greet with a capitalized name.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How your own modules can import and use other modules you've created.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Example with input "john doe":</div>
+                    <div class="terminal-body">
+                        <div class="output">Hello, John Doe!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Import name_utils in random_greet.py and use both the random greeting and name capitalization together.
+                </div>
+            ` },
+
+            64: { section: "Advanced Modules", title: "Stats tools module", content: `
+                <p>Make <code>stats_tools.py</code> with a function <code>average(nums)</code> using the <code>statistics</code> library. Import it and test it on <code>[1, 2, 3, 4, 5]</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to create wrapper functions that make library functions more convenient to use.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">3.0</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Your function can be a simple wrapper around <code>statistics.mean()</code>.
+                </div>
+            ` },
+
+            65: { section: "Advanced Modules", title: "Multiple stats functions", content: `
+                <p>Add a function <code>median(nums)</code> to <code>stats_tools.py</code>. Import it and print both average and median.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to build comprehensive utility modules with multiple related functions.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Average: 3.0</div>
+                        <div class="output">Median: 3</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Add both functions to stats_tools.py and call them both on the same list.
+                </div>
+            ` },
+
+            66: { section: "Package Organization", title: "Create package folder", content: `
+                <p>Create a folder called <code>mylib/</code> and move <code>greetings.py</code>, <code>math_tools.py</code>, and <code>stats_tools.py</code> inside. Add an empty file called <code>__init__.py</code> inside <code>mylib/</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to organize related modules into packages using folders and the special <code>__init__.py</code> file.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Folder structure:</div>
+                    <div class="terminal-body">
+                        <div class="output">mylib/</div>
+                        <div class="output">├── __init__.py</div>
+                        <div class="output">├── greetings.py</div>
+                        <div class="output">├── math_tools.py</div>
+                        <div class="output">└── stats_tools.py</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> The <code>__init__.py</code> file (even if empty) tells Python that the folder is a package.
+                </div>
+            ` },
+
+            67: { section: "Package Organization", title: "Import from package", content: `
+                <p>In a new script, import one module from the package and use it.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to import modules from packages using dot notation.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Hi, Anna!</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>from mylib import greetings</code> then <code>greetings.say_hi("Anna")</code>.
+                </div>
+            ` },
+
+            68: { section: "Package Organization", title: "Specific package import", content: `
+                <p>Import a specific function from within the package.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to import specific functions from modules within packages.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">15</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Use <code>from mylib.math_tools import add</code> then <code>add(5, 10)</code>.
+                </div>
+            ` },
+
+            69: { section: "Package Organization", title: "Intra-package imports", content: `
+                <p>Inside <code>mylib/greetings.py</code>, import and use a function from <code>math_tools.py</code>. Then re-import greetings from outside the package and observe the behavior.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How modules within a package can import other modules from the same package.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Hi, Eve! 2 + 3 = 5</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Inside greetings.py, use <code>from . import math_tools</code> or <code>from .math_tools import add</code>.
+                </div>
+            ` },
+
+            70: { section: "Package Organization", title: "Combo module", content: `
+                <p>Create a new module <code>combo.py</code> that imports your greetings and stats_tools modules, and prints a greeting and the average of <code>[10, 20, 30]</code>.</p>
+                
+                <div class="explanation">
+                    <h4>🎯 What you'll learn:</h4>
+                    <p>How to create modules that combine functionality from multiple other modules you've built.</p>
+                </div>
+
+                <div class="terminal">
+                    <div class="terminal-header">Expected Output:</div>
+                    <div class="terminal-body">
+                        <div class="output">Hi, World!</div>
+                        <div class="output">Average: 20.0</div>
+                    </div>
+                </div>
+
+                <div class="hint">
+                    <strong>💡 Hint:</strong> Import both modules and call a greeting function and the average function in the same script.
+                </div>
+            ` }
+        };
+
+        let currentExercise = 1;
+        const totalExercises = 70;
+
+        // DOM Elements
+        const sidebar = document.getElementById('sidebar');
+        const overlay = document.getElementById('overlay');
+        const burgerMenu = document.getElementById('burgerMenu');
+        const burgerIcon = document.getElementById('burgerIcon');
+        const exerciseItems = document.querySelectorAll('.exercise-item');
+        const prevButton = document.getElementById('prevButton');
+        const nextButton = document.getElementById('nextButton');
+        const currentSection = document.getElementById('currentSection');
+        const exerciseProgress = document.getElementById('exerciseProgress');
+        const exerciseTitle = document.getElementById('exerciseTitle');
+        const exerciseContent = document.getElementById('exerciseContent');
+        const progressText = document.getElementById('progressText');
+
+        // Initialize
+        updateExercise();
+
+        // Event Listeners
+        burgerMenu.addEventListener('click', toggleSidebar);
+        overlay.addEventListener('click', closeSidebar);
+
+        exerciseItems.forEach(item => {
+            item.addEventListener('click', (e) => {
+                const exerciseNum = parseInt(e.currentTarget.dataset.exercise);
+                setCurrentExercise(exerciseNum);
+                if (window.innerWidth <= 768) {
+                    closeSidebar();
+                }
+            });
+        });
+
+        prevButton.addEventListener('click', () => {
+            if (currentExercise > 1) {
+                setCurrentExercise(currentExercise - 1);
+            }
+        });
+
+        nextButton.addEventListener('click', () => {
+            if (currentExercise < totalExercises) {
+                setCurrentExercise(currentExercise + 1);
+            }
+        });
+
+        // Keyboard navigation
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'ArrowLeft' && currentExercise > 1) {
+                setCurrentExercise(currentExercise - 1);
+            } else if (e.key === 'ArrowRight' && currentExercise < totalExercises) {
+                setCurrentExercise(currentExercise + 1);
+            } else if (e.key === 'Escape') {
+                closeSidebar();
+            }
+        });
+
+        // Functions
+        function toggleSidebar() {
+            sidebar.classList.toggle('open');
+            overlay.classList.toggle('show');
+            burgerIcon.textContent = sidebar.classList.contains('open') ? '✕' : '☰';
+        }
+
+        function closeSidebar() {
+            sidebar.classList.remove('open');
+            overlay.classList.remove('show');
+            burgerIcon.textContent = '☰';
+        }
+
+        function setCurrentExercise(exerciseNum) {
+            currentExercise = exerciseNum;
+            updateExercise();
+            updateActiveItem();
+        }
+
+        function updateExercise() {
+            const exercise = exercises[currentExercise];
+            
+            currentSection.textContent = exercise.section;
+            exerciseProgress.textContent = `Exercise ${currentExercise} of ${totalExercises}`;
+            exerciseTitle.textContent = exercise.title;
+            exerciseContent.innerHTML = `<p>${exercise.content}</p>`;
+            progressText.textContent = `${currentExercise} / ${totalExercises}`;
+
+            // Update navigation buttons
+            prevButton.disabled = currentExercise === 1;
+            nextButton.disabled = currentExercise === totalExercises;
+        }
+
+        function updateActiveItem() {
+            exerciseItems.forEach(item => {
+                item.classList.remove('active');
+                if (parseInt(item.dataset.exercise) === currentExercise) {
+                    item.classList.add('active');
+                    item.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+                }
+            });
+        }
+
+        // Handle window resize
+        window.addEventListener('resize', () => {
+            if (window.innerWidth > 768) {
+                closeSidebar();
+            }
+        });
+    </script>
+</body>
+</html>
